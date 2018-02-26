@@ -162,7 +162,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/02/24/nihao/">nihao</a>
+      <a class="article-title" href="/2018/02/24/nihao/">How to use blktrace and btt to debug and tune disk io on Linux</a>
     </h1>
   
 
@@ -175,7 +175,64 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <p> blktrace is a block layer IO tracing mechanism which provides detailed  information  about  request  queue operations up to user space.</p>
+<p>There are three major components:</p>
+<p>a kernel component<br>a utility to record the i/o trace information for the kernel to user space<br>utilities to analyse and view the  trace  information</p>
+<p>Installation</p>
+<p>On RHEL/CentOS</p>
+<p>shell&gt;&gt;<em>**</em> yum install blktrace</p>
+<p> Package     Arch    Version         Repository             Size</p>
+<p>Installing:<br> blktrace   x86_64   1.0.5-6.el7     sl                    132 k</p>
+<p>Transaction Summary</p>
+<p>Install  1 Package</p>
+<p>Total download size: 132 k<br>Installed size: 297 k<br>Is this ok [y/d/N]: y</p>
+<p>Installed:<br>  blktrace.x86_64 0:1.0.5-6.el7<br>blktrace Usage</p>
+<p>Usage: blktrace </p>
+<p>-d <dev>             | –dev=<dev><br>[ -r <debugfs path="">  | –relay=<debugfs path=""> ]<br>[ -o <file>          | –output=<file>]<br>[ -D <dir>           | –output-dir=<dir><br>[ -w <time>          | –stopwatch=<time>]<br>[ -a <action field="">  | –act-mask=<action field="">]<br>[ -A <action mask="">   | –set-mask=<action mask="">]<br>[ -b <size>          | –buffer-size]<br>[ -n <number>        | –num-sub-buffers=<number>]<br>[ -l                 | –listen]<br>[ -h <hostname>      | –host=<hostname>]<br>[ -p <port number="">   | –port=<port number="">]<br>[ -s                 | –no-sendfile]<br>[ -I <devs file="">     | –input-devs=<devs file="">]<br>[ -v <version>       | –version]<br>[ -V <version>       | –version]<br>    -d Use specified device. May also be given last after options<br>    -r Path to mounted debugfs, defaults to /sys/kernel/debug<br>    -o File(s) to send output to<br>    -D Directory to prepend to output file names<br>    -w Stop after defined time, in seconds<br>    -a Only trace specified actions. See documentation<br>    -A Give trace mask as a single value. See documentation<br>    -b Sub buffer size in KiB (default 512)<br>    -n Number of sub buffers (default 4)<br>    -l Run in network listen mode (blktrace server)<br>    -h Run in network client mode, connecting to the given host<br>    -p Network port to use (default 8462)<br>    -s Make the network client NOT use sendfile() to transfer data<br>    -I Add devices found in <devs file=""><br>    -v Print program version info<br>    -V Print program version info<br>Use blktrace to trace disk i/o</devs></version></version></devs></devs></port></port></hostname></hostname></number></number></size></action></action></action></action></time></time></dir></dir></file></file></debugfs></debugfs></dev></dev></p>
+<ol>
+<li>Trace I/O</li>
+</ol>
+<p>The command below trace disk sdp for 10 seconds, and send the trace result to file trace.blktrace.[0-11], by default, the output filename in the example below should be sdp.blktrace.[0-11]</p>
+<h1 id="blktrace-d-dev-sdp-o-trace-w-10"><a href="#blktrace-d-dev-sdp-o-trace-w-10" class="headerlink" title="blktrace -d /dev/sdp -o trace -w 10"></a>blktrace -d /dev/sdp -o trace -w 10</h1><p>=== sdp ===<br>  CPU  0:                 8780 events,      412 KiB data<br>  CPU  1:                 3173 events,      149 KiB data<br>  CPU  2:                 3600 events,      169 KiB data<br>  CPU  3:                 1445 events,       68 KiB data<br>  CPU  4:                 4604 events,      216 KiB data<br>  CPU  5:                 3764 events,      177 KiB data<br>  CPU  6:                 1152 events,       54 KiB data<br>  CPU  7:                 1142 events,       54 KiB data<br>  CPU  8:                  335 events,       16 KiB data<br>  CPU  9:                  936 events,       44 KiB data<br>  CPU 10:                 1470 events,       69 KiB data<br>  CPU 11:                  385 events,       19 KiB data<br>  Total:                 30786 events (dropped 0),     1444 KiB data</p>
+<ol>
+<li>blkparse parse the trace output file</li>
+</ol>
+<p>#blkparse -i trace.blktrace.* -d sdp.bin</p>
+<p>…<br>Total (trace):<br> Reads Queued:       4,833,  117,316KiB     Writes Queued:           0,        0KiB<br> Read Dispatches:    4,833,  117,316KiB     Write Dispatches:        0,        0KiB<br> Reads Requeued:         0         Writes Requeued:         0<br> Reads Completed:    4,828,  116,829KiB     Writes Completed:        0,        0KiB<br> Read Merges:            0,        0KiB     Write Merges:            0,        0KiB<br> IO unplugs:             0             Timer unplugs:           0</p>
+<p>Throughput (R/W): 11,692KiB/s / 0KiB/s<br>Events (trace): 28,993 entries<br>Skips: 0 forward (0 -   0.0%)</p>
+<ol>
+<li>Use btt to get device i/o activites statistics</li>
+</ol>
+<h1 id="btt-i-sdp-bin-more"><a href="#btt-i-sdp-bin-more" class="headerlink" title="btt -i sdp.bin | more"></a>btt -i sdp.bin | more</h1><p>==================== All Devices ====================</p>
+<pre><code>ALL           MIN           AVG           MAX           N
+</code></pre><hr>
+<p>Q2Q               0.000002693   0.002064896   0.224947065        4832<br>Q2G               0.000000289   0.000010970   0.010791768       57996<br>G2I               0.000000214   0.000000961   0.000033457       57996<br>I2D               0.000000160   0.000005564   0.005938405       57108<br>D2C               0.000135164   0.003013303   0.035674715        4805<br>Q2C               0.000168496   0.003040692   0.035678620        4828</p>
+<p>==================== Device Overhead ====================</p>
+<pre><code>DEV |       Q2G       G2I       Q2M       I2D       D2C
+</code></pre><p>———- | ——— ——— ——— ——— ———<br> (  8,240) |   4.3338%   0.3797%   0.0000%   2.1643%  98.6272%<br>———- | ——— ——— ——— ——— ———<br>   Overall |   4.3338%   0.3797%   0.0000%   2.1643%  98.6272%</p>
+<p>==================== Device Merge Information ====================</p>
+<pre><code>DEV |       #Q       #D   Ratio |   BLKmin   BLKavg   BLKmax    Total
+</code></pre><p>———- | ——– ——– ——- | ——– ——– ——– ——–<br> (  8,240) |    57996    57996     1.0 |       25       48      256  2830284</p>
+<p>==================== Device Q2Q Seek Information ====================</p>
+<pre><code>DEV |          NSEEKS            MEAN          MEDIAN | MODE           
+</code></pre><p>———- | ————— ————— ————— | —————<br> (  8,240) |            4833        712982.8               0 | 0(2296)<br>———- | ————— ————— ————— | —————<br>   Overall |          NSEEKS            MEAN          MEDIAN | MODE<br>   Average |            4833        712982.8               0 | 0(2296)</p>
+<p>==================== Device D2D Seek Information ====================</p>
+<pre><code>DEV |          NSEEKS            MEAN          MEDIAN | MODE           
+</code></pre><p>———- | ————— ————— ————— | —————<br> (  8,240) |           57996         59415.2               0 | 0(55458)<br>———- | ————— ————— ————— | —————<br>   Overall |          NSEEKS            MEAN          MEDIAN | MODE<br>   Average |           57996         59415.2               0 | 0(55458)</p>
+<p>==================== Plug Information ====================</p>
+<pre><code>DEV |    # Plugs # Timer Us  | % Time Q Plugged
+</code></pre><p>———- | ———- ———-  | —————-</p>
+<pre><code>DEV |    IOs/Unp   IOs/Unp(to)
+</code></pre><p>———- | ———-   ———-<br> (  8,240) |        0.0          0.0</p>
+<p>==================== Active Requests At Q Information ====================</p>
+<pre><code>DEV |  Avg Reqs @ Q
+</code></pre><p>———- | ————-<br> (  8,240) |           0.0<br>…<br>Interpreting blktrace Information</p>
+<p>Note: All time is mili seconds</p>
+<p>Q2Q — time between requests sent to the block layer<br>Q2G — how long it takes from the time a block I/O is queued to the time it gets a request allocated for it<br>G2I — how long it takes from the time a request is allocated to the time it is Inserted into the device’s queue<br>Q2M — how long it takes from the time a block I/O is queued to the time it gets merged with an existing request<br>I2D — how long it takes from the time a request is inserted into the device’s queue to the time it is actually issued to the device<br>M2D — how long it takes from the time a block I/O is merged with an exiting request until the request is issued to the device<br>D2C — service time of the request by the device<br>Q2C — total time spent in the block layer for a request<br>I/O sequence</p>
+<p> Q——-&gt;G————&gt;I———&gt;M——————-&gt;D—————————–&gt;C<br> |-Q time-|-Insert time-|<br> |——— merge time ————|-merge with other IO|<br> |—————-scheduler time time——————-|—driver,adapter,storagetime–|</p>
+<p> |———————– await time in iostat output ———————————-|<br>Hints and tips for I/O tuning</p>
+<p>If Q2Q is much larger than Q2C, that means the application is not issuing I/O in rapid succession. hus, any performance problems you have may not be at all related to the I/O subsystem<br>D2C is very high, then the device is taking a long time to service requests. This can indicate that the device is simply overloaded (which may be due to the fact that it is a shared resource), or it could be because the workload sent down to the device is sub-optimal.<br>If Q2G is very high, it means that there are a lot of requests queued concurrently. This could indicate that the storage is unable to keep up with the I/O load.<br>await in iostat output = Q2C = Q2I + I2D + D2C<br>Q2I + I2D == scheduler time<br>The I2D time can include a lot of apparent extra time due to plug and unplug events (not shown above) which are used to improve merging of io within the schedule sort queue<br>D2C time covers driver time, adapter time, transport time, and storage service time (and back)<br>So if D2C/Q2C is approaching to 1, it  means % time spent on storage component is high.<br>high D-&gt;C times, the underlying transport structure of storage needs to be examined, such as switch counters or maintenance interfaces for storage boxes themselves.</p>
+
       
 
       
