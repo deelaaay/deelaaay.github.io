@@ -158,12 +158,24 @@
     <article id="post-centos7系统默认io-scheduler介绍" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/02/27/centos7系统默认io-scheduler介绍/">centos7系统下磁盘默认io scheduler介绍</a>
+    </h1>
+  
+
+        
+        <a href="/2018/02/27/centos7系统默认io-scheduler介绍/" class="archive-article-date">
+  	<time datetime="2018-02-27T03:12:28.014Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-27</time>
+</a>
+        
+      </header>
+    
     <div class="article-entry" itemprop="articleBody">
       
-        <hr>
-<p>centos7系统下磁盘默认io scheduler介绍</p>
-<hr>
-<p>在一次使用fio对磁盘进行iops的测试过程中，通过iostat监控磁盘信息。发现2者显示的iops不一样。根据这个做了以下测试，以及自己的一些推断，非专业，仅供参考。</p>
+        <p>在一次使用fio对磁盘进行iops的测试过程中，通过iostat监控磁盘信息。发现2者显示的iops不一样。根据这个做了以下测试，以及自己的一些推断，非专业，仅供参考。</p>
 <p>这里fio 任务 bs=4M  顺序写</p>
 <pre><code>[root@node1 ~]# fio --filename=/dev/sdc --name=write-4M --rw=write --ioengine=libaio --bs=4M --numjobs=1 --direct=1 --randrepeat=0  --iodepth=1 --runtime=100 --ramp_time=5 --size=100G --group_reporting
 write-4M: (g=0): rw=write, bs=4M-4M/4M-4M/4M-4M, ioengine=libaio, iodepth=1
