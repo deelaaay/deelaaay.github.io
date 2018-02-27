@@ -8,17 +8,17 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>centos7系统下磁盘默认io scheduler介绍 | deelaaay learning</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="在一次使用fio对磁盘进行iops的测试过程中，通过iostat监控磁盘信息。发现2者显示的iops不一样。根据这个做了以下测试，以及自己的一些推断，非专业，仅供参考。 这里fio 任务 bs=4M  顺序写 [root@node1 ~]# fio --filename=/dev/sdc --name=write-4M --rw=write --ioengine=libaio --bs=4M --">
+  <meta name="description" content="在一次使用fio对磁盘进行iops的测试过程中，通过iostat监控磁盘信息。发现2者显示的iops不一样。根据这个做了以下测试，以及自己的一些推断，非专业，仅供参考。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="centos7系统下磁盘默认io scheduler介绍">
 <meta property="og:url" content="http://yoursite.com/2018/02/27/centos7系统默认io-scheduler介绍/index.html">
 <meta property="og:site_name" content="deelaaay learning">
-<meta property="og:description" content="在一次使用fio对磁盘进行iops的测试过程中，通过iostat监控磁盘信息。发现2者显示的iops不一样。根据这个做了以下测试，以及自己的一些推断，非专业，仅供参考。 这里fio 任务 bs=4M  顺序写 [root@node1 ~]# fio --filename=/dev/sdc --name=write-4M --rw=write --ioengine=libaio --bs=4M --">
+<meta property="og:description" content="在一次使用fio对磁盘进行iops的测试过程中，通过iostat监控磁盘信息。发现2者显示的iops不一样。根据这个做了以下测试，以及自己的一些推断，非专业，仅供参考。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-02-27T07:27:53.036Z">
+<meta property="og:updated_time" content="2018-02-27T07:31:52.464Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="centos7系统下磁盘默认io scheduler介绍">
-<meta name="twitter:description" content="在一次使用fio对磁盘进行iops的测试过程中，通过iostat监控磁盘信息。发现2者显示的iops不一样。根据这个做了以下测试，以及自己的一些推断，非专业，仅供参考。 这里fio 任务 bs=4M  顺序写 [root@node1 ~]# fio --filename=/dev/sdc --name=write-4M --rw=write --ioengine=libaio --bs=4M --">
+<meta name="twitter:description" content="在一次使用fio对磁盘进行iops的测试过程中，通过iostat监控磁盘信息。发现2者显示的iops不一样。根据这个做了以下测试，以及自己的一些推断，非专业，仅供参考。">
   
     <link rel="alternative" href="/atom.xml" title="deelaaay learning" type="application/atom+xml">
   
@@ -174,8 +174,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>在一次使用fio对磁盘进行iops的测试过程中，通过iostat监控磁盘信息。发现2者显示的iops不一样。根据这个做了以下测试，以及自己的一些推断，非专业，仅供参考。</p>
-<p>这里fio 任务 bs=4M  顺序写</p>
+        <p>在一次使用fio对磁盘进行iops的测试过程中，通过iostat监控磁盘信息。发现2者显示的iops不一样。根据这个做了以下测试，以及自己的一些推断，非专业，仅供参考。<br><a id="more"></a><br>这里fio 任务 bs=4M  顺序写</p>
 <pre><code>[root@node1 ~]# fio --filename=/dev/sdc --name=write-4M --rw=write --ioengine=libaio --bs=4M --numjobs=1 --direct=1 --randrepeat=0  --iodepth=1 --runtime=100 --ramp_time=5 --size=100G --group_reporting
 write-4M: (g=0): rw=write, bs=4M-4M/4M-4M/4M-4M, ioengine=libaio, iodepth=1
 fio-2.2.5
