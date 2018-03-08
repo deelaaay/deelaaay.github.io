@@ -56,9 +56,9 @@
 		<nav class="header-menu">
 			<ul>
 			
-				<li><a href="/">主页</a></li>
+				<li><a href="/                  /主页">home</a></li>
 	        
-				<li><a href="/tags/随笔/">随笔</a></li>
+				<li><a href="/categories  /分类">categories</a></li>
 	        
 			</ul>
 		</nav>
@@ -81,12 +81,6 @@
 			<div class="social">
 				
 					<a class="github" target="_blank" href="/deelaaay/github.io" title="github"><i class="icon-github"></i></a>
-		        
-					<a class="weibo" target="_blank" href="#" title="weibo"><i class="icon-weibo"></i></a>
-		        
-					<a class="rss" target="_blank" href="#" title="rss"><i class="icon-rss"></i></a>
-		        
-					<a class="zhihu" target="_blank" href="#" title="zhihu"><i class="icon-zhihu"></i></a>
 		        
 			</div>
 		</nav>
@@ -123,12 +117,6 @@
 					
 						<a class="github" target="_blank" href="/deelaaay/github.io" title="github"><i class="icon-github"></i></a>
 			        
-						<a class="weibo" target="_blank" href="#" title="weibo"><i class="icon-weibo"></i></a>
-			        
-						<a class="rss" target="_blank" href="#" title="rss"><i class="icon-rss"></i></a>
-			        
-						<a class="zhihu" target="_blank" href="#" title="zhihu"><i class="icon-zhihu"></i></a>
-			        
 				</div>
 			</nav>
 
@@ -136,9 +124,9 @@
 				<ul style="width: 50%">
 				
 				
-					<li style="width: 50%"><a href="/">主页</a></li>
+					<li style="width: 50%"><a href="/                  /主页">home</a></li>
 		        
-					<li style="width: 50%"><a href="/tags/随笔/">随笔</a></li>
+					<li style="width: 50%"><a href="/categories  /分类">categories</a></li>
 		        
 				</ul>
 			</nav>
@@ -155,26 +143,380 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-ceph-osd基础运维" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/03/01/ceph-osd基础运维/">ceph-osd基础运维</a>
+      <a class="article-title" href="/2018/03/08/记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程/">记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程</a>
     </h1>
   
 
         
-        <a href="/2018/03/01/ceph-osd基础运维/" class="archive-article-date">
-  	<time datetime="2018-03-01T04:06:09.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-01</time>
+        <a href="/2018/03/08/记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程/" class="archive-article-date">
+  	<time datetime="2018-03-08T13:22:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-08</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
+        <p>记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程</p>
+<p>在一次对ceph集群做模拟故障测试过程中，外置内核客户端挂载ceph集群，客户端开启fio进行写，dd进行读的过程中。对集群节点的某个osd磁盘进行拔盘操作。客户端读取，写入中断一段时间，之后继续恢复读写。在插入磁盘之后，发现有个其他的osd 没有up.如下图：</p>
+<p><img src="https://i.imgur.com/Q8BIZIN.jpg" alt=""></p>
+<p>通过dmesg查看到如下报错</p>
+<pre><code>[13521.483167] sd 0:0:9:0: [sdd] tag#0 FAILED Result: hostbyte=DID_OK driverbyte=DRIVER_SENSE
+[13521.483175] sd 0:0:9:0: [sdd] tag#0 Sense Key : Medium Error [current] 
+[13521.483181] sd 0:0:9:0: [sdd] tag#0 Add. Sense: Unrecovered read error
+[13521.483188] sd 0:0:9:0: [sdd] tag#0 CDB: Read(16) 88 00 00 00 00 00 00 dd 80 70 00 00 00 08 00 00
+[13521.483193] blk_update_request: critical medium error, dev sdd, sector 14516336
+[13521.484969] Buffer I/O error on dev sdd1, logical block 1814286, async page read
+[13524.093833] sd 0:0:9:0: [sdd] tag#0 CDB: Read(16) 88 00 00 00 00 00 00 dd 80 70 00 00 00 08 00 00
+</code></pre><p>通过查看osd日志发现如下问题</p>
+<pre><code>-4&gt; 2018-03-08 19:53:08.955054 7feca2ec6800  2 journal read_entry 7414702080 : seq 1822676 4196207 bytes
+-3&gt; 2018-03-08 19:53:08.976400 7feca2ec6800  2 journal read_entry 7418904576 : seq 1822677 4196207 bytes
+-2&gt; 2018-03-08 19:53:08.997456 7feca2ec6800  2 journal read_entry 7423107072 : seq 1822678 4196123 bytes
+-1&gt; 2018-03-08 19:53:16.887077 7feca2ec6800 -1 journal FileJournal::wrap_read_bl: safe_read_exact 7427312370~4196207 returned -5
+ 0&gt; 2018-03-08 19:53:16.890176 7feca2ec6800 -1 os/filestore/FileJournal.cc: In function &apos;void FileJournal::wrap_read_bl(off64_t, int64_t, ceph::bufferlist*, off64_t*) const&apos; thread 7feca2ec6800 time 2018-03-08 19:53:16.887097
+os/filestore/FileJournal.cc: 1969: FAILED assert(0)
+</code></pre><p>因此判断该osd日志分区磁盘有故障。</p>
+<p><strong>修复磁盘</strong></p>
+<p>首先解挂载该osd磁盘</p>
+<p>[root@node193 ~]# umount /var/lib/ceph/osd/ceph-6/</p>
+<p>通过badblocks工具对磁盘进行坏道检测以及修复</p>
+<pre><code>[root@node193 ~]# badblocks  -s -v -c 4 -o /root/badblocks.log /dev/sdd1
+Checking blocks 0 to 10000383
+Checking for bad blocks (read-only test): done                                                 
+Pass completed, 4 bad blocks found. (4/0/0 errors)
+
+[root@node193 ~]# cat badblocks.log
+2177796
+2177797
+2177798
+2177799
+</code></pre><p>共发现4个bad block</p>
+<p>修复bad block</p>
+<pre><code>[root@node193 ~]#badblocks  -s -w  /dev/sdd1 2177799 2177796 
+</code></pre><p>(前面为结尾扇区，后面为起始扇区，可以设置区间范围大于该范围。例如2177800 2177700)</p>
+<p>修复之后再次查看坏道</p>
+<pre><code>[root@node193 ~]# badblocks  -s -v -c 4 -o /root/badblocks.log /dev/sdd1
+Checking blocks 0 to 10000383
+Checking for bad blocks (read-only test): done                                                 
+Pass completed, 0 bad blocks found. (0/0/0 errors)
+</code></pre><p>可以看到已经没有bad block了。</p>
+<p><strong>恢复osd</strong></p>
+<p>[root@node193 ~]#mount /dev/sdd2 /var/lib/ceph/osd/ceph-6/</p>
+<p>[root@node193 ~]#systemctl start cephosd@6</p>
+<p>[root@node193 ~]#systemctl reset-failed <a href="mailto:ceph-osd@6.service" target="_blank" rel="noopener">ceph-osd@6.service</a></p>
+<p>[root@node193 ~]#systemctl start ceph-osd@6</p>
+<p>[root@node193 ~]#systemctl status ceph-osd@6</p>
+<p>当osd启动之后等待一会 就会看到该osd tree显示为up了，若一段时间还是为down则刷下journal脏数据，再次启动osd</p>
+<p>[root@node193 ~]#ceph-osd -i 6 –flush-journal</p>
+<p>[root@node193 ~]#systemctl restart ceph-osd@6</p>
+<p>[root@node193 ~]#ceph osd tree</p>
+<pre><code>ID WEIGHT   TYPE NAME        UP/DOWN REWEIGHT PRIMARY-AFFINITY 
+-1 76.17947 root default                                       
+-2 25.39316     host node193                                   
+0  3.62759         osd.0         up  1.00000          1.00000 
+3  3.62759         osd.3         up  1.00000          1.00000 
+6  3.62759         osd.6         up  1.00000          1.00000 
+9  3.62759         osd.9         up  1.00000          1.00000 
+12  3.62759         osd.12        up  1.00000          1.00000 
+15  3.62759         osd.15        up  1.00000          1.00000 
+18  3.62759         osd.18        up  1.00000          1.00000 
+-3 25.39316     host node192                                   
+1  3.62759         osd.1         up  1.00000          1.00000 
+5  3.62759         osd.5         up  1.00000          1.00000 
+....
+</code></pre><p><strong>转载badblocks工具介绍</strong></p>
+<p>badblock命令用于查找磁盘中损坏的区块。 硬盘是一个损耗设备，当使用一段时间后可能会出现坏道等物理故障。电脑硬盘出现坏道后，如果不及时更换或进行技术处理，坏道就会越来越多，并会造成频繁死机和数据丢失。最好的处理方式是更换磁盘，但在临时的情况下，应及时屏蔽坏道部分的扇区，不要触动它们。badblocks就是一个很好的检查坏道位置的工具。</p>
+<p>语法</p>
+<pre><code>badblock(选项)(参数)
+选项
+-b&lt;区块大小&gt;：指定磁盘的区块大小，单位为字节；
+-o&lt;输出文件&gt;：将检查的结果写入指定的输出文件；
+-s：在检查时显示进度；
+-v：执行时显示详细的信息；
+-w：在检查时，执行写入测试。
+</code></pre><p>参数</p>
+<pre><code>磁盘装置：指定要检查的磁盘装置；
+磁盘区块数：指定磁盘装置的区块总数；
+启始区块：指定要从哪个区块开始检查。
+</code></pre><p>实例</p>
+<p>badblocks以4096的一个block，每一个block检查16次，将结果输出到“hda-badblocks-list”文件里。</p>
+<p>badblocks -b 4096 -c 16 /dev/hda1 -o hda-badblocks-list<br>hda-badblocks-list是个文本文件，内容如下：</p>
+<pre><code>cat hda-badblocks-list
+51249
+51250
+51251
+51253
+51254
+……
+61245
+……
+</code></pre><p> 逻辑坏道修复方法</p>
+<p>①、badblocks -s -w /dev/sda END START (END代表需要修复的扇区末端，START代表需要修复的扇区起始端)</p>
+<p>②、fsck -a /dev/sda</p>
+<p>修复后再用badblocks -s -v -o /root/bb.log /dev/sda监测看是否还有坏道存在，如果坏道还是存在的话说明坏道属于硬盘坏道。硬盘坏道要用隔离方法，首先记录监测出的硬盘坏道然后分区的时候把硬盘坏道所在的扇区分在一个分区（大小一般大于坏扇区大小），划分出的坏道分区不使用即可达到隔离的目的</p>
+<p>0磁道坏道和硬盘坏道（准备换硬盘）</p>
+<p>0磁道坏道的修复方法是隔离0磁道，使用fdsk划分区的时候从1磁道开始划分区。</p>
+<p>如果是硬盘坏道的话，只能隔离不能修复</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ceph</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/03/08/记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-flashcache介绍" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/03/08/flashcache介绍/">flashcache介绍</a>
+    </h1>
+  
+
+        
+        <a href="/2018/03/08/flashcache介绍/" class="archive-article-date">
+  	<time datetime="2018-03-08T13:21:33.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-08</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>简介</strong></p>
+<p>本文仅简单介绍flashcache的基本使用，安装，深度分析后期再补上。</p>
+<p>Flashcache 是facebook的一个开源方案，主要被用于数据加速。基本结构为在hdd盘前面加一层缓存，既采用固态硬盘ssd。把热数据保存在ssd中，加速数据的读写，写入的过程也是先写到ssd上，然后ssd同步到后端sata磁盘上，最后的资料将保存在sata磁盘上，这样不用担心ssd损坏会造成资料丢失的问题，同时可以有大容量，高读取速度的存储。flashcache是建立在Linux devicemapper之上的，由devicemapper在SSD和backing HDD之上创建了一个逻辑的mapped device，用户使用的就是这个mapped device。flashcache把cache（SSD）按照哈希的方式进行结构化管理。</p>
+<p><strong>安装</strong></p>
+<pre><code>$ git clone https://github.com/facebook/flashcache.git
+$ cd flashcache
+$ make
+$ make install
+</code></pre><p>安装完成后，就可以载入flashcache模块</p>
+<p>[root@node1 ~]#  modprobe flashcache</p>
+<p>使用下面命令查看模块信息：</p>
+<pre><code>[root@node1 ~]# lsmod |grep flashcache
+flashcache            102400  1 
+dm_mod                110592  11 dm_log,dm_mirror,flashcache
+</code></pre><p><strong>flashcache_create相关参数说明：</strong></p>
+<p>-p:缓存模式 </p>
+<pre><code>writeback(数据先写到SSD，随后写到普通硬盘)，
+writethrough(数据同时写到SSD和普通硬盘)，
+writearound（数据绕过SSD，直接写到普通硬盘）
+</code></pre><p>三种，三种模式的所有读都会被缓存到flashcache可以通过dev.flashcache.<cachedev>.cache_all参数调整</cachedev></p>
+<p>-s：缓存大小，可选项，如果未指定则整个SSD设备被用于缓存，默认的计数单位是扇区（sectors）,但是可以接受k/m/g单位。</p>
+<p>-b：指定块大小，可选项，默认为4KB，必须为2的指数。默认单位为扇区。也可以用K作为单位，一般选4KB。</p>
+<p>-f：强制创建，不进行检查</p>
+<p>-m：设备元数据块大小，只有writeback需要存储metadata块，默认4K</p>
+<p><strong>创建flashcache</strong></p>
+<p>1、格式化sata磁盘</p>
+<p>[root@node1 ~]# mkfs.xfs -f /dev/sdd</p>
+<p>2、创建falshcache writeback模式</p>
+<p>[root@node1 ~]# flashcache_create -p back -s 1G -b 4k cachedev /dev/sdc /dev/sdd</p>
+<p>cachedev cachedev, ssd_devname /dev/sdc, disk_devname /dev/sdd cache mode </p>
+<p>WRITE_BACK</p>
+<p>block_size 8, md_block_size 8, cache_size 2097152</p>
+<p>Flashcache metadata will use 5MB of your 1480MB main memory</p>
+<p>3、挂载使用</p>
+<p>[root@node1 ~]# mount /dev/mapper/cachedev /mnt/</p>
+<p><strong>查看flashcache统计信息</strong></p>
+<p>使用dmsetup status cachedev (缓存设备)查看缓存状态</p>
+<p>使用dmsetup table cachedev (缓存设备)查看缓存数据</p>
+<p>[root@node1 ~]# dmsetup status cachedev</p>
+<pre><code>0 20971520 flashcache stats: 
+reads(230), writes(0)
+read hits(116), read hit percent(50)
+write hits(0) write hit percent(0)
+dirty write hits(0) dirty write hit percent(0)
+replacement(0), write replacement(0)
+write invalidates(0), read invalidates(0)
+pending enqueues(0), pending inval(0)
+metadata dirties(0), metadata cleans(0)
+metadata batch(0) metadata ssd writes(0)
+cleanings(0) fallow cleanings(0)
+no room(0) front merge(0) back merge(0)
+force_clean_block(0)
+disk reads(114), disk writes(0) ssd reads(116) ssd writes(114)
+uncached reads(0), uncached writes(0), uncached IO requeue(0)
+disk read errors(0), disk write errors(0) ssd read errors(0) ssd write errors(0)
+uncached sequential reads(0), uncached sequential writes(0)
+pid_adds(0), pid_dels(0), pid_drops(0) pid_expiry(0)
+lru hot blocks(130304), lru warm blocks(130304)
+lru promotions(0), lru demotions(0)
+</code></pre><p>[root@node1 ~]# dmsetup table cachedev</p>
+<pre><code>0 20971520 flashcache conf:
+ssd dev (/dev/sdc), disk dev (/dev/sdd) cache mode(WRITE_BACK)
+capacity(1018M), associativity(512), data block size(4K) metadata block size(4096b)
+disk assoc(0K)
+skip sequential thresh(0K)
+total blocks(260608), cached blocks(114), cache percent(0)
+dirty blocks(0), dirty percent(0)
+nr_queued(0)
+Size Hist: 512:747 1024:689 1536:552 2048:853 2560:549 3072:667 3584:659 4096:203067
+</code></pre><p>或者直接查看设备状态文件</p>
+<p>[root@node1 ~]# cd /proc/flashcache/sda1+sdc3/</p>
+<p>[root@node1 sdc+sdd]# ls</p>
+<p>flashcache_errors  flashcache_iosize_hist  flashcache_pidlists  flashcache_stats       </p>
+<p>错误统计</p>
+<p>[root@node1 ~]# cat /proc/flashcache/sda1+sdc3/flashcache_errors </p>
+<p>disk_read_errors=0 disk_write_errors=0 ssd_read_errors=0 ssd_write_errors=0 memory_alloc_errors=0</p>
+<p><strong>监控flashcache信息</strong></p>
+<p>监控文件在/root/flashcache-master/utils目录下</p>
+<p>$ flashstat<br><img src="https://i.imgur.com/T2YWGaC.jpg" alt=""></p>
+<p>Flashstat的用法很简单，指定监控时间间隔（-i 默认1s），监控次数（-c 默认0表示一直监控），flashcache设备（-d 默认/dev/mapper/cachedev）即可。如果需要将结果重定向到文件，则建议关闭ANSI颜色显示，使用-n或者–nocolor选项即可。</p>
+<p>输出结果：</p>
+<pre><code>read/s                reads per second for cachedev
+write/s               writes per second for cachedev
+diskr/s               disk reads per second
+diskw/s               disk writes per second
+ssdr/s                ssd reads per second
+ssdw/s                ssd writes per second
+uread/s               uncached reads per second
+uwrit/s               uncached writes per second
+metaw/s               metadata ssd writes per second
+clean/s               cleanings per second
+repl/s                replacement per second
+wrepl/s               write replacement per second
+hit%                  read hit percent(current hit%|total hit%)
+whit%                 write hit percent(current whit%|total whit%)
+dwhit%                dirty write hit percent(current dwhit%|total dwhit%)
+</code></pre><p><strong>卸载flashcache</strong></p>
+<p>删除write backup设备的flashcache设备, 比较危险, 所有flashcache中的数据将被删除(未说明是否写脏数据).<br>writeback的flashcache设备不推荐这么做. 如果要删除的话, 建议使用dmsetup删除cache dev, 因为dmsetup会自动将脏数据写入磁盘.</p>
+<p>非back模式：</p>
+<pre><code>[root@node1 utils]#  umount /mnt
+[root@node1 utils]#  flashcache_destroy /dev/sdc  (ssd盘符)
+</code></pre><p>back模式</p>
+<pre><code>[root@node1 utils]#  umount /mnt
+[root@node1 utils]#  dmsetup remove cachedev    （缓存盘名字）
+[root@node1 utils]#  flashcache_destroy /dev/sdc  (ssd盘符)
+</code></pre>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">flashcache</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/03/08/flashcache介绍/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-ceph条带化介绍" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/03/04/ceph条带化介绍/">ceph条带化介绍</a>
+    </h1>
+  
+
+        
+        <a href="/2018/03/04/ceph条带化介绍/" class="archive-article-date">
+  	<time datetime="2018-03-04T13:59:41.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-04</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>在 RADOS 层，Ceph 本身没有条带的概念，因为一个object 是作为一个文件整体性保存的。RBD 可以控制向一个 object 的写入方式，默认是将一个 object 写满再去写下一个object；还可以通过指定 stripe_unit 和 stripe_count，来将 object 分成若干个条带即 strip。一个 RDB image 会被分为多个 object 来保存，从而使得对一个 image 的多个读写可以分在多个 object 进行，从而可以防止某个 image 非常大或者非常忙时单个节点称为性能瓶颈。还可以将 object 进一步条带化为多个条带（stripe unit）。条带（stripe）是 librados 通过 ODS 写入数据的基本单位。这么做的好处是在保持对象数目的同时，进一步减少可以同步读写的粒度（从 object 粒度减少到 stripe 粒度），从而提高读写效率。<br>
+        
+          <a class="article-more-a" href="/2018/03/04/ceph条带化介绍/#more">more >></a>
         
       
 
@@ -187,7 +529,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2018/03/01/ceph-osd基础运维/">展开全文 >></a>
+          <a class="article-more-a" href="/2018/03/04/ceph条带化介绍/">展开全文 >></a>
         </p>
       
 
@@ -230,7 +572,7 @@
 
         
         <a href="/2018/02/28/ceph-mon基础运维/" class="archive-article-date">
-  	<time datetime="2018-02-28T15:59:41.019Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-28</time>
+  	<time datetime="2018-02-28T15:59:41.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-28</time>
 </a>
         
       </header>
@@ -249,6 +591,17 @@
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ceph</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
 
       
@@ -296,7 +649,7 @@
 
         
         <a href="/2018/02/27/centos7系统默认io-scheduler介绍/" class="archive-article-date">
-  	<time datetime="2018-02-27T03:12:28.014Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-27</time>
+  	<time datetime="2018-02-27T03:12:28.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-27</time>
 </a>
         
       </header>
@@ -449,6 +802,14 @@ var _hmt = _hmt || [];
             <input type="checkbox" q-on="click:toggleTag(e)" q-attr="checked:showTags">
           </label>
           <ul class="article-tag-list" q-show="showTags">
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">ceph</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">flashcache</a>
+              </li>
             
             <div class="clearfix"></div>
           </ul>
@@ -499,27 +860,7 @@ var _hmt = _hmt || [];
         <ul class="search-ul">
           
             <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接1</a>
-            </li>
-          
-            <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接2</a>
-            </li>
-          
-            <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接3</a>
-            </li>
-          
-            <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接4</a>
-            </li>
-          
-            <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接5</a>
-            </li>
-          
-            <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接6</a>
+              <a href="/www.178pt.com" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接1</a>
             </li>
           
         </ul>
@@ -530,7 +871,7 @@ var _hmt = _hmt || [];
     
     	<section class="tools-section tools-section-me" q-show="aboutme">
   	  	
-  	  		<div class="aboutme-wrap" id="js-aboutme">很惭愧&lt;br&gt;&lt;br&gt;只做了一点微小的工作&lt;br&gt;谢谢大家</div>
+  	  		<div class="aboutme-wrap" id="js-aboutme">很惭愧&lt;br&gt;&lt;br&gt;努力学习中&lt;br&gt;谢谢大家</div>
   	  	
     	</section>
     

@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="deelaaay learning">
 <meta property="og:description" content="在一次使用fio对磁盘进行iops的测试过程中，通过iostat监控磁盘信息。发现2者显示的iops不一样。根据这个做了以下测试，以及自己的一些推断，非专业，仅供参考。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-02-27T07:31:52.464Z">
+<meta property="og:updated_time" content="2018-03-08T06:43:00.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="centos7系统下磁盘默认io scheduler介绍">
 <meta name="twitter:description" content="在一次使用fio对磁盘进行iops的测试过程中，通过iostat监控磁盘信息。发现2者显示的iops不一样。根据这个做了以下测试，以及自己的一些推断，非专业，仅供参考。">
@@ -57,9 +57,9 @@
 		<nav class="header-menu">
 			<ul>
 			
-				<li><a href="/">主页</a></li>
+				<li><a href="/                  /主页">home</a></li>
 	        
-				<li><a href="/tags/随笔/">随笔</a></li>
+				<li><a href="/categories  /分类">categories</a></li>
 	        
 			</ul>
 		</nav>
@@ -82,12 +82,6 @@
 			<div class="social">
 				
 					<a class="github" target="_blank" href="/deelaaay/github.io" title="github"><i class="icon-github"></i></a>
-		        
-					<a class="weibo" target="_blank" href="#" title="weibo"><i class="icon-weibo"></i></a>
-		        
-					<a class="rss" target="_blank" href="#" title="rss"><i class="icon-rss"></i></a>
-		        
-					<a class="zhihu" target="_blank" href="#" title="zhihu"><i class="icon-zhihu"></i></a>
 		        
 			</div>
 		</nav>
@@ -124,12 +118,6 @@
 					
 						<a class="github" target="_blank" href="/deelaaay/github.io" title="github"><i class="icon-github"></i></a>
 			        
-						<a class="weibo" target="_blank" href="#" title="weibo"><i class="icon-weibo"></i></a>
-			        
-						<a class="rss" target="_blank" href="#" title="rss"><i class="icon-rss"></i></a>
-			        
-						<a class="zhihu" target="_blank" href="#" title="zhihu"><i class="icon-zhihu"></i></a>
-			        
 				</div>
 			</nav>
 
@@ -137,9 +125,9 @@
 				<ul style="width: 50%">
 				
 				
-					<li style="width: 50%"><a href="/">主页</a></li>
+					<li style="width: 50%"><a href="/                  /主页">home</a></li>
 		        
-					<li style="width: 50%"><a href="/tags/随笔/">随笔</a></li>
+					<li style="width: 50%"><a href="/categories  /分类">categories</a></li>
 		        
 				</ul>
 			</nav>
@@ -167,7 +155,7 @@
 
         
         <a href="/2018/02/27/centos7系统默认io-scheduler介绍/" class="archive-article-date">
-  	<time datetime="2018-02-27T03:12:28.014Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-27</time>
+  	<time datetime="2018-02-27T03:12:28.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-27</time>
 </a>
         
       </header>
@@ -184,12 +172,21 @@ write-4M: (groupid=0, jobs=1): err= 0: pid=42962: Tue Feb 27 12:19:02 2018
   write: io=942080KB, bw=9396.7KB/s, iops=2, runt=100257msec
 </code></pre><p>这里看到iops=2 带宽值9.17MB/s</p>
 <p>查看同时运行的iostat的数据</p>
-<p>Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm<br>sdc               0.00         0.00    0.00        1.00     0.00  1024.00  2048.00     3.01   47.00    0.00   47.00 1000.00</p>
-<p>Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm<br>sdc               0.00        0.00    0.00        14.71     0.00 15058.82  2048.00     3.36  425.00    0.00  425.00  67.80</p>
-<p>Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm<br>sdc               0.00        0.00    0.00        12.75     0.00 13050.98  2048.00     2.94  200.62    0.00  200.62  78.77 </p>
-<p>Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm<br>sdc               0.00        0.00    0.00         8.00     0.00  8192.00  2048.00     2.95  155.50    0.00  155.50 124.88</p>
-<p>Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm<br>sdc               0.00           0.00    0.00       4.00     0.00  4096.00  2048.00     3.04 1193.25    0.00 1193.25 250.00</p>
-<p>这里的w/s每秒写入io数量分别为1   14.71  12.75  8   4   与FIO测试结果值差距很大，且每秒监控w/s值也不相同，这个是为什么呢？</p>
+<pre><code>Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  
+sdc               0.00         0.00    0.00        1.00     0.00  1024.00  2048.00     3.01   47.00    0.00   47.00 1000.00
+
+Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  
+sdc               0.00        0.00    0.00        14.71     0.00 15058.82  2048.00     3.36  425.00    0.00  425.00  67.80
+
+Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  
+sdc               0.00        0.00    0.00        12.75     0.00 13050.98  2048.00     2.94  200.62    0.00  200.62  78.77 
+
+Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  
+sdc               0.00        0.00    0.00         8.00     0.00  8192.00  2048.00     2.95  155.50    0.00  155.50 124.88
+
+Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  
+sdc               0.00           0.00    0.00       4.00     0.00  4096.00  2048.00     3.04 1193.25    0.00 1193.25 250.00
+</code></pre><p>这里的w/s每秒写入io数量分别为1   14.71  12.75  8   4   与FIO测试结果值差距很大，且每秒监控w/s值也不相同，这个是为什么呢？</p>
 <p><strong>分析：</strong></p>
 <p>1、通过avgrp-sz每次IO操作扇区数量均为2048个，通过fdisk查看每个sectors为512byte,合计计算每次IO大小为1024kb。同理计算15058/14.71=1024kb    8192/8=1024   4096/4=1024  .所以这样算来，通过iostat监控到的每次写入磁盘IO大小为1024kb,通过wKB值去除以1024就是当前监控时间磁盘的iops值。同理使用fio对象大小为4M，通过结果值9396KB/1024KB/4M=2.29  结果值显示为2.</p>
 <p>2、查看磁盘最大io scheduler </p>
@@ -199,29 +196,66 @@ write-4M: (groupid=0, jobs=1): err= 0: pid=42962: Tue Feb 27 12:19:02 2018
 <p><strong>验证：</strong></p>
 <p>1、FIO测试小文件 512kb 1M  对比</p>
 <p>1M 对比：</p>
-<p>[root@node1 ~]# fio –filename=/dev/sdc –name=write-4M –rw=write –ioengine=libaio –bs=1M –numjobs=1 –direct=1 –randrepeat=0  –iodepth=1 –runtime=100 –ramp_time=5 –size=100G –group_reporting<br>write-4M: (g=0): rw=write, bs=1M-1M/1M-1M/1M-1M, ioengine=libaio, iodepth=1<br>fio-2.2.5<br>Starting 1 process<br>Jobs: 1 (f=1): [W(1)] [100.0% done] [0KB/21418KB/0KB /s] [0/20/0 iops] [eta 00m:00s]<br>write-4M: (groupid=0, jobs=1): err= 0: pid=56204: Tue Feb 27 13:18:51 2018<br>  write: io=2500.0MB, bw=25590KB/s, iops=24, runt=100038msec</p>
+<pre><code>[root@node1 ~]# fio --filename=/dev/sdc --name=write-4M --rw=write --ioengine=libaio --bs=1M --numjobs=1 --direct=1 --randrepeat=0  --iodepth=1 --runtime=100 --ramp_time=5 --size=100G --group_reporting
+write-4M: (g=0): rw=write, bs=1M-1M/1M-1M/1M-1M, ioengine=libaio, iodepth=1
+fio-2.2.5
+Starting 1 process
+Jobs: 1 (f=1): [W(1)] [100.0% done] [0KB/21418KB/0KB /s] [0/20/0 iops] [eta 00m:00s]
+write-4M: (groupid=0, jobs=1): err= 0: pid=56204: Tue Feb 27 13:18:51 2018
+</code></pre><p>  write: io=2500.0MB, bw=25590KB/s, iops=24, runt=100038msec</p>
 <p>FIO结果 bw=25590  除以对象大小1024kb  既IOPS=24.9 与结果相符</p>
-<p>Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm<br>sdc               0.00     0.00    0.00   41.00     0.00 41984.00  2048.00     1.00   26.12    0.00   26.12  24.32  99.70</p>
-<p>Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util<br>sdc               0.00     0.00    0.00   30.00     0.00 30720.00  2048.00     1.00   32.47    0.00   32.47  33.20  99.60</p>
-<p>Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm<br>sdc               0.00     0.00    0.00   36.00     0.00 36864.00  2048.00     0.97   31.06    0.00   31.06  27.03  97.30</p>
-<p>iostat结果：扇区2048个，既单次io为1M 根据wKB除以1024kb 即为w/s值。此时队列深度均为1</p>
+<pre><code>Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  
+sdc               0.00     0.00    0.00   41.00     0.00 41984.00  2048.00     1.00   26.12    0.00   26.12  24.32  99.70
+
+Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util
+sdc               0.00     0.00    0.00   30.00     0.00 30720.00  2048.00     1.00   32.47    0.00   32.47  33.20  99.60
+
+Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  
+sdc               0.00     0.00    0.00   36.00     0.00 36864.00  2048.00     0.97   31.06    0.00   31.06  27.03  97.30
+</code></pre><p>iostat结果：扇区2048个，既单次io为1M 根据wKB除以1024kb 即为w/s值。此时队列深度均为1</p>
 <p>512kb对比：</p>
-<p>[root@node1 ~]# fio –filename=/dev/sdc –name=write-4M –rw=write –ioengine=libaio –bs=512kb  –numjobs=1 –direct=1 –randrepeat=0  –iodepth=1 –runtime=100 –ramp_time=5 –size=100G –group_reporting<br>write-4M: (g=0): rw=write, bs=512K-512K/512K-512K/512K-512K, ioengine=libaio, iodepth=1<br>fio-2.2.5<br>Starting 1 process<br>Jobs: 1 (f=1): [W(1)] [100.0% done] [0KB/25930KB/0KB /s] [0/50/0 iops] [eta 00m:00s]<br>write-4M: (groupid=0, jobs=1): err= 0: pid=8421: Tue Feb 27 13:26:02 2018<br>  write: io=1382.0MB, bw=14146KB/s, iops=27, runt=100039msec</p>
-<p> FIO结果 bw=14146  除以对象大小512kb  既IOPS=27.6 与结果相符</p>
-<p>Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm<br>sdc               0.00     0.00    0.00   49.00     0.00 25088.00  1024.00     1.00   21.41    0.00   21.41  20.37  99.80</p>
-<p>Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm<br>sdc               0.00     0.00    0.00   51.00     0.00 26112.00  1024.00     0.99   19.53    0.00   19.53  19.39  98.90</p>
-<p>Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm<br>sdc               0.00     0.00    0.00   30.00     0.00 15360.00  1024.00     1.00   31.30    0.00   31.30  33.33 100.00</p>
-<p>iostat结果：avgrq-sz 扇区数位1024 计算为单次io对象大小为512KB  avgqu-sz队列深度也均为1 。结合wKB w/s计算也相符合猜想。</p>
+<pre><code>[root@node1 ~]# fio --filename=/dev/sdc --name=write-4M --rw=write --ioengine=libaio --bs=512kb  --numjobs=1 --direct=1 --randrepeat=0  --iodepth=1 --runtime=100 --ramp_time=5 --size=100G --group_reporting
+write-4M: (g=0): rw=write, bs=512K-512K/512K-512K/512K-512K, ioengine=libaio, iodepth=1
+fio-2.2.5
+Starting 1 process
+Jobs: 1 (f=1): [W(1)] [100.0% done] [0KB/25930KB/0KB /s] [0/50/0 iops] [eta 00m:00s]
+write-4M: (groupid=0, jobs=1): err= 0: pid=8421: Tue Feb 27 13:26:02 2018
+write: io=1382.0MB, bw=14146KB/s, iops=27, runt=100039msec
+</code></pre><p> FIO结果 bw=14146  除以对象大小512kb  既IOPS=27.6 与结果相符</p>
+<pre><code>Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  
+sdc               0.00     0.00    0.00   49.00     0.00 25088.00  1024.00     1.00   21.41    0.00   21.41  20.37  99.80
+
+Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  
+sdc               0.00     0.00    0.00   51.00     0.00 26112.00  1024.00     0.99   19.53    0.00   19.53  19.39  98.90
+
+Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  
+sdc               0.00     0.00    0.00   30.00     0.00 15360.00  1024.00     1.00   31.30    0.00   31.30  33.33 100.00
+</code></pre><p>iostat结果：avgrq-sz 扇区数位1024 计算为单次io对象大小为512KB  avgqu-sz队列深度也均为1 。结合wKB w/s计算也相符合猜想。</p>
 <p>2、通过队列深度对比</p>
 <p>fio bs=4M  iodepth=16  </p>
-<p>[root@node1 ~]# fio –filename=/dev/sdc –name=write-4M –rw=write –ioengine=libaio –bs=4M  –numjobs=1 –direct=1 –randrepeat=0  –iodepth=16 –runtime=100 –ramp_time=5 –size=100G –group_reporting<br>write-4M: (g=0): rw=write, bs=4M-4M/4M-4M/4M-4M, ioengine=libaio, iodepth=16<br>fio-2.2.5<br>Starting 1 process<br>Jobs: 1 (f=0): [W(1)] [11.0% done] [0KB/29218KB/0KB /s] [0/7/0 iops] [eta 14m:33s]<br>write-4M: (groupid=0, jobs=1): err= 0: pid=25106: Tue Feb 27 13:33:00 2018<br>  write: io=10800MB, bw=108006KB/s, iops=26, runt=102394msec</p>
-<p>队列深度调到16，相比4M 深度为1的时候 iops值以及bw值均提升了很多，但是await时间也翻倍了许多。这个原因这里就不细讲。</p>
-<p>Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm<br>sdc               0.00     0.00       0.00  130.69     0.00 133829.70  2048.00    61.90  467.80    0.00  467.80   7.58  </p>
-<p>Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util<br>sdc               0.00     0.00       0.00  148.00     0.00 151552.00  2048.00    62.57  419.59    0.00  419.59   6.77 </p>
-<p>Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util<br>sdc               0.00     0.00        0.00  137.00     0.00 140288.00  2048.00    62.35  467.12    0.00  467.12   7.31 </p>
-<p>Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm<br>sdc               0.00     0.00         0.00  138.00     0.00 141312.00  2048.00    62.39  459.80    0.00  459.80   7.25 </p>
-<p>Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm<br>sdc               0.00     0.00            0.00  138.00     0.00 141312.00  2048.00    62.40  422.87    0.00  422.87   7.25 </p>
-<p>看到同样的4M对象大小，扇区数还是2048 既1M对象大小，但是avgqu-sz队列深度均接近于64 符合4M/1*16猜想。</p>
+<pre><code>[root@node1 ~]# fio --filename=/dev/sdc --name=write-4M --rw=write --ioengine=libaio --bs=4M  --numjobs=1 --direct=1 --randrepeat=0  --iodepth=16 --runtime=100 --ramp_time=5 --size=100G --group_reporting
+write-4M: (g=0): rw=write, bs=4M-4M/4M-4M/4M-4M, ioengine=libaio, iodepth=16
+fio-2.2.5
+Starting 1 process
+Jobs: 1 (f=0): [W(1)] [11.0% done] [0KB/29218KB/0KB /s] [0/7/0 iops] [eta 14m:33s] 
+write-4M: (groupid=0, jobs=1): err= 0: pid=25106: Tue Feb 27 13:33:00 2018
+write: io=10800MB, bw=108006KB/s, iops=26, runt=102394msec
+</code></pre><p>队列深度调到16，相比4M 深度为1的时候 iops值以及bw值均提升了很多，但是await时间也翻倍了许多。这个原因这里就不细讲。</p>
+<pre><code>Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  
+sdc               0.00     0.00       0.00  130.69     0.00 133829.70  2048.00    61.90  467.80    0.00  467.80   7.58  
+
+Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util
+sdc               0.00     0.00       0.00  148.00     0.00 151552.00  2048.00    62.57  419.59    0.00  419.59   6.77 
+
+Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util
+sdc               0.00     0.00        0.00  137.00     0.00 140288.00  2048.00    62.35  467.12    0.00  467.12   7.31 
+
+Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  
+sdc               0.00     0.00         0.00  138.00     0.00 141312.00  2048.00    62.39  459.80    0.00  459.80   7.25 
+
+Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  
+sdc               0.00     0.00            0.00  138.00     0.00 141312.00  2048.00    62.40  422.87    0.00  422.87   7.25 
+</code></pre><p>看到同样的4M对象大小，扇区数还是2048 既1M对象大小，但是avgqu-sz队列深度均接近于64 符合4M/1*16猜想。</p>
 <p><strong>总结：</strong></p>
 <p>块设备写入最大io大小当前为1M  ，当fio（libaio 异步写）写入对象大小大于1M的时候 根据实际大小除以1M之后的值增加了队列深度，类似同步写中增加了线程数。当应用程序fio写入对象小于1M的时候，对象不会出现split现象。</p>
 <p><strong>疑问：</strong></p>
@@ -239,47 +273,93 @@ write-4M: (groupid=0, jobs=1): err= 0: pid=42962: Tue Feb 27 12:19:02 2018
 <p>下面通过fio测试测试4M 对象 512kb对象观察</p>
 <p>1、4M对象</p>
 <p>开启3个shell窗口：运行fio   运行iostat  运行blktrace跟踪sdc盘</p>
-<p> [root@node1 4M]#fio –filename=/dev/sdc –name=write-4M –rw=write –ioengine=libaio –bs=4M  –numjobs=1 –direct=1 –randrepeat=0  –iodepth=1 –runtime=100 –ramp_time=5 –size=100G –group_reporting</p>
-<p>[root@node1 4M]#iostat -d sdc -x 1</p>
-<p>[root@node1 4M]# blktrace -d /dev/sdc</p>
-<p>当fio运行完成后，ctrl+c结束blktrace进程，当前目录下面会生成已cpu逻辑数的文件，此例为</p>
+<pre><code>[root@node1 4M]#fio --filename=/dev/sdc --name=write-4M --rw=write --ioengine=libaio --bs=4M  --numjobs=1 --direct=1 --randrepeat=0  --iodepth=1 --runtime=100 --ramp_time=5 --size=100G --group_reporting
+
+[root@node1 4M]#iostat -d sdc -x 1
+
+[root@node1 4M]# blktrace -d /dev/sdc
+</code></pre><p>当fio运行完成后，ctrl+c结束blktrace进程，当前目录下面会生成已cpu逻辑数的文件，此例为</p>
 <p>[root@node1 4M]# ls<br>sdc.blktrace.0  sdc.blktrace.1</p>
 <p>格式转换：</p>
-<p>blkparse -i sdc -d sdc.blktrace.bin</p>
-<p>取一段</p>
-<p>​    8,32   1     5084    74.637582891     0  C  WS 2516312 + 680 [0]<br>  8,32   1     5085    74.642529579     0  C  WS 2516992 + 2048 [0]<br>  8,32   1     5086    74.649161320     0  C  WS 2519040 + 2048 [0]<br>  8,32   1     5087    74.652712982     0  C  WS 2521088 + 2048 [0]<br>  8,32   1     5088    74.652974507 62470  Q  WS 2523136 + 2048 [fio]<br>  8,32   1     5089    74.652978297 62470  Q  WS 2524504 + 680 [fio]<br>  8,32   1     5090    74.652980113 62470  G  WS 2523136 + 1368 [fio]<br>  8,32   1     5091    74.652980329 62470  P   N [fio]<br>  8,32   1     5092    74.652982911 62470  G  WS 2524504 + 680 [fio]<br>  8,32   1     5093    74.653007161 62470  Q  WS 2525184 + 2048 [fio]<br>  8,32   1     5094    74.653010028 62470  G  WS 2525184 + 2048 [fio]<br>  8,32   1     5095    74.653078171 62470  Q  WS 2527232 + 2048 [fio]<br>  8,32   1     5096    74.653080948 62470  G  WS 2527232 + 2048 [fio]<br>  8,32   1     5097    74.653144055 62470  Q  WS 2529280 + 2048 [fio]<br>  8,32   1     5098    74.653146880 62470  G  WS 2529280 + 2048 [fio]<br>  8,32   1     5099    74.653149556 62470  I  WS 2523136 + 1368 [fio]<br>  8,32   1     5100    74.653149948 62470  I  WS 2524504 + 680 [fio]<br>  8,32   1     5101    74.653150068 62470  I  WS 2525184 + 2048 [fio]<br>  8,32   1     5102    74.653150198 62470  I  WS 2527232 + 2048 [fio]<br>  8,32   1     5103    74.653150307 62470  I  WS 2529280 + 2048 [fio]<br>  8,32   1     5104    74.653150650 62470  U   N [fio] 5<br>  8,32   1     5105    74.653151147 62470  D  WS 2523136 + 1368 [fio]<br>  8,32   1     5106    74.653397635 62470  D  WS 2524504 + 680 [fio]<br>  8,32   1     5107    74.653487215 62470  D  WS 2525184 + 2048 [fio]<br>  8,32   1     5108    74.653648491 62470  D  WS 2527232 + 2048 [fio]<br>  8,32   1     5109    74.653758599 62470  D  WS 2529280 + 2048 [fio]<br>  8,32   1     5110    74.800903047     0  C  WS 2523136 + 1368 [0]<br>  8,32   1     5111    74.802685792     0  C  WS 2524504 + 680 [0]<br>  8,32   1     5112    74.809983551     0  C  WS 2525184 + 2048 [0]<br>  8,32   1     5113    74.819413918     0  C  WS 2527232 + 2048 [0]<br>  8,32   1     5114    74.826425458     0  C  WS 2529280 + 2048 [0]<br>  8,32   1     5115    74.826688212 62470  Q  WS 2531328 + 2048 [fio]</p>
-<p>通过第8列就可以看到每次io大小为2048个扇区，既1M数据。</p>
+<pre><code>blkparse -i sdc -d sdc.blktrace.bin
+</code></pre><p>取一段</p>
+<pre><code>8,32   1     5084    74.637582891     0  C  WS 2516312 + 680 [0]
+8,32   1     5085    74.642529579     0  C  WS 2516992 + 2048 [0]
+8,32   1     5086    74.649161320     0  C  WS 2519040 + 2048 [0]
+8,32   1     5087    74.652712982     0  C  WS 2521088 + 2048 [0]
+8,32   1     5088    74.652974507 62470  Q  WS 2523136 + 2048 [fio]
+8,32   1     5089    74.652978297 62470  Q  WS 2524504 + 680 [fio]
+8,32   1     5090    74.652980113 62470  G  WS 2523136 + 1368 [fio]
+8,32   1     5091    74.652980329 62470  P   N [fio]
+8,32   1     5092    74.652982911 62470  G  WS 2524504 + 680 [fio]
+8,32   1     5093    74.653007161 62470  Q  WS 2525184 + 2048 [fio]
+8,32   1     5094    74.653010028 62470  G  WS 2525184 + 2048 [fio]
+8,32   1     5095    74.653078171 62470  Q  WS 2527232 + 2048 [fio]
+8,32   1     5096    74.653080948 62470  G  WS 2527232 + 2048 [fio]
+8,32   1     5097    74.653144055 62470  Q  WS 2529280 + 2048 [fio]
+8,32   1     5098    74.653146880 62470  G  WS 2529280 + 2048 [fio]
+8,32   1     5099    74.653149556 62470  I  WS 2523136 + 1368 [fio]
+8,32   1     5100    74.653149948 62470  I  WS 2524504 + 680 [fio]
+8,32   1     5101    74.653150068 62470  I  WS 2525184 + 2048 [fio]
+8,32   1     5102    74.653150198 62470  I  WS 2527232 + 2048 [fio]
+8,32   1     5103    74.653150307 62470  I  WS 2529280 + 2048 [fio]
+8,32   1     5104    74.653150650 62470  U   N [fio] 5
+8,32   1     5105    74.653151147 62470  D  WS 2523136 + 1368 [fio]
+8,32   1     5106    74.653397635 62470  D  WS 2524504 + 680 [fio]
+8,32   1     5107    74.653487215 62470  D  WS 2525184 + 2048 [fio]
+8,32   1     5108    74.653648491 62470  D  WS 2527232 + 2048 [fio]
+8,32   1     5109    74.653758599 62470  D  WS 2529280 + 2048 [fio]
+8,32   1     5110    74.800903047     0  C  WS 2523136 + 1368 [0]
+8,32   1     5111    74.802685792     0  C  WS 2524504 + 680 [0]
+8,32   1     5112    74.809983551     0  C  WS 2525184 + 2048 [0]
+8,32   1     5113    74.819413918     0  C  WS 2527232 + 2048 [0]
+8,32   1     5114    74.826425458     0  C  WS 2529280 + 2048 [0]
+8,32   1     5115    74.826688212 62470  Q  WS 2531328 + 2048 [fio]
+</code></pre><p>通过第8列就可以看到每次io大小为2048个扇区，既1M数据。</p>
 <p>第6列  G获取IO请求，Q即将生成IO请求。第4列为时间轴，可以看到以秒为单位，通过完整的数据可以看到每秒issued的IO（D 第6列）均不相同，对应iostat中avgrq-sz参数。所以每秒显示值均不同。</p>
 <p>2、512kb对象</p>
-<p>[root@node1 ~]# fio –filename=/dev/sdc –name=write-4M –rw=write –ioengine=libaio –bs=512kb  –numjobs=1 –direct=1 –randrepeat=0  –iodepth=1 –runtime=100 –ramp_time=5 –size=100G –group_reporting<br>write-4M: (g=0): rw=write, bs=512K-512K/512K-512K/512K-512K, ioengine=libaio, iodepth=1<br>fio-2.2.5<br>Starting 1 process<br>Jobs: 1 (f=1): [W(1)] [100.0% done] [0KB/10191KB/0KB /s] [0/19/0 iops] [eta 00m:00s]<br>write-4M: (groupid=0, jobs=1): err= 0: pid=48327: Tue Feb 27 15:09:04 2018<br>  write: io=1587.0MB, bw=16246KB/s, iops=31, runt=100029msec</p>
-<p>blktrace数据：</p>
-<p> 8,32   0     3446    91.662931350 48327  P   N [fio]<br>  8,32   0     3447    91.662933867 48327  I  WS 3411968 + 1024 [fio]<br>  8,32   0     3448    91.662934452 48327  U   N [fio] 1<br>  8,32   0     3449    91.662934974 48327  D  WS 3411968 + 1024 [fio]<br>  8,32   0     3450    91.680073252     0  C  WS 3411968 + 1024 [0]<br>  8,32   0     3451    91.680180307 48327  Q  WS 3412992 + 1024 [fio]<br>  8,32   0     3452    91.680185144 48327  G  WS 3412992 + 1024 [fio]<br>  8,32   0     3453    91.680185484 48327  P   N [fio]<br>  8,32   0     3454    91.680187957 48327  I  WS 3412992 + 1024 [fio]<br>  8,32   0     3455    91.680188632 48327  U   N [fio] 1<br>  8,32   0     3456    91.680189506 48327  D  WS 3412992 + 1024 [fio]<br>  8,32   0     3457    91.696710693  3360  C  WS 3412992 + 1024 [0]<br>  8,32   0     3458    91.696862267 48327  Q  WS 3414016 + 1024 [fio]<br>  8,32   0     3459    91.696866413 48327  G  WS 3414016 + 1024 [fio]<br>  8,32   0     3460    91.696866983 48327  P   N [fio]<br>  8,32   0     3461    91.696869084 48327  I  WS 3414016 + 1024 [fio]<br>  8,32   0     3462    91.696869813 48327  U   N [fio] 1<br>  8,32   0     3463    91.696870421 48327  D  WS 3414016 + 1024 [fio]<br>  8,32   0     3464    91.712655698  2719  C  WS 3414016 + 1024 [0]<br>  8,32   1    16995    91.712758397 48327  Q  WS 3415040 + 1024 [fio]<br>  8,32   1    16996    91.712763594 48327  G  WS 3415040 + 1024 [fio]<br>  8,32   1    16997    91.712763977 48327  P   N [fio]<br>  8,32   1    16998    91.712766267 48327  I  WS 3415040 + 1024 [fio]<br>  8,32   1    16999    91.712766934 48327  U   N [fio] 1<br>  8,32   1    17000    91.712767493 48327  D  WS 3415040 + 1024 [fio]<br>  8,32   1    17001    91.735700424     0  C  WS 3415040 + 1024 [0]<br>  8,32   1    17002    91.735817163 48327  Q  WS 3416064 + 1024 [fio]<br>  8,32   1    17003    91.735821770 48327  G  WS 3416064 + 1024 [fio]<br>  8,32   1    17004    91.735822084 48327  P   N [fio]</p>
-<p>可以看出每次io大小为1024个扇区，既512kb。 通过这组数据对比4M数据可以明显的看到一个io生命从Q-C 明显的512kb比较顺畅，io 等待时间明显少很多。</p>
+<pre><code>[root@node1 ~]# fio --filename=/dev/sdc --name=write-4M --rw=write --ioengine=libaio --bs=512kb  --numjobs=1 --direct=1 --randrepeat=0  --iodepth=1 --runtime=100 --ramp_time=5 --size=100G --group_reporting
+write-4M: (g=0): rw=write, bs=512K-512K/512K-512K/512K-512K, ioengine=libaio, iodepth=1
+fio-2.2.5
+Starting 1 process
+Jobs: 1 (f=1): [W(1)] [100.0% done] [0KB/10191KB/0KB /s] [0/19/0 iops] [eta 00m:00s]
+write-4M: (groupid=0, jobs=1): err= 0: pid=48327: Tue Feb 27 15:09:04 2018
+write: io=1587.0MB, bw=16246KB/s, iops=31, runt=100029msec
+</code></pre><p>blktrace数据：</p>
+<pre><code>8,32   0     3446    91.662931350 48327  P   N [fio]
+8,32   0     3447    91.662933867 48327  I  WS 3411968 + 1024 [fio]
+8,32   0     3448    91.662934452 48327  U   N [fio] 1
+8,32   0     3449    91.662934974 48327  D  WS 3411968 + 1024 [fio]
+8,32   0     3450    91.680073252     0  C  WS 3411968 + 1024 [0]
+8,32   0     3451    91.680180307 48327  Q  WS 3412992 + 1024 [fio]
+8,32   0     3452    91.680185144 48327  G  WS 3412992 + 1024 [fio]
+8,32   0     3453    91.680185484 48327  P   N [fio]
+8,32   0     3454    91.680187957 48327  I  WS 3412992 + 1024 [fio]
+8,32   0     3455    91.680188632 48327  U   N [fio] 1
+8,32   0     3456    91.680189506 48327  D  WS 3412992 + 1024 [fio]
+8,32   0     3457    91.696710693  3360  C  WS 3412992 + 1024 [0]
+8,32   0     3458    91.696862267 48327  Q  WS 3414016 + 1024 [fio]
+8,32   0     3459    91.696866413 48327  G  WS 3414016 + 1024 [fio]
+8,32   0     3460    91.696866983 48327  P   N [fio]
+8,32   0     3461    91.696869084 48327  I  WS 3414016 + 1024 [fio]
+8,32   0     3462    91.696869813 48327  U   N [fio] 1
+8,32   0     3463    91.696870421 48327  D  WS 3414016 + 1024 [fio]
+8,32   0     3464    91.712655698  2719  C  WS 3414016 + 1024 [0]
+8,32   1    16995    91.712758397 48327  Q  WS 3415040 + 1024 [fio]
+8,32   1    16996    91.712763594 48327  G  WS 3415040 + 1024 [fio]
+8,32   1    16997    91.712763977 48327  P   N [fio]
+8,32   1    16998    91.712766267 48327  I  WS 3415040 + 1024 [fio]
+8,32   1    16999    91.712766934 48327  U   N [fio] 1
+8,32   1    17000    91.712767493 48327  D  WS 3415040 + 1024 [fio]
+8,32   1    17001    91.735700424     0  C  WS 3415040 + 1024 [0]
+8,32   1    17002    91.735817163 48327  Q  WS 3416064 + 1024 [fio]
+8,32   1    17003    91.735821770 48327  G  WS 3416064 + 1024 [fio]
+8,32   1    17004    91.735822084 48327  P   N [fio]
+</code></pre><p>可以看出每次io大小为1024个扇区，既512kb。 通过这组数据对比4M数据可以明显的看到一个io生命从Q-C 明显的512kb比较顺畅，io 等待时间明显少很多。</p>
 <p>此次测试验证到此完成，关于blktrace部分，个人还不是很熟悉，不作细讲。</p>
 
       
 
-      
-        <div class="page-reward">
-          <a href="javascript:;" class="page-reward-btn tooltip-top">
-            <div class="tooltip tooltip-east">
-            <span class="tooltip-item">
-              赏
-            </span>
-            <span class="tooltip-content">
-              <span class="tooltip-text">
-                <span class="tooltip-inner">
-                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
-                  <div class="reward-box">
-                    
-                    
-                  </div>
-                </span>
-              </span>
-            </span>
-          </div>
-          </a>
-        </div>
       
     </div>
     <div class="article-info article-info-index">
@@ -489,6 +569,14 @@ var _hmt = _hmt || [];
             <input type="checkbox" q-on="click:toggleTag(e)" q-attr="checked:showTags">
           </label>
           <ul class="article-tag-list" q-show="showTags">
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">ceph</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">flashcache</a>
+              </li>
             
             <div class="clearfix"></div>
           </ul>
@@ -539,27 +627,7 @@ var _hmt = _hmt || [];
         <ul class="search-ul">
           
             <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接1</a>
-            </li>
-          
-            <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接2</a>
-            </li>
-          
-            <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接3</a>
-            </li>
-          
-            <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接4</a>
-            </li>
-          
-            <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接5</a>
-            </li>
-          
-            <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接6</a>
+              <a href="/www.178pt.com" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接1</a>
             </li>
           
         </ul>
@@ -570,7 +638,7 @@ var _hmt = _hmt || [];
     
     	<section class="tools-section tools-section-me" q-show="aboutme">
   	  	
-  	  		<div class="aboutme-wrap" id="js-aboutme">很惭愧&lt;br&gt;&lt;br&gt;只做了一点微小的工作&lt;br&gt;谢谢大家</div>
+  	  		<div class="aboutme-wrap" id="js-aboutme">很惭愧&lt;br&gt;&lt;br&gt;努力学习中&lt;br&gt;谢谢大家</div>
   	  	
     	</section>
     
