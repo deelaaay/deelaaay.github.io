@@ -8,19 +8,19 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程 | deelaaay learning</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程 在一次对ceph集群做模拟故障测试过程中，外置内核客户端挂载ceph集群，客户端开启fio进行写，dd进行读的过程中。对集群节点的某个osd磁盘进行拔盘操作。客户端读取，写入中断一段时间，之后继续恢复读写。在插入磁盘之后，发现有个其他的osd 没有up.如下图：  通过dmesg查看到如下报错 [13521.483167] sd 0">
+  <meta name="description" content="记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程 在一次对ceph集群做模拟故障测试过程中，外置内核客户端挂载ceph集群，客户端开启fio进行写，dd进行读的过程中。对集群节点的某个osd磁盘进行拔盘操作。客户端读取，写入中断一段时间，之后继续恢复读写。在插入磁盘之后，发现有个其他的osd 没有up.如下图：">
 <meta name="keywords" content="ceph">
 <meta property="og:type" content="article">
 <meta property="og:title" content="记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程">
 <meta property="og:url" content="http://yoursite.com/2018/03/08/记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程/index.html">
 <meta property="og:site_name" content="deelaaay learning">
-<meta property="og:description" content="记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程 在一次对ceph集群做模拟故障测试过程中，外置内核客户端挂载ceph集群，客户端开启fio进行写，dd进行读的过程中。对集群节点的某个osd磁盘进行拔盘操作。客户端读取，写入中断一段时间，之后继续恢复读写。在插入磁盘之后，发现有个其他的osd 没有up.如下图：  通过dmesg查看到如下报错 [13521.483167] sd 0">
+<meta property="og:description" content="记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程 在一次对ceph集群做模拟故障测试过程中，外置内核客户端挂载ceph集群，客户端开启fio进行写，dd进行读的过程中。对集群节点的某个osd磁盘进行拔盘操作。客户端读取，写入中断一段时间，之后继续恢复读写。在插入磁盘之后，发现有个其他的osd 没有up.如下图：">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://i.imgur.com/Q8BIZIN.jpg">
-<meta property="og:updated_time" content="2018-03-08T13:28:56.561Z">
+<meta property="og:updated_time" content="2018-03-08T13:43:44.605Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程">
-<meta name="twitter:description" content="记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程 在一次对ceph集群做模拟故障测试过程中，外置内核客户端挂载ceph集群，客户端开启fio进行写，dd进行读的过程中。对集群节点的某个osd磁盘进行拔盘操作。客户端读取，写入中断一段时间，之后继续恢复读写。在插入磁盘之后，发现有个其他的osd 没有up.如下图：  通过dmesg查看到如下报错 [13521.483167] sd 0">
+<meta name="twitter:description" content="记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程 在一次对ceph集群做模拟故障测试过程中，外置内核客户端挂载ceph集群，客户端开启fio进行写，dd进行读的过程中。对集群节点的某个osd磁盘进行拔盘操作。客户端读取，写入中断一段时间，之后继续恢复读写。在插入磁盘之后，发现有个其他的osd 没有up.如下图：">
 <meta name="twitter:image" content="https://i.imgur.com/Q8BIZIN.jpg">
   
     <link rel="alternative" href="/atom.xml" title="deelaaay learning" type="application/atom+xml">
@@ -60,9 +60,13 @@
 		<nav class="header-menu">
 			<ul>
 			
-				<li><a href="/                  /主页">home</a></li>
+				<li><a href="/">main</a></li>
 	        
-				<li><a href="/categories  /分类">categories</a></li>
+				<li><a href="/archives">文章</a></li>
+	        
+				<li><a href="/archives  /归档">archives</a></li>
+	        
+				<li><a href="/tags   /标签">tags</a></li>
 	        
 			</ul>
 		</nav>
@@ -114,6 +118,10 @@
 			
 				
 			
+				
+			
+				
+			
 			
 			
 			<nav class="header-nav">
@@ -125,12 +133,16 @@
 			</nav>
 
 			<nav class="header-menu js-header-menu">
-				<ul style="width: 50%">
+				<ul style="width: 70%">
 				
 				
-					<li style="width: 50%"><a href="/                  /主页">home</a></li>
+					<li style="width: 25%"><a href="/">main</a></li>
 		        
-					<li style="width: 50%"><a href="/categories  /分类">categories</a></li>
+					<li style="width: 25%"><a href="/archives">文章</a></li>
+		        
+					<li style="width: 25%"><a href="/archives  /归档">archives</a></li>
+		        
+					<li style="width: 25%"><a href="/tags   /标签">tags</a></li>
 		        
 				</ul>
 			</nav>
@@ -166,7 +178,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程</p>
-<p>在一次对ceph集群做模拟故障测试过程中，外置内核客户端挂载ceph集群，客户端开启fio进行写，dd进行读的过程中。对集群节点的某个osd磁盘进行拔盘操作。客户端读取，写入中断一段时间，之后继续恢复读写。在插入磁盘之后，发现有个其他的osd 没有up.如下图：</p>
+<p>在一次对ceph集群做模拟故障测试过程中，外置内核客户端挂载ceph集群，客户端开启fio进行写，dd进行读的过程中。对集群节点的某个osd磁盘进行拔盘操作。客户端读取，写入中断一段时间，之后继续恢复读写。在插入磁盘之后，发现有个其他的osd 没有up.如下图：<br><a id="more"></a></p>
 <p><img src="https://i.imgur.com/Q8BIZIN.jpg" alt=""></p>
 <p>通过dmesg查看到如下报错</p>
 <pre><code>[13521.483167] sd 0:0:9:0: [sdd] tag#0 FAILED Result: hostbyte=DID_OK driverbyte=DRIVER_SENSE
@@ -492,6 +504,10 @@ var _hmt = _hmt || [];
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">flashcache</a>
               </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">io</a>
+              </li>
             
             <div class="clearfix"></div>
           </ul>
@@ -542,7 +558,107 @@ var _hmt = _hmt || [];
         <ul class="search-ul">
           
             <li class="search-li">
-              <a href="/www.178pt.com" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接1</a>
+              <a href="/友" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>0</a>
+            </li>
+          
+            <li class="search-li">
+              <a href="/情" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>1</a>
+            </li>
+          
+            <li class="search-li">
+              <a href="/链" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>2</a>
+            </li>
+          
+            <li class="search-li">
+              <a href="/接" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>3</a>
+            </li>
+          
+            <li class="search-li">
+              <a href="/1" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>4</a>
+            </li>
+          
+            <li class="search-li">
+              <a href="/:" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>5</a>
+            </li>
+          
+            <li class="search-li">
+              <a href="/h" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>6</a>
+            </li>
+          
+            <li class="search-li">
+              <a href="/t" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>7</a>
+            </li>
+          
+            <li class="search-li">
+              <a href="/t" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>8</a>
+            </li>
+          
+            <li class="search-li">
+              <a href="/p" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>9</a>
+            </li>
+          
+            <li class="search-li">
+              <a href="/:" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>10</a>
+            </li>
+          
+            <li class="search-li">
+              <a href="/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>11</a>
+            </li>
+          
+            <li class="search-li">
+              <a href="/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>12</a>
+            </li>
+          
+            <li class="search-li">
+              <a href="/w" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>13</a>
+            </li>
+          
+            <li class="search-li">
+              <a href="/w" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>14</a>
+            </li>
+          
+            <li class="search-li">
+              <a href="/w" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>15</a>
+            </li>
+          
+            <li class="search-li">
+              <a href="/." target="_blank" class="search-title"><i class="icon-quo-left icon"></i>16</a>
+            </li>
+          
+            <li class="search-li">
+              <a href="/1" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>17</a>
+            </li>
+          
+            <li class="search-li">
+              <a href="/7" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>18</a>
+            </li>
+          
+            <li class="search-li">
+              <a href="/8" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>19</a>
+            </li>
+          
+            <li class="search-li">
+              <a href="/p" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>20</a>
+            </li>
+          
+            <li class="search-li">
+              <a href="/t" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>21</a>
+            </li>
+          
+            <li class="search-li">
+              <a href="/." target="_blank" class="search-title"><i class="icon-quo-left icon"></i>22</a>
+            </li>
+          
+            <li class="search-li">
+              <a href="/c" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>23</a>
+            </li>
+          
+            <li class="search-li">
+              <a href="/o" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>24</a>
+            </li>
+          
+            <li class="search-li">
+              <a href="/m" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>25</a>
             </li>
           
         </ul>
