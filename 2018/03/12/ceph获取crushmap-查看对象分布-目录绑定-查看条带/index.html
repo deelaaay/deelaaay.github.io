@@ -6,22 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>flashcache介绍 | deelaaay learning</title>
+  <title>ceph获取crushmap-查看对象分布-目录绑定-查看条带 | deelaaay learning</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="简介 本文仅简单介绍flashcache的基本使用，安装，深度分析后期再补上。 Flashcache 是facebook的一个开源方案，主要被用于数据加速。基本结构为在hdd盘前面加一层缓存，既采用固态硬盘ssd。把热数据保存在ssd中，加速数据的读写，写入的过程也是先写到ssd上，然后ssd同步到后端sata磁盘上，最后的资料将保存在sata磁盘上，这样不用担心ssd损坏会造成资料丢失的问题，同">
-<meta name="keywords" content="flashcache">
+  <meta name="description" content="获取crush  map 要获取集群的crush map，执行命令： ceph osd  getcrushmap -o {compiled-crushmap-filename} ceph将crush输出（-o）到你指定的文件，由于crush map是已编译的，所以需要反编译； crushmap反编译crush map 要反编译crush map， 执行命令： crushtool -d {compi">
+<meta name="keywords" content="ceph">
 <meta property="og:type" content="article">
-<meta property="og:title" content="flashcache介绍">
-<meta property="og:url" content="http://yoursite.com/2018/03/08/flashcache介绍/index.html">
+<meta property="og:title" content="ceph获取crushmap-查看对象分布-目录绑定-查看条带">
+<meta property="og:url" content="http://yoursite.com/2018/03/12/ceph获取crushmap-查看对象分布-目录绑定-查看条带/index.html">
 <meta property="og:site_name" content="deelaaay learning">
-<meta property="og:description" content="简介 本文仅简单介绍flashcache的基本使用，安装，深度分析后期再补上。 Flashcache 是facebook的一个开源方案，主要被用于数据加速。基本结构为在hdd盘前面加一层缓存，既采用固态硬盘ssd。把热数据保存在ssd中，加速数据的读写，写入的过程也是先写到ssd上，然后ssd同步到后端sata磁盘上，最后的资料将保存在sata磁盘上，这样不用担心ssd损坏会造成资料丢失的问题，同">
+<meta property="og:description" content="获取crush  map 要获取集群的crush map，执行命令： ceph osd  getcrushmap -o {compiled-crushmap-filename} ceph将crush输出（-o）到你指定的文件，由于crush map是已编译的，所以需要反编译； crushmap反编译crush map 要反编译crush map， 执行命令： crushtool -d {compi">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://i.imgur.com/T2YWGaC.jpg">
-<meta property="og:updated_time" content="2018-03-08T13:43:39.092Z">
+<meta property="og:updated_time" content="2018-03-12T13:11:30.611Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="flashcache介绍">
-<meta name="twitter:description" content="简介 本文仅简单介绍flashcache的基本使用，安装，深度分析后期再补上。 Flashcache 是facebook的一个开源方案，主要被用于数据加速。基本结构为在hdd盘前面加一层缓存，既采用固态硬盘ssd。把热数据保存在ssd中，加速数据的读写，写入的过程也是先写到ssd上，然后ssd同步到后端sata磁盘上，最后的资料将保存在sata磁盘上，这样不用担心ssd损坏会造成资料丢失的问题，同">
-<meta name="twitter:image" content="https://i.imgur.com/T2YWGaC.jpg">
+<meta name="twitter:title" content="ceph获取crushmap-查看对象分布-目录绑定-查看条带">
+<meta name="twitter:description" content="获取crush  map 要获取集群的crush map，执行命令： ceph osd  getcrushmap -o {compiled-crushmap-filename} ceph将crush输出（-o）到你指定的文件，由于crush map是已编译的，所以需要反编译； crushmap反编译crush map 要反编译crush map， 执行命令： crushtool -d {compi">
   
     <link rel="alternative" href="/atom.xml" title="deelaaay learning" type="application/atom+xml">
   
@@ -151,132 +149,123 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-flashcache介绍" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-ceph获取crushmap-查看对象分布-目录绑定-查看条带" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      flashcache介绍
+      ceph获取crushmap-查看对象分布-目录绑定-查看条带
     </h1>
   
 
         
-        <a href="/2018/03/08/flashcache介绍/" class="archive-article-date">
-  	<time datetime="2018-03-08T13:21:33.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-08</time>
+        <a href="/2018/03/12/ceph获取crushmap-查看对象分布-目录绑定-查看条带/" class="archive-article-date">
+  	<time datetime="2018-03-12T12:54:07.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-12</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><strong>简介</strong></p>
-<p>本文仅简单介绍flashcache的基本使用，安装，深度分析后期再补上。</p>
-<p>Flashcache 是facebook的一个开源方案，主要被用于数据加速。基本结构为在hdd盘前面加一层缓存，既采用固态硬盘ssd。把热数据保存在ssd中，加速数据的读写，写入的过程也是先写到ssd上，然后ssd同步到后端sata磁盘上，最后的资料将保存在sata磁盘上，这样不用担心ssd损坏会造成资料丢失的问题，同时可以有大容量，高读取速度的存储。flashcache是建立在Linux devicemapper之上的，由devicemapper在SSD和backing HDD之上创建了一个逻辑的mapped device，用户使用的就是这个mapped device。flashcache把cache（SSD）按照哈希的方式进行结构化管理。</p>
-<a id="more"></a>
-<p><strong>安装</strong></p>
-<pre><code>$ git clone https://github.com/facebook/flashcache.git
-$ cd flashcache
-$ make
-$ make install
-</code></pre><p>安装完成后，就可以载入flashcache模块</p>
-<p>[root@node1 ~]#  modprobe flashcache</p>
-<p>使用下面命令查看模块信息：</p>
-<pre><code>[root@node1 ~]# lsmod |grep flashcache
-flashcache            102400  1 
-dm_mod                110592  11 dm_log,dm_mirror,flashcache
-</code></pre><p><strong>flashcache_create相关参数说明：</strong></p>
-<p>-p:缓存模式 </p>
-<pre><code>writeback(数据先写到SSD，随后写到普通硬盘)，
-writethrough(数据同时写到SSD和普通硬盘)，
-writearound（数据绕过SSD，直接写到普通硬盘）
-</code></pre><p>三种，三种模式的所有读都会被缓存到flashcache可以通过dev.flashcache.<cachedev>.cache_all参数调整</cachedev></p>
-<p>-s：缓存大小，可选项，如果未指定则整个SSD设备被用于缓存，默认的计数单位是扇区（sectors）,但是可以接受k/m/g单位。</p>
-<p>-b：指定块大小，可选项，默认为4KB，必须为2的指数。默认单位为扇区。也可以用K作为单位，一般选4KB。</p>
-<p>-f：强制创建，不进行检查</p>
-<p>-m：设备元数据块大小，只有writeback需要存储metadata块，默认4K</p>
-<p><strong>创建flashcache</strong></p>
-<p>1、格式化sata磁盘</p>
-<p>[root@node1 ~]# mkfs.xfs -f /dev/sdd</p>
-<p>2、创建falshcache writeback模式</p>
-<p>[root@node1 ~]# flashcache_create -p back -s 1G -b 4k cachedev /dev/sdc /dev/sdd</p>
-<p>cachedev cachedev, ssd_devname /dev/sdc, disk_devname /dev/sdd cache mode </p>
-<p>WRITE_BACK</p>
-<p>block_size 8, md_block_size 8, cache_size 2097152</p>
-<p>Flashcache metadata will use 5MB of your 1480MB main memory</p>
-<p>3、挂载使用</p>
-<p>[root@node1 ~]# mount /dev/mapper/cachedev /mnt/</p>
-<p><strong>查看flashcache统计信息</strong></p>
-<p>使用dmsetup status cachedev (缓存设备)查看缓存状态</p>
-<p>使用dmsetup table cachedev (缓存设备)查看缓存数据</p>
-<p>[root@node1 ~]# dmsetup status cachedev</p>
-<pre><code>0 20971520 flashcache stats: 
-reads(230), writes(0)
-read hits(116), read hit percent(50)
-write hits(0) write hit percent(0)
-dirty write hits(0) dirty write hit percent(0)
-replacement(0), write replacement(0)
-write invalidates(0), read invalidates(0)
-pending enqueues(0), pending inval(0)
-metadata dirties(0), metadata cleans(0)
-metadata batch(0) metadata ssd writes(0)
-cleanings(0) fallow cleanings(0)
-no room(0) front merge(0) back merge(0)
-force_clean_block(0)
-disk reads(114), disk writes(0) ssd reads(116) ssd writes(114)
-uncached reads(0), uncached writes(0), uncached IO requeue(0)
-disk read errors(0), disk write errors(0) ssd read errors(0) ssd write errors(0)
-uncached sequential reads(0), uncached sequential writes(0)
-pid_adds(0), pid_dels(0), pid_drops(0) pid_expiry(0)
-lru hot blocks(130304), lru warm blocks(130304)
-lru promotions(0), lru demotions(0)
-</code></pre><p>[root@node1 ~]# dmsetup table cachedev</p>
-<pre><code>0 20971520 flashcache conf:
-ssd dev (/dev/sdc), disk dev (/dev/sdd) cache mode(WRITE_BACK)
-capacity(1018M), associativity(512), data block size(4K) metadata block size(4096b)
-disk assoc(0K)
-skip sequential thresh(0K)
-total blocks(260608), cached blocks(114), cache percent(0)
-dirty blocks(0), dirty percent(0)
-nr_queued(0)
-Size Hist: 512:747 1024:689 1536:552 2048:853 2560:549 3072:667 3584:659 4096:203067
-</code></pre><p>或者直接查看设备状态文件</p>
-<p>[root@node1 ~]# cd /proc/flashcache/sda1+sdc3/</p>
-<p>[root@node1 sdc+sdd]# ls</p>
-<p>flashcache_errors  flashcache_iosize_hist  flashcache_pidlists  flashcache_stats       </p>
-<p>错误统计</p>
-<p>[root@node1 ~]# cat /proc/flashcache/sda1+sdc3/flashcache_errors </p>
-<p>disk_read_errors=0 disk_write_errors=0 ssd_read_errors=0 ssd_write_errors=0 memory_alloc_errors=0</p>
-<p><strong>监控flashcache信息</strong></p>
-<p>监控文件在/root/flashcache-master/utils目录下</p>
-<p>$ flashstat<br><img src="https://i.imgur.com/T2YWGaC.jpg" alt=""></p>
-<p>Flashstat的用法很简单，指定监控时间间隔（-i 默认1s），监控次数（-c 默认0表示一直监控），flashcache设备（-d 默认/dev/mapper/cachedev）即可。如果需要将结果重定向到文件，则建议关闭ANSI颜色显示，使用-n或者–nocolor选项即可。</p>
-<p>输出结果：</p>
-<pre><code>read/s                reads per second for cachedev
-write/s               writes per second for cachedev
-diskr/s               disk reads per second
-diskw/s               disk writes per second
-ssdr/s                ssd reads per second
-ssdw/s                ssd writes per second
-uread/s               uncached reads per second
-uwrit/s               uncached writes per second
-metaw/s               metadata ssd writes per second
-clean/s               cleanings per second
-repl/s                replacement per second
-wrepl/s               write replacement per second
-hit%                  read hit percent(current hit%|total hit%)
-whit%                 write hit percent(current whit%|total whit%)
-dwhit%                dirty write hit percent(current dwhit%|total dwhit%)
-</code></pre><p><strong>卸载flashcache</strong></p>
-<p>删除write backup设备的flashcache设备, 比较危险, 所有flashcache中的数据将被删除(未说明是否写脏数据).<br>writeback的flashcache设备不推荐这么做. 如果要删除的话, 建议使用dmsetup删除cache dev, 因为dmsetup会自动将脏数据写入磁盘.</p>
-<p>非back模式：</p>
-<pre><code>[root@node1 utils]#  umount /mnt
-[root@node1 utils]#  flashcache_destroy /dev/sdc  (ssd盘符)
-</code></pre><p>back模式</p>
-<pre><code>[root@node1 utils]#  umount /mnt
-[root@node1 utils]#  dmsetup remove cachedev    （缓存盘名字）
-[root@node1 utils]#  flashcache_destroy /dev/sdc  (ssd盘符)
+        <p><strong>获取crush  map</strong></p>
+<p>要获取集群的crush map，执行命令：</p>
+<pre><code>ceph osd  getcrushmap -o {compiled-crushmap-filename}
+</code></pre><p>ceph将crush输出（-o）到你指定的文件，由于crush map是已编译的，所以需要反编译；</p>
+<h1 id="crushmap"><a href="#crushmap" class="headerlink" title="crushmap"></a>crushmap</h1><p><strong>反编译crush map</strong></p>
+<p>要反编译crush map， 执行命令：</p>
+<pre><code>crushtool -d {compiled-crushmap-filename}  -o {decompiled-crushmap-filename}
+</code></pre><p>ceph将反编译（-d）二进制crush图，且输出（-o）到你指定的文件；</p>
+<p><strong>编译crush map</strong></p>
+<p>要编译crush map，执行命令：</p>
+<pre><code>crushtool -c  {decompiled-crushmap-filename}  -o {compiled-crushmap-filename}
+</code></pre><p>　　ceph将已编译的crush map保存到你指定的文件；</p>
+<p><strong>注入crush map</strong></p>
+<p>要把crush map应用到集群，执行命令：</p>
+<pre><code>ceph osd  setcrushmap -i {compiled-crushmap-filename}
+</code></pre><p>ceph 将把你指定的已编译的crush  map输入到集群；</p>
+<h1 id="查看对象分布"><a href="#查看对象分布" class="headerlink" title="查看对象分布"></a>查看对象分布</h1><p>查看文件系统下某个文件的对象集合</p>
+<pre><code>[root@node192 jiushan-dir1]# cephfs ./10M show_layout
+WARNING: This tool is deprecated.  Use the layout.* xattrs to query and modify layouts.
+layout.data_pool:     3
+layout.object_size:   4194304
+layout.stripe_unit:   4194304
+layout.stripe_count:  1
+
+[root@node192 jiushan-dir1]# cephfs ./10M show_location 
+WARNING: This tool is deprecated.  Use the layout.* xattrs to query and modify layouts.
+location.file_offset:  0
+location.object_offset:0
+location.object_no:    0
+location.object_size:  4194304
+location.object_name:  10000001458.00000000
+location.block_offset: 0
+location.block_size:   4194304
+location.osd:          0
+
+[root@node192 jiushan-dir1]# cephfs ./10M map
+WARNING: This tool is deprecated.  Use the layout.* xattrs to query and modify layouts.
+FILE OFFSET                    OBJECT        OFFSET        LENGTH  OSD
+          0      10000001458.00000000             0       4194304  0
+    4194304      10000001458.00000001             0       4194304  5
+    8388608      10000001458.00000002             0       4194304  2
+
+
+
+[root@node248 ~]# rados -p data ls
+100000003e9.00000000
+100000003e9.00000006
+100000003e9.00000002
+100000003e9.00000008
+100000003e9.00000001
+100000003e9.00000005
+100000003e9.00000004
+100000003e9.00000009
+100000003e9.00000003
+100000003e9.00000007
+
+[root@node248 ~]# ceph osd map data   100000003e9.00000007
+osdmap e39 pool &apos;data&apos; (1) object &apos;100000003e9.00000007&apos; -&gt; pg 1.e5b260d4 (1.d4) -&gt; up ([0,4], p0) acting ([0,4], p0)
+
+[root@node ~]# ceph osd tree
+ID WEIGHT   TYPE NAME          UP/DOWN REWEIGHT PRIMARY-AFFINITY 
+ -1 18.13797 root default                                         
+ -2  7.25519     host node253                                   
+ 0  3.62759         osd.0           up  1.00000          1.00000 
+ 2  3.62759         osd.2           up  1.00000          1.00000 
+ -3  7.25519     host node250                                   
+ 1  3.62759         osd.1           up  1.00000          1.00000 
+ 3  3.62759         osd.3           up  1.00000          1.00000 
+ -4  3.62759     host node248                                   
+ 4  3.62759         osd.4           up  1.00000          1.00000 
+
+[root@node248 ~]# cd /var/lib/ceph/osd/ceph-4/current/
+[root@node248 current]# ls 1.d4_head/
+100000003e9.00000007__head_E5B260D4__1  __head_000000D4__1
+</code></pre><h1 id="目录绑定，查看条带"><a href="#目录绑定，查看条带" class="headerlink" title="目录绑定，查看条带"></a>目录绑定，查看条带</h1><p><strong>目录绑定到哪个存储池</strong></p>
+<pre><code>getfattr -n ceph.dir.layout.pool /ceph
+</code></pre><p><strong>查看文件条带</strong></p>
+<pre><code>getfattr -n ceph.file.layout file1 
+# file: file1
+ceph.file.layout=&quot;stripe_unit=4194304 stripe_count=1 object_size=4194304 pool=pool-rule-c2&quot;
+</code></pre><p>pool=存储池 </p>
+<p><strong>查看目录所有信息</strong></p>
+<pre><code>getfattr -n ceph.dir.layout nfs-1
+#file: nfs-1
+ceph.dir.layout=&quot;stripe_unit=4194304 stripe_count=1 object_size=4194304 pool=pool-rule-c2&quot;
+</code></pre><p><strong>设置 setfattr</strong></p>
+<pre><code>[root@ceph226 ceph]# getfattr -n ceph.dir.layout nfs-2
+nfs-2: ceph.dir.layout: No such attribute
+
+[root@ceph226 ceph]# setfattr -n ceph.dir.layout.pool -v pool-rule-c2 nfs-2
+[root@ceph226 ceph]# getfattr -n ceph.dir.layout.pool  nfs-2
+#file: nfs-2
+ceph.dir.layout.pool=&quot;pool-rule-c2&quot;
+
+[root@ceph226 ceph]# getfattr -n ceph.dir.layout  nfs-2
+# file: nfs-2
+ceph.dir.layout=&quot;stripe_unit=4194304 stripe_count=1 object_size=4194304 pool=pool-rule-c2&quot;
 </code></pre>
       
 
@@ -290,7 +279,7 @@ dwhit%                dirty write hit percent(current dwhit%|total dwhit%)
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">flashcache</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ceph</a>
         		</li>
       		
 		</ul>
@@ -346,7 +335,7 @@ dwhit%                dirty write hit percent(current dwhit%|total dwhit%)
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/03/08/flashcache介绍/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/03/12/ceph获取crushmap-查看对象分布-目录绑定-查看条带/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -360,18 +349,9 @@ dwhit%                dirty write hit percent(current dwhit%|total dwhit%)
   
 <nav id="article-nav">
   
-    <a href="/2018/03/08/记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程
-        
-      </div>
-    </a>
   
-  
-    <a href="/2018/03/04/ceph条带化介绍/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">ceph条带化介绍</div>
+    <a href="/2018/03/08/记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程</div>
       <i class="icon-circle-right"></i>
     </a>
   

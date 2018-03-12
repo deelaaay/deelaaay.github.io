@@ -149,6 +149,176 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-ceph获取crushmap-查看对象分布-目录绑定-查看条带" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/03/12/ceph获取crushmap-查看对象分布-目录绑定-查看条带/">ceph获取crushmap-查看对象分布-目录绑定-查看条带</a>
+    </h1>
+  
+
+        
+        <a href="/2018/03/12/ceph获取crushmap-查看对象分布-目录绑定-查看条带/" class="archive-article-date">
+  	<time datetime="2018-03-12T12:54:07.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-12</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>获取crush  map</strong></p>
+<p>要获取集群的crush map，执行命令：</p>
+<pre><code>ceph osd  getcrushmap -o {compiled-crushmap-filename}
+</code></pre><p>ceph将crush输出（-o）到你指定的文件，由于crush map是已编译的，所以需要反编译；</p>
+<h1 id="crushmap"><a href="#crushmap" class="headerlink" title="crushmap"></a>crushmap</h1><p><strong>反编译crush map</strong></p>
+<p>要反编译crush map， 执行命令：</p>
+<pre><code>crushtool -d {compiled-crushmap-filename}  -o {decompiled-crushmap-filename}
+</code></pre><p>ceph将反编译（-d）二进制crush图，且输出（-o）到你指定的文件；</p>
+<p><strong>编译crush map</strong></p>
+<p>要编译crush map，执行命令：</p>
+<pre><code>crushtool -c  {decompiled-crushmap-filename}  -o {compiled-crushmap-filename}
+</code></pre><p>　　ceph将已编译的crush map保存到你指定的文件；</p>
+<p><strong>注入crush map</strong></p>
+<p>要把crush map应用到集群，执行命令：</p>
+<pre><code>ceph osd  setcrushmap -i {compiled-crushmap-filename}
+</code></pre><p>ceph 将把你指定的已编译的crush  map输入到集群；</p>
+<h1 id="查看对象分布"><a href="#查看对象分布" class="headerlink" title="查看对象分布"></a>查看对象分布</h1><p>查看文件系统下某个文件的对象集合</p>
+<pre><code>[root@node192 jiushan-dir1]# cephfs ./10M show_layout
+WARNING: This tool is deprecated.  Use the layout.* xattrs to query and modify layouts.
+layout.data_pool:     3
+layout.object_size:   4194304
+layout.stripe_unit:   4194304
+layout.stripe_count:  1
+
+[root@node192 jiushan-dir1]# cephfs ./10M show_location 
+WARNING: This tool is deprecated.  Use the layout.* xattrs to query and modify layouts.
+location.file_offset:  0
+location.object_offset:0
+location.object_no:    0
+location.object_size:  4194304
+location.object_name:  10000001458.00000000
+location.block_offset: 0
+location.block_size:   4194304
+location.osd:          0
+
+[root@node192 jiushan-dir1]# cephfs ./10M map
+WARNING: This tool is deprecated.  Use the layout.* xattrs to query and modify layouts.
+FILE OFFSET                    OBJECT        OFFSET        LENGTH  OSD
+          0      10000001458.00000000             0       4194304  0
+    4194304      10000001458.00000001             0       4194304  5
+    8388608      10000001458.00000002             0       4194304  2
+
+
+
+[root@node248 ~]# rados -p data ls
+100000003e9.00000000
+100000003e9.00000006
+100000003e9.00000002
+100000003e9.00000008
+100000003e9.00000001
+100000003e9.00000005
+100000003e9.00000004
+100000003e9.00000009
+100000003e9.00000003
+100000003e9.00000007
+
+[root@node248 ~]# ceph osd map data   100000003e9.00000007
+osdmap e39 pool &apos;data&apos; (1) object &apos;100000003e9.00000007&apos; -&gt; pg 1.e5b260d4 (1.d4) -&gt; up ([0,4], p0) acting ([0,4], p0)
+
+[root@node ~]# ceph osd tree
+ID WEIGHT   TYPE NAME          UP/DOWN REWEIGHT PRIMARY-AFFINITY 
+ -1 18.13797 root default                                         
+ -2  7.25519     host node253                                   
+ 0  3.62759         osd.0           up  1.00000          1.00000 
+ 2  3.62759         osd.2           up  1.00000          1.00000 
+ -3  7.25519     host node250                                   
+ 1  3.62759         osd.1           up  1.00000          1.00000 
+ 3  3.62759         osd.3           up  1.00000          1.00000 
+ -4  3.62759     host node248                                   
+ 4  3.62759         osd.4           up  1.00000          1.00000 
+
+[root@node248 ~]# cd /var/lib/ceph/osd/ceph-4/current/
+[root@node248 current]# ls 1.d4_head/
+100000003e9.00000007__head_E5B260D4__1  __head_000000D4__1
+</code></pre><h1 id="目录绑定，查看条带"><a href="#目录绑定，查看条带" class="headerlink" title="目录绑定，查看条带"></a>目录绑定，查看条带</h1><p><strong>目录绑定到哪个存储池</strong></p>
+<pre><code>getfattr -n ceph.dir.layout.pool /ceph
+</code></pre><p><strong>查看文件条带</strong></p>
+<pre><code>getfattr -n ceph.file.layout file1 
+# file: file1
+ceph.file.layout=&quot;stripe_unit=4194304 stripe_count=1 object_size=4194304 pool=pool-rule-c2&quot;
+</code></pre><p>pool=存储池 </p>
+<p><strong>查看目录所有信息</strong></p>
+<pre><code>getfattr -n ceph.dir.layout nfs-1
+#file: nfs-1
+ceph.dir.layout=&quot;stripe_unit=4194304 stripe_count=1 object_size=4194304 pool=pool-rule-c2&quot;
+</code></pre><p><strong>设置 setfattr</strong></p>
+<pre><code>[root@ceph226 ceph]# getfattr -n ceph.dir.layout nfs-2
+nfs-2: ceph.dir.layout: No such attribute
+
+[root@ceph226 ceph]# setfattr -n ceph.dir.layout.pool -v pool-rule-c2 nfs-2
+[root@ceph226 ceph]# getfattr -n ceph.dir.layout.pool  nfs-2
+#file: nfs-2
+ceph.dir.layout.pool=&quot;pool-rule-c2&quot;
+
+[root@ceph226 ceph]# getfattr -n ceph.dir.layout  nfs-2
+# file: nfs-2
+ceph.dir.layout=&quot;stripe_unit=4194304 stripe_count=1 object_size=4194304 pool=pool-rule-c2&quot;
+</code></pre>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ceph</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/03/12/ceph获取crushmap-查看对象分布-目录绑定-查看条带/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -636,11 +806,11 @@ var _hmt = _hmt || [];
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">ceph</a>
+                <a href="javascript:void(0)" class="js-tag color3">io</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">io</a>
+                <a href="javascript:void(0)" class="js-tag color5">ceph</a>
               </li>
              
               <li class="article-tag-list-item">
