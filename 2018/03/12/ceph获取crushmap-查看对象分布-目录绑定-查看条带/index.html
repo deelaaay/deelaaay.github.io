@@ -8,18 +8,18 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>ceph获取crushmap-查看对象分布-目录绑定-查看条带 | deelaaay learning</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="获取crush  map 要获取集群的crush map，执行命令： ceph osd  getcrushmap -o {compiled-crushmap-filename} ceph将crush输出（-o）到你指定的文件，由于crush map是已编译的，所以需要反编译； crushmap反编译crush map 要反编译crush map， 执行命令： crushtool -d {compi">
+  <meta name="description" content="本文仅仅记录下常用命令，以备自己查询使用。 获取crush  map 要获取集群的crush map，执行命令： ceph osd  getcrushmap -o {compiled-crushmap-filename} ceph将crush输出（-o）到你指定的文件，由于crush map是已编译的，所以需要反编译； crushmap反编译crush map 要反编译crush map， 执行命">
 <meta name="keywords" content="ceph">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ceph获取crushmap-查看对象分布-目录绑定-查看条带">
 <meta property="og:url" content="http://yoursite.com/2018/03/12/ceph获取crushmap-查看对象分布-目录绑定-查看条带/index.html">
 <meta property="og:site_name" content="deelaaay learning">
-<meta property="og:description" content="获取crush  map 要获取集群的crush map，执行命令： ceph osd  getcrushmap -o {compiled-crushmap-filename} ceph将crush输出（-o）到你指定的文件，由于crush map是已编译的，所以需要反编译； crushmap反编译crush map 要反编译crush map， 执行命令： crushtool -d {compi">
+<meta property="og:description" content="本文仅仅记录下常用命令，以备自己查询使用。 获取crush  map 要获取集群的crush map，执行命令： ceph osd  getcrushmap -o {compiled-crushmap-filename} ceph将crush输出（-o）到你指定的文件，由于crush map是已编译的，所以需要反编译； crushmap反编译crush map 要反编译crush map， 执行命">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-03-12T13:11:30.611Z">
+<meta property="og:updated_time" content="2018-03-12T13:15:11.702Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ceph获取crushmap-查看对象分布-目录绑定-查看条带">
-<meta name="twitter:description" content="获取crush  map 要获取集群的crush map，执行命令： ceph osd  getcrushmap -o {compiled-crushmap-filename} ceph将crush输出（-o）到你指定的文件，由于crush map是已编译的，所以需要反编译； crushmap反编译crush map 要反编译crush map， 执行命令： crushtool -d {compi">
+<meta name="twitter:description" content="本文仅仅记录下常用命令，以备自己查询使用。 获取crush  map 要获取集群的crush map，执行命令： ceph osd  getcrushmap -o {compiled-crushmap-filename} ceph将crush输出（-o）到你指定的文件，由于crush map是已编译的，所以需要反编译； crushmap反编译crush map 要反编译crush map， 执行命">
   
     <link rel="alternative" href="/atom.xml" title="deelaaay learning" type="application/atom+xml">
   
@@ -169,15 +169,15 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><strong>获取crush  map</strong></p>
+        <p>本文仅仅记录下常用命令，以备自己查询使用。</p>
+<p><strong>获取crush  map</strong></p>
 <p>要获取集群的crush map，执行命令：</p>
 <pre><code>ceph osd  getcrushmap -o {compiled-crushmap-filename}
 </code></pre><p>ceph将crush输出（-o）到你指定的文件，由于crush map是已编译的，所以需要反编译；</p>
 <h1 id="crushmap"><a href="#crushmap" class="headerlink" title="crushmap"></a>crushmap</h1><p><strong>反编译crush map</strong></p>
 <p>要反编译crush map， 执行命令：</p>
 <pre><code>crushtool -d {compiled-crushmap-filename}  -o {decompiled-crushmap-filename}
-</code></pre><p>ceph将反编译（-d）二进制crush图，且输出（-o）到你指定的文件；</p>
-<p><strong>编译crush map</strong></p>
+</code></pre><p>ceph将反编译（-d）二进制crush图，且输出（-o）到你指定的文件；<br><a id="more"></a><br><strong>编译crush map</strong></p>
 <p>要编译crush map，执行命令：</p>
 <pre><code>crushtool -c  {decompiled-crushmap-filename}  -o {compiled-crushmap-filename}
 </code></pre><p>　　ceph将已编译的crush map保存到你指定的文件；</p>
@@ -487,11 +487,11 @@ var _hmt = _hmt || [];
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">io</a>
+                <a href="javascript:void(0)" class="js-tag color5">ceph</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">ceph</a>
+                <a href="javascript:void(0)" class="js-tag color3">io</a>
               </li>
              
               <li class="article-tag-list-item">
