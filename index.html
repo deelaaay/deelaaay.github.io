@@ -171,35 +171,10 @@
       
         <p>利用火焰图分析ceph-mds进程的cpu占用-简单介绍</p>
 <p><strong>Perf工具简介</strong></p>
-<p>它是 Linux 系统原生提供的性能分析工具，用来进行软件性能分析的工具。是linux中用于分析性能问题的一大利器，可以针对一个运行着的程序，对系统进行采样，会返回 CPU 正在执行的函数名以及调用栈（stack）。<br>通常，它的执行频率是 99Hz（每秒99次），如果99次都返回同一个函数名，那就说明 CPU 这一秒钟都在执行同一个函数，可能存在性能问题。</p>
-<p>安装</p>
-<pre><code>yum install perf
-</code></pre><p><strong>火焰图（Flame Graphs）简介：</strong></p>
-<p><a href="http://www.brendangregg.com/flamegraphs.html" target="_blank" rel="noopener">http://www.brendangregg.com/flamegraphs.html</a></p>
-<p>火焰图是基于 perf 结果产生的 svg图片，用来展示 CPU 的调用栈。<br><img src="https://i.imgur.com/rniB5kO.jpg" alt=""></p>
-<p>y 轴表示调用栈，每一层都是一个函数。调用栈越深，火焰就越高，顶部就是正在执行的函数，下方都是它的父函数。<br>x 轴表示抽样数，如果一个函数在 x 轴占据的宽度越宽，就表示它被抽到的次数多，即执行的时间长。注意，x 轴不代表时间，而是所有的调用栈合并后，按字母顺序排列的。<br>火焰图就是看顶层的哪个函数占据的宽度最大。只要有”平顶”（plateaus），就表示该函数可能存在性能问题</p>
-<p><strong>下载</strong></p>
-<p>Git  brendangregg大神的火焰图生成程序</p>
-<pre><code>git clone https://github.com/brendangress/FlameGraph
-</code></pre><p><strong>使用</strong></p>
-<p>进入到下载目录，另外窗口客户端对集群进行写操作，期间通过perf对mds进程进行采样收集。</p>
-<p>客户端写入：</p>
-<pre><code>time  dd if=/dev/zero of=a bs=1M count=1024 oflag=direct
-</code></pre><p>对mds进程进行perf测试并采样30s</p>
-<pre><code>[root@ceph01 FlameGraph]# perf record -e cpu-clock --call-graph dwarf  -p 17484 -- sleep 30 
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.327 MB perf.data (1 samples) ]
-[root@ceph01 FlameGraph]#
-</code></pre><p><strong>分析</strong></p>
-<p>首先对之前的采样结果进行整理</p>
-<pre><code>[root@ceph01 FlameGraph]# perf script | ./stackcollapse-perf.pl &gt; ceph-mds.out
-</code></pre><p>生成火焰图</p>
-<pre><code>[root@ceph01 FlameGraph]# ./flamegraph.pl ceph-mds.out &gt; ceph-mds.svg
-</code></pre><p>下载该svg文件并通过chrome浏览器打开<br><img src="https://i.imgur.com/ZcFZ2OM.jpg" alt=""><br>总结</p>
-<p>火焰图的功能不止这一点，当然perf作为linux下的性能测试的一大神器，其功能也不仅仅这一点。该PPT的内容仅作为抛砖引玉之用。</p>
-<p>参考网站 <a href="http://www.brendangregg.com/flamegraphs.html" target="_blank" rel="noopener">http://www.brendangregg.com/flamegraphs.html</a></p>
-<p>后期关于一些测试方面的经验再做分享。</p>
-
+<p>它是 Linux 系统原生提供的性能分析工具，用来进行软件性能分析的工具。是linux中用于分析性能问题的一大利器，可以针对一个运行着的程序，对系统进行采样，会返回 CPU 正在执行的函数名以及调用栈（stack）。<br>通常，它的执行频率是 99Hz（每秒99次），如果99次都返回同一个函数名，那就说明 CPU 这一秒钟都在执行同一个函数，可能存在性能问题。<br>
+        
+          <a class="article-more-a" href="/2018/03/14/利用火焰图分析ceph-mds进程的cpu占用-简单介绍/#more">more >></a>
+        
       
 
       
@@ -819,19 +794,19 @@ var _hmt = _hmt || [];
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">ceph</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">flamegraph</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">io</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">ceph</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">flashcache</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">flamegraph</a>
               </li>
             
             <div class="clearfix"></div>

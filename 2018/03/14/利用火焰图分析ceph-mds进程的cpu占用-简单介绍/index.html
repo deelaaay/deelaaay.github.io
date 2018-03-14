@@ -18,7 +18,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://i.imgur.com/rniB5kO.jpg">
 <meta property="og:image" content="https://i.imgur.com/ZcFZ2OM.jpg">
-<meta property="og:updated_time" content="2018-03-14T12:54:57.549Z">
+<meta property="og:updated_time" content="2018-03-14T12:59:08.579Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="利用火焰图分析ceph-mds进程的cpu占用-简单介绍">
 <meta name="twitter:description" content="利用火焰图分析ceph-mds进程的cpu占用-简单介绍 Perf工具简介 它是 Linux 系统原生提供的性能分析工具，用来进行软件性能分析的工具。是linux中用于分析性能问题的一大利器，可以针对一个运行着的程序，对系统进行采样，会返回 CPU 正在执行的函数名以及调用栈（stack）。通常，它的执行频率是 99Hz（每秒99次），如果99次都返回同一个函数名，那就说明 CPU 这一秒钟都在执">
@@ -174,8 +174,7 @@
       
         <p>利用火焰图分析ceph-mds进程的cpu占用-简单介绍</p>
 <p><strong>Perf工具简介</strong></p>
-<p>它是 Linux 系统原生提供的性能分析工具，用来进行软件性能分析的工具。是linux中用于分析性能问题的一大利器，可以针对一个运行着的程序，对系统进行采样，会返回 CPU 正在执行的函数名以及调用栈（stack）。<br>通常，它的执行频率是 99Hz（每秒99次），如果99次都返回同一个函数名，那就说明 CPU 这一秒钟都在执行同一个函数，可能存在性能问题。</p>
-<p>安装</p>
+<p>它是 Linux 系统原生提供的性能分析工具，用来进行软件性能分析的工具。是linux中用于分析性能问题的一大利器，可以针对一个运行着的程序，对系统进行采样，会返回 CPU 正在执行的函数名以及调用栈（stack）。<br>通常，它的执行频率是 99Hz（每秒99次），如果99次都返回同一个函数名，那就说明 CPU 这一秒钟都在执行同一个函数，可能存在性能问题。<br><a id="more"></a><br>安装</p>
 <pre><code>yum install perf
 </code></pre><p><strong>火焰图（Flame Graphs）简介：</strong></p>
 <p><a href="http://www.brendangregg.com/flamegraphs.html" target="_blank" rel="noopener">http://www.brendangregg.com/flamegraphs.html</a></p>
@@ -423,19 +422,19 @@ var _hmt = _hmt || [];
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">ceph</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">flamegraph</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">io</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">ceph</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">flashcache</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">flamegraph</a>
               </li>
             
             <div class="clearfix"></div>
