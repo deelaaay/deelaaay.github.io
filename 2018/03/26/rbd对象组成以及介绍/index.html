@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="deelaaay learning">
 <meta property="og:description" content="创建format 2格式的image 加上–image-format=2参数，下面直接看下rbd format2下有哪些对象 [root@node1 ~]# rbd create image --size 100M --image-format=2 [root@node1 ~]# rados ls -p rbd  rbd_directory rbd_id.image rbd_header.3289">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-03-26T12:48:54.011Z">
+<meta property="og:updated_time" content="2018-03-26T12:50:34.560Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="rbd对象组成以及介绍">
 <meta name="twitter:description" content="创建format 2格式的image 加上–image-format=2参数，下面直接看下rbd format2下有哪些对象 [root@node1 ~]# rbd create image --size 100M --image-format=2 [root@node1 ~]# rados ls -p rbd  rbd_directory rbd_id.image rbd_header.3289">
@@ -181,7 +181,7 @@ rbd_header.3289416b8b4567
 <pre><code>[root@node1 ~]# ceph osd map rbd rbd_id.image
 osdmap e188 pool &apos;rbd&apos; (0) object &apos;rbd_id.image&apos; -&gt; pg 0.1e6f8db0 (0.30) -&gt; up ([2,0], p2) acting ([2,0], p2)
 </code></pre><p>到osd2上 current下查看对象</p>
-<pre><code>[root@node2 ~]# cd /var/lib/vcfs/osd/ceph-2/current/0.30_head/
+<pre><code>[root@node2 ~]# cd /var/lib/ceph/osd/ceph-2/current/0.30_head/
 [root@node2 0.30_head]# ll
 total 4
  -rw-r--r-- 1 ceph ceph  0 Jan 31 15:32 __head_00000030__0
@@ -548,11 +548,11 @@ var _hmt = _hmt || [];
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">ceph</a>
+                <a href="javascript:void(0)" class="js-tag color3">io</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">io</a>
+                <a href="javascript:void(0)" class="js-tag color5">ceph</a>
               </li>
              
               <li class="article-tag-list-item">
