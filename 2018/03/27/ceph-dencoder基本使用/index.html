@@ -6,18 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>deelaaay learning</title>
+  <title>ceph-dencoder基本使用 | deelaaay learning</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="自我定位">
-<meta property="og:type" content="website">
-<meta property="og:title" content="deelaaay learning">
-<meta property="og:url" content="http://yoursite.com/page/2/index.html">
+  <meta name="description" content="本文摘自https://blog.csdn.net/scaleqiao/article/details/51987426 0 简介 贯穿Ceph OSD端数据处理的一个核心结构就是ObjectStore::Transaction，OSD处理的所有操作以及其关联的数据都会封装进入Transaction中的bufferlist结构里，这里的封装也就是序列化(encode)，它将各种数据结构无论简单或者">
+<meta name="keywords" content="ceph">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ceph-dencoder基本使用">
+<meta property="og:url" content="http://yoursite.com/2018/03/27/ceph-dencoder基本使用/index.html">
 <meta property="og:site_name" content="deelaaay learning">
-<meta property="og:description" content="自我定位">
+<meta property="og:description" content="本文摘自https://blog.csdn.net/scaleqiao/article/details/51987426 0 简介 贯穿Ceph OSD端数据处理的一个核心结构就是ObjectStore::Transaction，OSD处理的所有操作以及其关联的数据都会封装进入Transaction中的bufferlist结构里，这里的封装也就是序列化(encode)，它将各种数据结构无论简单或者">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-03-27T14:07:21.265Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="deelaaay learning">
-<meta name="twitter:description" content="自我定位">
+<meta name="twitter:title" content="ceph-dencoder基本使用">
+<meta name="twitter:description" content="本文摘自https://blog.csdn.net/scaleqiao/article/details/51987426 0 简介 贯穿Ceph OSD端数据处理的一个核心结构就是ObjectStore::Transaction，OSD处理的所有操作以及其关联的数据都会封装进入Transaction中的bufferlist结构里，这里的封装也就是序列化(encode)，它将各种数据结构无论简单或者">
   
     <link rel="alternative" href="/atom.xml" title="deelaaay learning" type="application/atom+xml">
   
@@ -147,33 +149,124 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-    <article id="post-ceph-mon基础运维" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+            <article id="post-ceph-dencoder基本使用" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/02/28/ceph-mon基础运维/">ceph-mon基础运维</a>
+    <h1 class="article-title" itemprop="name">
+      ceph-dencoder基本使用
     </h1>
   
 
         
-        <a href="/2018/02/28/ceph-mon基础运维/" class="archive-article-date">
-  	<time datetime="2018-02-28T15:59:41.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-28</time>
+        <a href="/2018/03/27/ceph-dencoder基本使用/" class="archive-article-date">
+  	<time datetime="2018-03-27T14:06:41.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-27</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>全文参考<a href="https://access.redhat.com/documentation/en-us/red_hat_ceph_storage/3/html/troubleshooting_guide/troubleshooting-monitors" target="_blank" rel="noopener">https://access.redhat.com/documentation/en-us/red_hat_ceph_storage/3/html/troubleshooting_guide/troubleshooting-monitors</a></p>
-<p>进行翻译，可以直接查看原文。<br>
-        
-          <a class="article-more-a" href="/2018/02/28/ceph-mon基础运维/#more">more >></a>
-        
+        <p>本文摘自<a href="https://blog.csdn.net/scaleqiao/article/details/51987426" target="_blank" rel="noopener">https://blog.csdn.net/scaleqiao/article/details/51987426</a></p>
+<p>0 简介</p>
+<p>贯穿Ceph OSD端数据处理的一个核心结构就是ObjectStore::Transaction，OSD处理的所有操作以及其关联的数据都会封装进入Transaction中的bufferlist结构里，这里的封装也就是序列化(encode)，它将各种数据结构无论简单或者复杂都作为字节流，存入bufferlist中。最终Transaction会由具体的ObjectStore后端实现来处理，当然，处理时会对bufferlist中的数据进行反序列化（decode）。而本文介绍的ceph-dencoder工具就是Ceph提供的可以进行encode、decode以及dump ceph相关数据结构的工具，同时它也可以用来调试以及测试Ceph不同版本之间的兼容性。今天这里主要介绍它的decode功能，其他功能大家可以自行研究。<br><a id="more"></a><br><strong>1 安装</strong></p>
+<p>ceph-dencoder工具是默认安装的。</p>
+<p><strong>2 使用</strong></p>
+<p>可以通过它的manpage或者help文档来了解它的使用</p>
+<pre><code>[root@ceph03 ~]# man ceph-dencoder  
+
+[root@ceph03 ~]# ceph-dencoder -h  
+usage: ceph-dencoder [commands ...]  
+
+  version            print version string (to stdout)  
+  import &lt;encfile&gt;   read encoded data from encfile  
+  export &lt;outfile&gt;    write encoded data to outfile  
+  set_features &lt;num&gt;  set feature bits used for encoding  
+  get_features        print feature bits (int) to stdout  
+  list_types          list supported types  
+  type &lt;classname&gt;    select in-memory type  
+  skip &lt;num&gt;          skip &lt;num&gt; leading bytes before decoding  
+  decode              decode into in-memory object  
+  encode              encode in-memory object  
+  dump_json           dump in-memory object as json (to stdout)  
+  copy                copy object (via operator=)  
+  copy_ctor           copy object (via copy ctor)  
+  count_tests         print number of generated test objects (to stdout)  
+  select_test &lt;n&gt;     select generated test object as in-memory object  
+  is_deterministic    exit w/ success if type encodes deterministically  
+</code></pre><p>它的用法比较简单，即ceph-dencoder跟上相应的子命令即可。<br>在具体使用时，可以通过以下命令查看ceph-dencoder当前支持哪些结构：</p>
+<pre><code>ceph-dencoder list_types  
+</code></pre><p>要确定需要通过哪种结构来进行数据解析，只能通过阅读源码，找到encode数据时，数据对应的数据结构。</p>
+<p><strong>3 使用事例</strong></p>
+<p>下面以查看object的object_info信息为例，介绍一下这个工具的使用。</p>
+<p>在使用XFS作为后端存储时，一个object就对应一个文件，obejct的object_info信息通常是作为文件的扩展属性存在的。</p>
+<p>首先先找到一个object对应的文件，并查看object文件的扩展属性，这里会用到XFS一个工具attr，主要用于操作XFS文件的扩展属性的：</p>
+<pre><code>[root@ceph02 0.10_head]# rados ls -p rbd
+rbd_header.d3652ae8944a
+rbd_directory
+rbd_id.test
+</code></pre><p>查看ceph osd map rbd rbd_header.d3652ae8944a  找到对应的osd</p>
+<pre><code>[root@ceph02 0.10_head]# 
+[root@ceph02 0.10_head]# attr -l rbd\\uheader.d3652ae8944a__head_9EB01B90__0 
+Attribute &quot;cephos.spill_out&quot; has a 2 byte value for rbd\uheader.d3652ae8944a__head_9EB01B90__0
+Attribute &quot;ceph._lock.rbd_lock&quot; has a 23 byte value for rbd\uheader.d3652ae8944a__head_9EB01B90__0
+Attribute &quot;ceph._&quot; has a 250 byte value for rbd\uheader.d3652ae8944a__head_9EB01B90__0
+Attribute &quot;ceph._@1&quot; has a 250 byte value for rbd\uheader.d3652ae8944a__head_9EB01B90__0
+Attribute &quot;ceph._@2&quot; has a 92 byte value for rbd\uheader.d3652ae8944a__head_9EB01B90__0
+Attribute &quot;ceph.snapset&quot; has a 31 byte value for rbd\uheader.d3652ae8944a__head_9EB01B90__0
+</code></pre><p>从上面的输出可以看到扩展属性中总共有3部分，其中”ceph.<em>“和”ceph.</em>@1”，”ceph.<em>@2”应该算是一部分，因为ceph.</em>超出了XFS扩展属性的长度限制，所以拆成了3个。而它里面就存放了我们要找的object_info_t的数据。”cephos.spill_out”是一个两个字节的字符数组，用于记录文件的扩展属性是否溢出到了Omap里，一般它的值是“0”或者“1”，“0”就是源码里的宏定义XATTR_NO_SPILL_OUT，表示没有溢出，而“1”是XATTR_SPILL_OUT，表示有溢出。“ceph.snapset”用来记录和Object相关的Snapshot信息，它的数据以SnapSet这个结构的形式存在。</p>
+<p>另外还有一个通用的命令getfattr也可以干类似的事情。</p>
+<pre><code>[root@ceph02 0.10_head]# getfattr -d rbd\\uheader.d3652ae8944a__head_9EB01B90__0 -m &apos;user\.ceph\._&apos;
+# file: rbd\134uheader.d3652ae8944a__head_9EB01B90__0
+user.ceph._=0sDwhKAgAABAM4AAAAAAAAABcAAAByYmRfaGVhZGVyLmQzNjUyYWU4OTQ0Yf7/////////kBuwngAAAAAAAAAAAAAAAAAGAxwAAAAAAAAAAAAAAP////8AAAAAAAAAAP//////////AAAAAAoAAAAAAAAAOAAAAAkAAAAAAAAAOAAAAAICFQAAAAhr0wAAAAAAAAIAAAAAAAAAAQAAAAAAAAAAAAAAIki6WizsNiECAhUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAIa9MAAAAAAAAEA5QAAAABAAAAAAAAAB4AAAAAAA==
+user.ceph._@1=0sAADTQ2beAAIAAMCoAakAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAQAAAAEAAAAAAAAACGvTAAAAAAAABAOUAAAAAQAAAAAAAAAeAAAAAAAAANNDZt4AAgAAwKgBqQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==
+user.ceph._@2=0sAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHAAAACJIulr/91Ah//////////8=
+user.ceph._lock.rbd_lock=0sAQERAAAAAAAAAAEIAAAAaW50ZXJuYWw=
+</code></pre><p>接着，我们将扩展属性中的数据dump到一个文件当中，注意应该将”ceph.<em>“和”ceph.</em>@1”，”ceph._@1”的数据拼起来。</p>
+<pre><code>[root@ceph02 0.10_head]# attr -q -g &quot;ceph._&quot; rbd\\uheader.d3652ae8944a__head_9EB01B90__0  &gt; 1.txt
+[root@ceph02 0.10_head]# attr -q -g &quot;ceph._@1&quot; rbd\\uheader.d3652ae8944a__head_9EB01B90__0  &gt;&gt; 1.txt
+[root@ceph02 0.10_head]# attr -q -g &quot;ceph._@2&quot; rbd\\uheader.d3652ae8944a__head_9EB01B90__0  &gt;&gt; 1.txt 
+</code></pre><p>最后使用ceph-dencoder工具将其内容解析出来。</p>
+<pre><code>[root@ceph02 0.10_head]# ceph-dencoder import 1.txt type object_info_t decode dump_json
+{
+&quot;oid&quot;: {
+    &quot;oid&quot;: &quot;rbd_header.d3652ae8944a&quot;,
+    &quot;key&quot;: &quot;&quot;,
+    &quot;snapid&quot;: -2,
+    &quot;hash&quot;: 2662341520,
+    &quot;max&quot;: 0,
+    &quot;pool&quot;: 0,
+    &quot;namespace&quot;: &quot;&quot;
+},
+&quot;version&quot;: &quot;56&apos;10&quot;,
+&quot;prior_version&quot;: &quot;56&apos;9&quot;,
+&quot;last_reqid&quot;: &quot;client.54123.1:2&quot;,
+&quot;user_version&quot;: 8,
+&quot;size&quot;: 0,
+&quot;mtime&quot;: &quot;2018-03-27 21:33:22.557247&quot;,
+&quot;local_mtime&quot;: &quot;2018-03-27 21:33:22.558954&quot;,
+&quot;lost&quot;: 0,
+&quot;flags&quot;: 28,
+&quot;snaps&quot;: [],
+&quot;truncate_seq&quot;: 0,
+&quot;truncate_size&quot;: 0,
+&quot;data_digest&quot;: 4294967295,
+&quot;omap_digest&quot;: 4294967295,
+&quot;watchers&quot;: {
+    &quot;client.54123&quot;: {
+        &quot;cookie&quot;: 1,
+        &quot;timeout_seconds&quot;: 30,
+        &quot;addr&quot;: {
+            &quot;nonce&quot;: 3731243987,
+            &quot;addr&quot;: &quot;192.168.1.169:0&quot;
+        }
+    }
+}
+}
+</code></pre><p>后期遇到详细学习。仅做记录。</p>
+
       
 
       
@@ -195,16 +288,75 @@
       
 
       
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/02/28/ceph-mon基础运维/">展开全文 >></a>
-        </p>
-      
 
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/03/27/ceph-dencoder基本使用/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
       
       <div class="clearfix"></div>
     </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2018/03/27/ceph-kvstore-tool工具简单介绍/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">ceph-kvstore-tool工具简单介绍</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
 
 <aside class="wrap-side-operation">
     <div class="mod-side-operation">
@@ -224,88 +376,14 @@
 
 
 
-
-  
-    <article id="post-centos7系统默认io-scheduler介绍" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/02/27/centos7系统默认io-scheduler介绍/">centos7系统下磁盘默认io scheduler介绍</a>
-    </h1>
-  
-
-        
-        <a href="/2018/02/27/centos7系统默认io-scheduler介绍/" class="archive-article-date">
-  	<time datetime="2018-02-27T03:12:28.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-27</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>在一次使用fio对磁盘进行iops的测试过程中，通过iostat监控磁盘信息。发现2者显示的iops不一样。根据这个做了以下测试，以及自己的一些推断，非专业，仅供参考。<br>
-        
-          <a class="article-more-a" href="/2018/02/27/centos7系统默认io-scheduler介绍/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">io</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/02/27/centos7系统默认io-scheduler介绍/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
   
   
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
-    </nav>
+  
+
+  
+
+  
+
   
 
 
@@ -328,8 +406,8 @@
     <script>
 	var yiliaConfig = {
 		mathjax: false,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,
