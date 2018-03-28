@@ -6,20 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>ceph条带化介绍 | deelaaay learning</title>
+  <title>ceph 多区域radosgw网关配置 | deelaaay learning</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="在 RADOS 层，Ceph 本身没有条带的概念，因为一个object 是作为一个文件整体性保存的。RBD 可以控制向一个 object 的写入方式，默认是将一个 object 写满再去写下一个object；还可以通过指定 stripe_unit 和 stripe_count，来将 object 分成若干个条带即 strip。一个 RDB image 会被分为多个 object 来保存，从而使得对">
+  <meta name="description" content="一、本文环境 2台虚拟机部署2套ceph集群。2个节点分别作为不同集群的radosgw网关。 Cluster1    节点名： ceph01   ip :  192.168.0.39 Cluster2    节点名： ceph02   ip :  192.168.1.169">
 <meta name="keywords" content="ceph">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ceph条带化介绍">
-<meta property="og:url" content="http://yoursite.com/2018/03/04/ceph条带化介绍/index.html">
+<meta property="og:title" content="ceph 多区域radosgw网关配置">
+<meta property="og:url" content="http://yoursite.com/2018/03/28/ceph-多区域radosgw网关配置/index.html">
 <meta property="og:site_name" content="deelaaay learning">
-<meta property="og:description" content="在 RADOS 层，Ceph 本身没有条带的概念，因为一个object 是作为一个文件整体性保存的。RBD 可以控制向一个 object 的写入方式，默认是将一个 object 写满再去写下一个object；还可以通过指定 stripe_unit 和 stripe_count，来将 object 分成若干个条带即 strip。一个 RDB image 会被分为多个 object 来保存，从而使得对">
+<meta property="og:description" content="一、本文环境 2台虚拟机部署2套ceph集群。2个节点分别作为不同集群的radosgw网关。 Cluster1    节点名： ceph01   ip :  192.168.0.39 Cluster2    节点名： ceph02   ip :  192.168.1.169">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-03-08T13:39:40.217Z">
+<meta property="og:updated_time" content="2018-03-28T14:07:43.015Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ceph条带化介绍">
-<meta name="twitter:description" content="在 RADOS 层，Ceph 本身没有条带的概念，因为一个object 是作为一个文件整体性保存的。RBD 可以控制向一个 object 的写入方式，默认是将一个 object 写满再去写下一个object；还可以通过指定 stripe_unit 和 stripe_count，来将 object 分成若干个条带即 strip。一个 RDB image 会被分为多个 object 来保存，从而使得对">
+<meta name="twitter:title" content="ceph 多区域radosgw网关配置">
+<meta name="twitter:description" content="一、本文环境 2台虚拟机部署2套ceph集群。2个节点分别作为不同集群的radosgw网关。 Cluster1    节点名： ceph01   ip :  192.168.0.39 Cluster2    节点名： ceph02   ip :  192.168.1.169">
   
     <link rel="alternative" href="/atom.xml" title="deelaaay learning" type="application/atom+xml">
   
@@ -149,219 +149,133 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-ceph条带化介绍" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-ceph-多区域radosgw网关配置" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      ceph条带化介绍
+      ceph 多区域radosgw网关配置
     </h1>
   
 
         
-        <a href="/2018/03/04/ceph条带化介绍/" class="archive-article-date">
-  	<time datetime="2018-03-04T13:59:41.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-04</time>
+        <a href="/2018/03/28/ceph-多区域radosgw网关配置/" class="archive-article-date">
+  	<time datetime="2018-03-28T14:06:36.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-28</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>在 RADOS 层，Ceph 本身没有条带的概念，因为一个object 是作为一个文件整体性保存的。RBD 可以控制向一个 object 的写入方式，默认是将一个 object 写满再去写下一个object；还可以通过指定 stripe_unit 和 stripe_count，来将 object 分成若干个条带即 strip。一个 RDB image 会被分为多个 object 来保存，从而使得对一个 image 的多个读写可以分在多个 object 进行，从而可以防止某个 image 非常大或者非常忙时单个节点称为性能瓶颈。还可以将 object 进一步条带化为多个条带（stripe unit）。条带（stripe）是 librados 通过 ODS 写入数据的基本单位。这么做的好处是在保持对象数目的同时，进一步减少可以同步读写的粒度（从 object 粒度减少到 stripe 粒度），从而提高读写效率。<br><a id="more"></a><br>Ceph 的条带化行为（如果划分条带和如何写入条带）受三个参数控制： </p>
-<p><strong>object-size(cephfs),order(rbd,默认为22)</strong>：默认对象大小为4MB。 </p>
-<p><strong>stripe_unit：</strong>条带（stripe unit）的大小。每个 [stripe_unit] 的连续字节会被连续地保存到同一个对象中，client 写满 stripe unit 大小的数据后，接着去下一个 object 中写下一个 stripe unit 大小的数据。默认为 1，此时一个 stripe 就是一个 object。</p>
-<p><strong>stripe_count：</strong>在分别写入了 [stripe_unit] 个字节到 [stripe_count] 个对象后，ceph 又重新从一个新的对象开始写下一个条带，直到该对象达到了它的最大大小。这时候，ceph 转移到下 [stripe_unit] 字节。默认为 object site。</p>
-<p>举例：32M的rbd image，object_size=4M,stripe_unit=1M,stripe_count=4  </p>
-<p>分析：</p>
-<ol>
-<li>RBD image 会被保存在总共 8 个 RADOS object （计算方式为 client data size 除以 2^[order]单位：字节）中。 </li>
-<li>stripe_unit 为 object size 的四分之一，也就是说每个 object 包含 4 个 stripe(1M)。 </li>
-<li>stripe_count 为 4，即每个 object set 包含四个 object。这样，client 以 4 为一个循环，向一个 object set 中的每个 object 依次写入 stripe，写到第 16 个 stripe 后，按照同样的方式写第二个 object set。</li>
-</ol>
-<pre><code> ---                       object set 0                          ---
- /---------\    /---------\         /---------\    /---------\  
-| obj_0 4M|    | obj_1 4M|         | obj_2 4M|   | obj_3 4M|
-|=========|    |=========|         |=========|    |=========|
-| stripe  |    | stripe  |         | stripe  |    | stripe  |
-| unit 0  |    | unit 1  |         | unit 2  |    | unit 3  |
-   1M             1M                   1M             1M
-|---------|    |---------|         |---------|    |---------|
-| stripe  |    | stripe  |         | stripe  |    | stripe  |
-| unit 4  |    | unit 5  |         | unit 6  |    | unit 7  |
-|---------|    |---------|         |---------|    |---------|
-|---------|    |---------|         |---------|    |---------|
-| stripe  |    | stripe  |         | stripe  |    | stripe  |
-| unit 8  |    | unit 9  |         | unit 10  |   | unit 11 |
-|---------|    |---------|         |---------|    |---------|       
-|---------|    |---------|         |---------|    |---------|
-| stripe  |    | stripe  |         | stripe  |    | stripe  |
-| unit 12 |   | unit 13  |         | unit14  |    | unit 15 |
-|---------|    |---------|         |---------|    |---------|       
+        <p>一、本文环境</p>
+<p>2台虚拟机部署2套ceph集群。2个节点分别作为不同集群的radosgw网关。</p>
+<p>Cluster1    节点名： ceph01   ip :  192.168.0.39</p>
+<p>Cluster2    节点名： ceph02   ip :  192.168.1.169<br><a id="more"></a><br>二，概念：        </p>
+<p>  zone：包含多个RGW实例的一个逻辑概念。zone不能跨集群。同一个zone的数据保存在同一组pool中。     本例中每个zone只有一个RGW实例。</p>
+<p>  zonegroup：一个zonegroup如果包含1个或多个zone。如果一个zonegroup包含多个zone，必须指定 一个zone作为master zone，用来处理bucket和用户的创建。一个集群可以创建多个zonegroup，一个zonegroup也可以跨多个集群。     本例中只有一个zonegroup,跨2个集群，每个集群只有一个zone,分别作为master和从zone.</p>
+<p>  realm：一个realm包含1个或多个zonegroup。如果realm包含多个zonegroup，必须指定一个zonegroup为master zonegroup， 用来处理系统操作。一个系统中可以包含多个realm，多个realm之间资源完全隔离。    本例 只有一个realm,包含一个zonegroup. </p>
+<p>  RGW多活方式是在同一zonegroup的多个zone之间进行，即同一zonegroup中多个zone之间的数据是完全一致的，用户可以通过任意zone读写同一份数据。 但是，对元数据的操作，比如创建桶、创建用户，仍然只能在master zone进行。对数据的操作，比如创建桶中的对象，访问对象等，可以在任意zone中 处理。</p>
+<p>三、在Cluster1集群上配置master zone</p>
+<p>创建realm</p>
+<pre><code>radosgw-admin realm create --rgw-realm=aaa --default
+[root@ceph01 ~]# radosgw-admin realm list
+{
+&quot;default_info&quot;: &quot;eff9b039-8c3c-4991-87f9-e9331b2c7824&quot;,
+&quot;realms&quot;: [
+    &quot;aaa&quot;
+    ]
+}
+</code></pre><p>创建master zonegroup,先删除默认的zonegroup</p>
+<pre><code>radosgw-admin zonegroup delete --rgw-zonegroup=default
+</code></pre><p>创建一个为azonggroup的zonegroup</p>
+<pre><code>radosgw-admin zonegroup create --rgw-zonegroup=azonegroup --endpoints=192.168.0.39:7480 --master --default
+</code></pre><p>创建master zone,先删除默认的zone</p>
+<pre><code>adosgw-admin zone delete --rgw-zone=default
+</code></pre><p>创建一个为azone的zone</p>
+<pre><code>radosgw-admin zone create --rgw-zonegroup=azonegroup --rgw-zone=azone --endpoints=192.168.0.39:7480 --default --master
+</code></pre><p>创建一个auser账户用于和bzone zone同步</p>
+<pre><code>radosgw-admin user create --uid=&quot;auser&quot; --display-name=&quot;auser&quot; --system
+</code></pre><p>用创建auser账户产生的access 和secret更新zone配置</p>
+<pre><code>radosgw-admin zone modify --rgw-zone=azone --access-key=BKG10IM15N8EB0I7ZE7U --secret=Cvh60vBX5ciujqRaLw3bm6wMIGmLdlJ9FB4ukOG
+</code></pre><p>更新period</p>
+<pre><code>radosgw-admin period update --commit
+</code></pre><p>修改配置ceph.conf</p>
+<pre><code>[client.rgw.ceph-1]
 
+host = ceph-1
 
- ---                       object set 1                         ---
- /---------\    /---------\         /---------\    /---------\  
-| obj_4 4M|    | obj_5 4M|         | obj_6 4M|    | obj_7 4M|
-|=========|    |=========|         |=========|    |=========|
-| stripe  |    | stripe  |         | stripe  |    | stripe  |
-| unit 0  |    | unit 1  |         | unit 2  |    | unit 3  |
-   1M             1M                   1M             1M
-|---------|    |---------|         |---------|    |---------|
-| stripe  |    | stripe  |         | stripe  |    | stripe  |
-| unit 4  |    | unit 5  |         | unit 6  |    | unit 7  |
-|---------|    |---------|         |---------|    |---------|
-|---------|    |---------|         |---------|    |---------|
-| stripe  |    | stripe  |         | stripe  |    | stripe  |
-| unit 8  |    | unit 9  |         | unit 10  |   | unit 11 |
-|---------|    |---------|         |---------|    |---------|       
-|---------|    |---------|         |---------|    |---------|
-| stripe  |    | stripe  |         | stripe  |    | stripe  |
-| unit 12 |   | unit 13  |         | unit14  |    | unit 15 |
-|---------|    |---------|         |---------|    |---------| 
-</code></pre><p>默认的情况下，[stripe_unit] 等于 object size；stripe_count 为1。意味着 ceph client 在将第一个 object 写满后再去写下一个 object。</p>
-<p><strong>cephfs</strong></p>
-<p>cephfs也同样支持配置file layout，可以控制file分配到指定的ceph rados objects上，这些信息是写在file/dir的xattrs上。</p>
-<p>文件的layout xattrs为：ceph.file.layout</p>
-<p>目录的layout xattrs为：ceph.dir.layout</p>
-<p>目录中的文件和子目录默认继承父目录的layout配置</p>
-<p>支持的layout配置项有：</p>
-<p>pool： file的数据存储在哪个RADOS pool里</p>
-<p>namespace： file的数据存储在RADOS pool里的哪个namespace里，但现在rbd/rgw/cephfs都还不支持</p>
-<p>stripe_unit：  条带的大小，以Bytes为单位</p>
-<p>stripe_count：  条带的个数</p>
-<p>比如，stripe_unit=512kb，stripe_count=2，默认object size是4MB，则file写10MB的数据分配如下：<br>（stripe_count=2表示2个对象（每个对象大小为4M）为一个对象集，接受stripe_unit单位大小的连续字节循环写入。此时写入10M文件，则除以stripe_unit等于20个条带对象，循环写入到每个对象集中的每个对象，当一个对象集里面对象都写满后，剩下的条带对象写入到第二个对象集中,然后每个对象写入到不同的osd中去）</p>
-<pre><code> --- object set 0 ---                   --- object set 1 ---
-/---------\    /---------\         /---------\    /---------\  
-| obj_0 4M|    | obj_1 4M|         | obj_M2 4M|   | obj_3 4M|
-|=========|    |=========|         |=========|    |=========|
-| stripe  |    | stripe  |         | stripe  |    | stripe  |
-| unit 0  |    | unit 1  |         | unit 0  |    | unit 1  |
-   512KB          512KB              512KB          512KB
-|---------|    |---------|         |---------|    |---------|
-| stripe  |    | stripe  |         | stripe  |    | stripe  |
-| unit 2  |    | unit 3  |         | unit 2  |    | unit 3  |
-|---------|    |---------|         \=========/    \=========/
-| stripe  |    | stripe  |
-| unit 4  |    | unit 5  |            osd 16         osd 20
-|---------|    |---------|         
-| stripe  |    | stripe  |         
-| unit 6  |    | unit 7  |         
-|---------|    |---------|         
-| stripe  |    | stripe  |         
-| unit 8  |    | unit 9  |         
-|---------|    |---------|         
-| stripe  |    | stripe  |         
-| unit 10 |    | unit 11 |         
-|---------|    |---------|         
-| stripe  |    | stripe  |         
-| unit 12 |    | unit 13 |         
-|---------|    |---------|         
-| stripe  |    | stripe  |         
-| unit 14 |    | unit 15 |         
-\=========/    \=========/        
-   osd 25         osd 3
-</code></pre><p><strong>验证file stripe</strong></p>
-<pre><code># mount -t ceph 192.168.0.31:/ /vcfs
-# mkdir /vcfs/vcfs/test
-# setfattr -n ceph.dir.layout -v &quot;stripe_unit=524288 stripe_count=8 object_size=4194304 pool=cephfs_data2&quot; /vcfs/vcfs/test
+rgw frontends = &quot;civetweb port=7480&quot;
 
-# getfattr -n ceph.dir.layout /vcfs/vcfs/test
-getfattr: Removing leading &apos;/&apos; from absolute path names # file: vcfs/vcfs/test
-ceph.dir.layout=&quot;stripe_unit=524288 stripe_count=8 object_size=4194304 pool=data&quot;
+rgw_zone=azone
+</code></pre><p>重启radosgw服务</p>
+<pre><code>systemctl restart ceph-radosgw@rgw.ceph01
+</code></pre><p>四、在Cluster2集群上配置slave zone</p>
+<p>从master zone拉取realm</p>
+<pre><code>[root@ceph02 ceph]#radosgw-admin realm pull --url=192.168.0.39:7480 --access-key=BKG10IM15N8EB0I7ZE7U --secret=Cvh60vBX5ciujqRaLw3bm6wMIGmLdlJ9FB4ukOGC
+</code></pre><p>注意：这里的access key 和secret是master zone上auser 账户的access key和secret</p>
+<p>拉取period</p>
+<pre><code>[root@ceph02 ceph]# radosgw-admin period pull --url=192.168.0.39:7480 --access-key=BKG10IM15N8EB0I7ZE7U --secret=Cvh60vBX5ciujqRaLw3bm6wMIGmLdlJ9FB4ukOGC
+</code></pre><p>注意：这里的access key 和secret是master zone上auser 账户的access key和secret</p>
+<p>创建slave zone，名称为bzone</p>
+<pre><code>[root@ceph02 ceph]# radosgw-admin zone create --rgw-zonegroup=azonegroup --rgw-zone=bzone --access-key=BKG10IM15N8EB0I7ZE7U --secret=Cvh60vBX5ciujqRaLw3bm6wMIGmLdlJ9FB4ukOGC --endpoints=192.168.1.169:7480
+[root@ceph02 ceph]# radosgw-admin zone list
+{
+&quot;default_info&quot;: &quot;118aa9b6-458f-4b4e-9aa8-1c3577bf8dd6&quot;,
+&quot;zones&quot;: [
+    &quot;bzone&quot;,
+    &quot;default&quot;
+]
+}
+</code></pre><p> 注意：这里的access key 和secret是master zone上auser 账户的access key和secret</p>
+<p>更新period</p>
+<pre><code>[root@ceph02 ceph]#radosgw-admin period update --commit
+</code></pre><p>有如下警告，只需要更新libcurl既可</p>
+<pre><code>2018-03-28 18:07:46.941333 7f27d9f499c0  0 WARNING: detected a version of libcurl which contains a bug in curl_multi_wait(). enabling a workaround that may degrade performance slightly.
 
+[root@ceph02 ceph]# yum update libcurl -y
+</code></pre><p>修改配置ceph.conf</p>
+<pre><code>[client.rgw.ceph-2]
 
-# cephfs /vcfs/vcfs/test show_layout
-WARNING: This tool is deprecated.  Use the layout.* xattrs to query and modify layouts.
-layout.data_pool:     1
-layout.object_size:   4194304
-layout.stripe_unit:   524288
-layout.stripe_count:  8
-</code></pre><p>写入文件，并查看文件的location</p>
-<pre><code># dd if=/dev/zero of=/vcfs/vcfs/test bs=4M count=100
-# cephfs /vcfs/vcfs/test show_location
-WARNING: This tool is deprecated.  Use the layout.* xattrs to query and modify layouts.
-location.file_offset:  0        // file的偏移
-location.object_offset:0        // object的偏移
-location.object_no:    0        // object的number
-location.object_size:  4194304 // object size为4M
-location.object_name:  10000002356.00000000 // object的name
-location.block_offset: 0        // block的偏移
-location.block_size:   524288    // block size为512k(这里很关键)
-location.osd:          0        // 存储在osd 0 上
+ host = ceph-2
 
+ rgw frontends = &quot;civetweb port=7480&quot;
 
-# cephfs /vcfs/vcfs/test show_location -l 524288
-WARNING: This tool is deprecated.  Use the layout.* xattrs to query and modify layouts.
-location.file_offset:  524288    // file的偏移
-location.object_offset:0        // object的偏移
-location.object_no:    1        // object的number
-location.object_size:  4194304 // object size为4M
-location.object_name:  10000002356.00000001 // object的name
-location.block_offset: 0        // block的偏移
-location.block_size:   524288    // block size为512k(这里很关键)
-location.osd:          2        // 存储在osd 2 上
-</code></pre><p>新建目录设置strip_unit为1M 即1048576字节</p>
-<pre><code>#mkdir /vcfs/vcfs/test1    
-# setfattr -n ceph.dir.layout -v &quot;stripe_unit=1048576 stripe_count=8 object_size=4194304&quot; /vcfs/vcfs/test1
-# dd if=/dev/zero of=/vcfs/vcfs/test1/abc bs=4M count=10
-10+0 records in
-10+0 records out
-41943040 bytes (42 MB) copied, 0.370634 s, 113 MB/s
-# cephfs /vcfs/vcfs/test1/ show_layout
-WARNING: This tool is deprecated.  Use the layout.* xattrs to query and modify layouts.
-layout.data_pool:     1
-layout.object_size:   4194304
-layout.stripe_unit:   1048576
-layout.stripe_count:  8
+ rgw_zone=bzone
+</code></pre><p>重启radosgw服务</p>
+<pre><code>systemctl restart ceph-radosgw@rgw.ceph02
+</code></pre><p>五、验证zone之间数据同步</p>
+<p>在ceph02  从节点执行</p>
+<pre><code>[root@ceph02 ~]# radosgw-admin sync status
+      realm eff9b039-8c3c-4991-87f9-e9331b2c7824 (aaa)
+  zonegroup 7e6ff2ed-f8aa-44fc-b2f3-5ca81464dd9b (azonegroup)
+       zone 118aa9b6-458f-4b4e-9aa8-1c3577bf8dd6 (bzone)
+metadata sync syncing
+            full sync: 0/64 shards
+            incremental sync: 64/64 shards
+            metadata is caught up with master
+  data sync source: 08fcacca-5e53-4499-9413-5212d2477576 (azone)
+                    syncing
+                    full sync: 0/128 shards
+                    incremental sync: 128/128 shards
+                    data is caught up with source
+</code></pre><p>在master zone  节点ceph01上创建用户</p>
+<pre><code>[root@ceph01 ~]# radosgw-admin user create --uid=&quot;zhang&quot; --display-name=&quot;zhang&quot;
+</code></pre><p>安装s3客户端 创建桶tong1，并put 对象</p>
+<pre><code>[root@ceph01 ~]# s3cmd mb s3://tong1
+[root@ceph01 ~]# s3cmd put release.asc s3://tong1
+upload: &apos;release.asc&apos; -&gt; &apos;s3://tong1/release.asc&apos;  [1 of 1]
+1645 of 1645   100% in    0s    33.23 kB/s  done
 
-#cephfs /vcfs/vcfs/test1/abc show_location
-WARNING: This tool is deprecated.  Use the layout.* xattrs to query and modify layouts.
-location.file_offset:  0
-location.object_offset:0
-location.object_no:    0
-location.object_size:  4194304
-location.object_name:  10000000005.00000000
-location.block_offset: 0
-location.block_size:   1048576  // block size为1M
-location.osd:          3
-
-#cephfs /vcfs/vcfs/test1/abc show_location -l 1048576
-WARNING: This tool is deprecated.  Use the layout.* xattrs to query and modify layouts.
-location.file_offset:  1048576
-location.object_offset:0
-location.object_no:    1
-location.object_size:  4194304
-location.object_name:  10000000005.00000001
-location.block_offset: 0
-location.block_size:   1048576    // block size为1M
-location.osd:          0
-</code></pre><p><strong>rbd</strong></p>
-<p>在测试rbd条带的过程中遇到如下问题，以后在解决。暂时记录，初步怀疑内核不支持。</p>
-<pre><code>[root@radosgw1 ~]# rbd create test -p zhang --size=100M --object-size 4M --stripe-unit 1048576 --stripe-count 8 --image-format 2 --image-feature layering
-[root@radosgw1 ~]# rbd info zhang/test
-rbd image &apos;test&apos;:
-size 102400 kB in 28 objects
-order 22 (4096 kB objects)
-block_name_prefix: rbd_data.5a27626b8b4567
-format: 2
-features: layering, striping
-flags: 
-stripe unit: 1024 kB
-stripe count: 8
-
-[root@radosgw1 ~]# rbd map zhang/test
-rbd: sysfs write failed
-In some cases useful info is found in syslog - try &quot;dmesg | tail&quot; or so.
-rbd: map failed: (22) Invalid argument
-
-[root@radosgw1 ~]# dmesg |tail -n 1
-[274817.782747] rbd: image test: unsupported stripe unit (got 1048576 want 4194304)
-
- [root@radosgw1 ~]# uname -r
-4.4.13-1.el7.elrepo.x86_64
-</code></pre><p>未完待续。。。。</p>
+[root@ceph01 ~]# s3cmd ls s3://tong1
+2018-03-28 12:26      1082   s3://tong1/anaconda-ks.cfg
+2018-03-28 13:05      1645   s3://tong1/release.asc
+</code></pre><p>在slave zone 节点ceph02 查看（将ceph01 /root/.s3cfg 拷贝到ceph02节点同样的目录）</p>
+<pre><code>[root@ceph02 ~]# s3cmd  ls s3://tong1
+2018-03-28 12:26      1082   s3://tong1/anaconda-ks.cfg
+2018-03-28 13:05      1645   s3://tong1/release.asc
+</code></pre><p>至此，2个zone之间可做到高可用，保证一定的数据安全。详细测试以后进行。</p>
 
       
 
@@ -431,7 +345,7 @@ rbd: map failed: (22) Invalid argument
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/03/04/ceph条带化介绍/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/03/28/ceph-多区域radosgw网关配置/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -445,18 +359,9 @@ rbd: map failed: (22) Invalid argument
   
 <nav id="article-nav">
   
-    <a href="/2018/03/08/flashcache介绍/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          flashcache介绍
-        
-      </div>
-    </a>
   
-  
-    <a href="/2018/02/28/ceph-mon基础运维/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">ceph-mon基础运维</div>
+    <a href="/2018/03/27/ceph-dencoder基本使用/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">ceph-dencoder基本使用</div>
       <i class="icon-circle-right"></i>
     </a>
   
