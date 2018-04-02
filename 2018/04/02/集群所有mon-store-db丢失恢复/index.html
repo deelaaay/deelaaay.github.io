@@ -8,18 +8,18 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>集群所有mon store.db丢失恢复 | deelaaay learning</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="1、模拟测试环境 三台虚拟机，每台虚拟机一个osd，均是mon节点，mds节点 node1  192.168.1.141  node2  192.168.1.142  node3  192.168.1.143   2、模拟所有节点的mon  数据丢失  在3个集群节点上停止mon服务，拷贝数据到其他路径 [root@node1 ~]# systemctl stop ceph-mon@node1 [">
+  <meta name="description" content="1、模拟测试环境 三台虚拟机，每台虚拟机一个osd，均是mon节点，mds节点 node1  192.168.1.141  node2  192.168.1.142  node3  192.168.1.143">
 <meta name="keywords" content="ceph">
 <meta property="og:type" content="article">
 <meta property="og:title" content="集群所有mon store.db丢失恢复">
 <meta property="og:url" content="http://yoursite.com/2018/04/02/集群所有mon-store-db丢失恢复/index.html">
 <meta property="og:site_name" content="deelaaay learning">
-<meta property="og:description" content="1、模拟测试环境 三台虚拟机，每台虚拟机一个osd，均是mon节点，mds节点 node1  192.168.1.141  node2  192.168.1.142  node3  192.168.1.143   2、模拟所有节点的mon  数据丢失  在3个集群节点上停止mon服务，拷贝数据到其他路径 [root@node1 ~]# systemctl stop ceph-mon@node1 [">
+<meta property="og:description" content="1、模拟测试环境 三台虚拟机，每台虚拟机一个osd，均是mon节点，mds节点 node1  192.168.1.141  node2  192.168.1.142  node3  192.168.1.143">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-04-02T11:47:58.590Z">
+<meta property="og:updated_time" content="2018-04-02T11:50:00.576Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="集群所有mon store.db丢失恢复">
-<meta name="twitter:description" content="1、模拟测试环境 三台虚拟机，每台虚拟机一个osd，均是mon节点，mds节点 node1  192.168.1.141  node2  192.168.1.142  node3  192.168.1.143   2、模拟所有节点的mon  数据丢失  在3个集群节点上停止mon服务，拷贝数据到其他路径 [root@node1 ~]# systemctl stop ceph-mon@node1 [">
+<meta name="twitter:description" content="1、模拟测试环境 三台虚拟机，每台虚拟机一个osd，均是mon节点，mds节点 node1  192.168.1.141  node2  192.168.1.142  node3  192.168.1.143">
   
     <link rel="alternative" href="/atom.xml" title="deelaaay learning" type="application/atom+xml">
   
@@ -174,7 +174,7 @@
 <pre><code>node1  192.168.1.141 
 node2  192.168.1.142 
 node3  192.168.1.143 
-</code></pre><!--moe-->
+</code></pre><a id="more"></a>
 <p>2、模拟所有节点的mon  数据丢失 </p>
 <p>在3个集群节点上停止mon服务，拷贝数据到其他路径</p>
 <pre><code>[root@node1 ~]# systemctl stop ceph-mon@node1
@@ -570,11 +570,15 @@ var _hmt = _hmt || [];
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">ceph</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">io</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">ceph</a>
+                <a href="javascript:void(0)" class="js-tag color1">flashcache</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -583,10 +587,6 @@ var _hmt = _hmt || [];
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">flamegraph</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">flashcache</a>
               </li>
             
             <div class="clearfix"></div>
