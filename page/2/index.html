@@ -149,6 +149,84 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-flashcache介绍" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/03/08/flashcache介绍/">flashcache介绍</a>
+    </h1>
+  
+
+        
+        <a href="/2018/03/08/flashcache介绍/" class="archive-article-date">
+  	<time datetime="2018-03-08T13:21:33.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-08</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>简介</strong></p>
+<p>本文仅简单介绍flashcache的基本使用，安装，深度分析后期再补上。</p>
+<p>Flashcache 是facebook的一个开源方案，主要被用于数据加速。基本结构为在hdd盘前面加一层缓存，既采用固态硬盘ssd。把热数据保存在ssd中，加速数据的读写，写入的过程也是先写到ssd上，然后ssd同步到后端sata磁盘上，最后的资料将保存在sata磁盘上，这样不用担心ssd损坏会造成资料丢失的问题，同时可以有大容量，高读取速度的存储。flashcache是建立在Linux devicemapper之上的，由devicemapper在SSD和backing HDD之上创建了一个逻辑的mapped device，用户使用的就是这个mapped device。flashcache把cache（SSD）按照哈希的方式进行结构化管理。</p>
+        
+          <a class="article-more-a" href="/2018/03/08/flashcache介绍/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">flashcache</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/03/08/flashcache介绍/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-ceph条带化介绍" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -485,15 +563,11 @@ var _hmt = _hmt || [];
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">ceph</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">io</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">flashcache</a>
+                <a href="javascript:void(0)" class="js-tag color5">ceph</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -502,6 +576,10 @@ var _hmt = _hmt || [];
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">flamegraph</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">flashcache</a>
               </li>
             
             <div class="clearfix"></div>
