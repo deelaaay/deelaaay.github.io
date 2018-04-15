@@ -170,47 +170,10 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>仅此记录，自己参考。</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
-&lt;workload name=&quot;128k-36&quot; description=&quot;sample benchmark for s3&quot;&gt;
-  &lt;storage type=&quot;s3&quot; /&gt;
- &lt;workflow&gt;
-&lt;workstage name=&quot;init&quot;&gt;
-  &lt;storage type=&quot;s3&quot; config=&quot;accesskey=zhangadmin;secretkey=zhangadmin;endpoint=http://192.168.0.191:7480&quot; /&gt;
-  &lt;work type=&quot;init&quot; workers=&quot;3&quot; config=&quot;cprefix=128zhang;containers=r(1,30)&quot; /&gt;
-&lt;/workstage&gt;
-
-&lt;workstage name=&quot;prepare&quot;&gt;
-  &lt;work type=&quot;prepare&quot; workers=&quot;36&quot; config=&quot;cprefix=128zhang;containers=r(1,30);objects=r(1,1000);sizes=c(128)KB&quot; /&gt;
-&lt;/workstage&gt;
-
-&lt;workstage name=&quot;main&quot;&gt;
-  &lt;work name=&quot;write&quot; workers=&quot;36&quot; runtime=&quot;300&quot;&gt;
-      &lt;storage type=&quot;s3&quot; config=&quot;accesskey=zhangadmin;secretkey=zhangadmin;endpoint=http://192.168.0.191:7480&quot; /&gt;
-      &lt;operation type=&quot;write&quot; ratio=&quot;100&quot; config=&quot;cprefix=128zhang;containers=u(1,10);objects=u(1,1000);sizes=c(128)KB&quot; /&gt;
- &lt;/work&gt;
-
- &lt;work name=&quot;write&quot; workers=&quot;36&quot; runtime=&quot;300&quot;&gt;
-      &lt;storage type=&quot;s3&quot; config=&quot;accesskey=zhangadmin;secretkey=zhangadmin;endpoint=http://192.168.0.192:7480&quot; /&gt;
-      &lt;operation type=&quot;write&quot; ratio=&quot;100&quot; config=&quot;cprefix=128zhang;containers=u(11,20);objects=u(1,1000);sizes=c(128)KB&quot; /&gt;
- &lt;/work&gt;
-
- &lt;work name=&quot;write&quot; workers=&quot;36&quot; runtime=&quot;300&quot;&gt;
-      &lt;storage type=&quot;s3&quot; config=&quot;accesskey=zhangadmin;secretkey=zhangadmin;endpoint=http://192.168.0.193:7480&quot; /&gt;
-      &lt;operation type=&quot;write&quot; ratio=&quot;100&quot; config=&quot;cprefix=128zhang;containers=u(21,30);objects=u(1,1000);sizes=c(128)KB&quot; /&gt;
- &lt;/work&gt;
-&lt;/workstage&gt;
-
-&lt;workstage name=&quot;cleanup&quot;&gt;
-  &lt;work type=&quot;cleanup&quot; workers=&quot;36&quot; config=&quot;cprefix=128zhang;containers=r(1,30);objects=r(1,1000)&quot; /&gt;
-&lt;/workstage&gt;
-&lt;workstage name=&quot;dispose&quot;&gt;
-  &lt;work type=&quot;dispose&quot; workers=&quot;36&quot; config=&quot;cprefix=128zhang;containers=r(1,30)&quot; /&gt;
-&lt;/workstage&gt;
-
-    &lt;/workflow&gt;
-&lt;/workload&gt;
-</code></pre>
+        <p>仅此记录，自己参考。<br>
+        
+          <a class="article-more-a" href="/2018/04/15/cosbench例子-参考/#more">more >></a>
+        
       
 
       
@@ -1104,6 +1067,10 @@ var _hmt = _hmt || [];
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">io</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">ceph</a>
               </li>
              
@@ -1112,19 +1079,15 @@ var _hmt = _hmt || [];
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">leveldb ceph</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">flashcache</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">flamegraph</a>
+                <a href="javascript:void(0)" class="js-tag color3">leveldb ceph</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">io</a>
+                <a href="javascript:void(0)" class="js-tag color1">flamegraph</a>
               </li>
             
             <div class="clearfix"></div>
