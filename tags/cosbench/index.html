@@ -6,20 +6,18 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>ceph集群替换mon节点ip地址 | deelaaay learning</title>
+  <title>Tag: cosbench | deelaaay learning</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="是由：原来单节点虚拟机集群，搬迁服务器，从A服务器复制虚拟机到B服务器上。然后启动后发现改节点IP地址已经变换，且无法恢复到原有IP地址，则必须使用新的ip地址作为mon 地址。">
-<meta name="keywords" content="ceph">
-<meta property="og:type" content="article">
-<meta property="og:title" content="ceph集群替换mon节点ip地址">
-<meta property="og:url" content="http://yoursite.com/2018/03/27/ceph集群替换mon节点ip地址/index.html">
+  <meta name="description" content="自我定位">
+<meta property="og:type" content="website">
+<meta property="og:title" content="deelaaay learning">
+<meta property="og:url" content="http://yoursite.com/tags/cosbench/index.html">
 <meta property="og:site_name" content="deelaaay learning">
-<meta property="og:description" content="是由：原来单节点虚拟机集群，搬迁服务器，从A服务器复制虚拟机到B服务器上。然后启动后发现改节点IP地址已经变换，且无法恢复到原有IP地址，则必须使用新的ip地址作为mon 地址。">
+<meta property="og:description" content="自我定位">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-03-27T12:11:28.596Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ceph集群替换mon节点ip地址">
-<meta name="twitter:description" content="是由：原来单节点虚拟机集群，搬迁服务器，从A服务器复制虚拟机到B服务器上。然后启动后发现改节点IP地址已经变换，且无法恢复到原有IP地址，则必须使用新的ip地址作为mon 地址。">
+<meta name="twitter:title" content="deelaaay learning">
+<meta name="twitter:description" content="自我定位">
   
     <link rel="alternative" href="/atom.xml" title="deelaaay learning" type="application/atom+xml">
   
@@ -150,261 +148,60 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-ceph集群替换mon节点ip地址" class="article article-type-post " itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
+            
   
-    <h1 class="article-title" itemprop="name">
-      ceph集群替换mon节点ip地址
+  
+    
+    
+      
+      
+      <section class="archives-wrap">
+        <div class="archive-year-wrap">
+          <a href="/archives/2018" class="archive-year">2018</a>
+        </div>
+        <div class="archives">
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      	<div class="article-meta">
+	      	<a href="/2018/04/15/cosbench例子-参考/" class="archive-article-date">
+  	<time datetime="2018-04-15T11:30:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-15</time>
+</a>
+        </div>
+    	 
+  
+    <h1 itemprop="name">
+      <a class="archive-article-title" href="/2018/04/15/cosbench例子-参考/">cosbench例子-参考</a>
     </h1>
   
 
-        
-        <a href="/2018/03/27/ceph集群替换mon节点ip地址/" class="archive-article-date">
-  	<time datetime="2018-03-27T12:06:32.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-27</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>是由：原来单节点虚拟机集群，搬迁服务器，从A服务器复制虚拟机到B服务器上。然后启动后发现改节点IP地址已经变换，且无法恢复到原有IP地址，则必须使用新的ip地址作为mon 地址。<br><a id="more"></a><br>mon节点日志</p>
-<pre><code>2018-03-27 14:37:13.691047 7f6dee6354c0  0 starting mon.ceph02 rank 0 at 192.168.0.40:6789/0 mon_data /var/lib/ceph/mon/ceph-ceph02 fsid f6110559-f0f1-4e14-9213-f29471329ee9
-2018-03-27 14:37:13.691080 7f6dee6354c0 -1 accepter.accepter.bind unable to bind to 192.168.0.40:6789: (99) Cannot assign requested address
-2018-03-27 14:37:13.691088 7f6dee6354c0 -1 accepter.accepter.bind was unable to bind. Trying again in 5 seconds 
-2018-03-27 14:37:18.691584 7f6dee6354c0 -1 accepter.accepter.bind unable to bind to 192.168.0.40:6789: (99) Cannot assign requested address
-2018-03-27 14:37:18.691618 7f6dee6354c0 -1 accepter.accepter.bind was unable to bind. Trying again in 5 seconds 
-2018-03-27 14:37:23.692664 7f6dee6354c0 -1 accepter.accepter.bind unable to bind to 192.168.0.40:6789: (99) Cannot assign requested address
-2018-03-27 14:37:23.692699 7f6dee6354c0 -1 accepter.accepter.bind was unable to bind after 3 attempts: (99) Cannot assign requested address
-2018-03-27 14:37:23.692712 7f6dee6354c0 -1 unable to bind monitor to 192.168.0.40:6789/0
-</code></pre><p>1、获取当前集群monmap</p>
-<pre><code>[root@ceph02 ~]# ceph mon getmap -o /tmp/momnmap
-2018-03-27 14:54:38.217464 7fa5f46ae700  0 -- :/2440828314 &gt;&gt; 192.168.0.40:6789/0 pipe(0x7fa5e8000c80 sd=3 :0 s=1 pgs=0 cs=0 l=1 c=0x7fa5e8001f90).fault
-2018-03-27 14:54:41.236171 7fa5f47af700  0 -- :/2440828314 &gt;&gt; 192.168.0.40:6789/0 pipe(0x7fa5e80052b0 sd=3 :0 s=1 pgs=0 cs=0 l=1 c=0x7fa5e8006570).fault
-</code></pre><p>单节点IP已经更改，也无法从其他mon节点获取monmap信息。下面换到从ceph.conf配置文件中获取monmap信息</p>
-<pre><code>[root@ceph02 tmp]#  monmaptool --create --generate -c /etc/ceph/ceph.conf /tmp/monmap
-monmaptool: monmap file /tmp/monmap
-monmaptool: set fsid to f6110559-f0f1-4e14-9213-f29471329ee9
-monmaptool: writing epoch 0 to /tmp/monmap (1 monitors)
-</code></pre><p>2、查看信息</p>
-<pre><code>[root@ceph02 tmp]# monmaptool --print monmap 
-monmaptool: monmap file monmap
-epoch 0
-fsid f6110559-f0f1-4e14-9213-f29471329ee9
-last_changed 2018-03-27 15:09:11.680108
-created 2018-03-27 15:09:11.680108
-0: 192.168.0.40:6789/0 mon.noname-a
-</code></pre><p>可以看到原有ip。</p>
-<p>3、删除原有ip，若有多个mon ip 则执行多次需要替换的mon 节点</p>
-<pre><code>[root@ceph02 tmp]# monmaptool --rm noname-a /tmp/monmap 
-monmaptool: monmap file /tmp/monmap
-monmaptool: removing noname-a
-monmaptool: writing epoch 0 to /tmp/monmap (0 monitors)
-</code></pre><p>4、原有的monitor信息删除后，添加新的monitor节点，多个节点则执行多次，如下：</p>
-<pre><code>[root@ceph02 tmp]# monmaptool --add ceph02 192.168.1.169:6789 /tmp/monmap 
-monmaptool: monmap file /tmp/monmap
-monmaptool: writing epoch 0 to /tmp/monmap (1 monitors)
-
-[root@ceph02 tmp]# monmaptool --print monmap 
-monmaptool: monmap file monmap
-epoch 0
-fsid f6110559-f0f1-4e14-9213-f29471329ee9
-last_changed 2018-03-27 15:09:11.680108
-created 2018-03-27 15:09:11.680108
-0: 192.168.1.169:6789/0 mon.ceph02
-</code></pre><p>将新的manmap文件拷贝到所有运行ceph-mon服务的机器上（若多个mon 节点）</p>
-<p>5、停止mon服务以及修改ceph.conf文件，并同步到所有节点</p>
-<pre><code>[root@ceph02 tmp]# systemctl stop ceph-mon@ceph02
-
-[global]
-fsid = f6110559-f0f1-4e14-9213-f29471329ee9
-mon_initial_members = ceph02
-mon_host = 192.168.1.169
-auth_cluster_required = cephx
-auth_service_required = cephx
-auth_client_required = cephx
-
-[mon.ceph02]
-host = ceph02
-mon addr = 192.168.1.169
-</code></pre><p>6、注入新的monmap 多个节点则在多个节点执行 -i 后面输入实际节点主机名</p>
-<pre><code>[root@ceph02 tmp]# ceph-mon -i ceph02 --inject-monmap /tmp/monmap 
-</code></pre><p>7、启动mon。</p>
-<pre><code>[root@ceph02 tmp]# systemctl start ceph-mon@ceph02
-
-[root@ceph02 tmp]# systemctl status ceph-mon@ceph02
-● ceph-mon@ceph02.service - Ceph cluster monitor daemon
-       Loaded: loaded (/usr/lib/systemd/system/ceph-mon@.service; enabled; vendor preset: disabled)
-       Active: active (running) since Tue 2018-03-27 15:36:30 CST; 4s ago
-     Main PID: 16664 (ceph-mon)
-       CGroup: /system.slice/system-ceph\x2dmon.slice/ceph-mon@ceph02.service
-       └─16664 /usr/bin/ceph-mon -f --cluster ceph --id ceph02 --setuser ceph --setgroup ceph
-
-Mar 27 15:36:30 ceph02 systemd[1]: Started Ceph cluster monitor daemon.
-Mar 27 15:36:30 ceph02 systemd[1]: Starting Ceph cluster monitor daemon...
-Mar 27 15:36:30 ceph02 ceph-mon[16664]: starting mon.ceph02 rank 0 at 192.168.1.169:6789/0 mon_data /var/lib/ceph/m...329ee9
-Mar 27 15:36:30 ceph02 ceph-mon[16664]: 2018-03-27 15:36:30.386583 7f71023634c0 -1 WARNING: &apos;mon addr&apos; config optio...p file
-Mar 27 15:36:30 ceph02 ceph-mon[16664]: continuing with monmap configuration
-Hint: Some lines were ellipsized, use -l to show in full.
-
-
-[root@ceph02 tmp]# ceph -s
-cluster f6110559-f0f1-4e14-9213-f29471329ee9
- health HEALTH_OK
- monmap e2: 1 mons at {ceph02=192.168.1.169:6789/0}
-        election epoch 6, quorum 0 ceph02
-  fsmap e11: 1/1/1 up {0=ceph02=up:active}
- osdmap e40: 2 osds: 2 up, 2 in
-        flags sortbitwise
-  pgmap v1334: 192 pgs, 3 pools, 2068 bytes data, 20 objects
-        70932 kB used, 10148 MB / 10217 MB avail
-             192 active+clean
-</code></pre><p>最好重启下所有osd，否则可能会遇到mds degraded </p>
-<p>mds日志</p>
-<pre><code>2018-03-27 15:43:29.540226 7f7c96308180  0 set uid:gid to 167:167 (ceph:ceph)
-2018-03-27 15:43:29.540240 7f7c96308180  0 ceph version 10.2.3 (ecc23778eb545d8dd55e2e4735b53cc93f92e65b), process ceph-mds, pid 16910
-2018-03-27 15:43:29.540395 7f7c96308180  0 pidfile_write: ignore empty --pid-file
-2018-03-27 15:43:29.719622 7f7c902e3700  1 mds.ceph02 handle_mds_map standby
-2018-03-27 15:43:29.720884 7f7c902e3700  1 mds.0.14 handle_mds_map i am now mds.0.14
-2018-03-27 15:43:29.720888 7f7c902e3700  1 mds.0.14 handle_mds_map state change up:boot --&gt; up:replay
-2018-03-27 15:43:29.720895 7f7c902e3700  1 mds.0.14 replay_start
-2018-03-27 15:43:29.720899 7f7c902e3700  1 mds.0.14  recovery set is
-2018-03-27 15:43:29.720902 7f7c902e3700  1 mds.0.14  waiting for osdmap 41 (which blacklists prior instance)
-2018-03-27 15:43:32.771498 7f7c8b1d8700  0 -- 192.168.1.169:6800/16910 &gt;&gt; 192.168.0.40:6805/2661 pipe(0x7f7ca2014800 sd=17 :0 s=1 pgs=0 cs=0 l=1 c=0x7f7ca1fd6a80).fault
-2018-03-27 15:43:32.771585 7f7c8a0d5700  0 -- 192.168.1.169:6800/16910 &gt;&gt; 192.168.0.40:6801/2448 pipe(0x7f7ca20a4000 sd=18 :0 s=1 pgs=0 cs=0 l=1 c=0x7f7ca1fd6c00).fault
-</code></pre><p>以上，自己做个记录。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
+        <div class="article-info info-on-right">
+          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ceph</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">cosbench</a>
         		</li>
       		
 		</ul>
 	</div>
 
-      
+          
 
-      
-
-      
-        
-<div class="share-btn share-icons tooltip-left">
-  <div class="tooltip tooltip-east">
-    <span class="tooltip-item">
-      <a href="javascript:;" class="share-sns share-outer">
-        <i class="icon icon-share"></i>
-      </a>
-    </span>
-    <span class="tooltip-content">
-      <div class="share-wrap">
-        <div class="share-icons">
-          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
-            <i class="icon icon-weibo"></i>
-          </a>
-          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
-            <i class="icon icon-weixin"></i>
-          </a>
-          <a class="qq share-sns" href="javascript:;" data-type="qq">
-            <i class="icon icon-qq"></i>
-          </a>
-          <a class="douban share-sns" href="javascript:;" data-type="douban">
-            <i class="icon icon-douban"></i>
-          </a>
-          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
-            <i class="icon icon-qzone"></i>
-          </a>
-          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
-            <i class="icon icon-facebook"></i>
-          </a>
-          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
-            <i class="icon icon-twitter"></i>
-          </a>
-          <a class="google share-sns" href="javascript:;" data-type="google">
-            <i class="icon icon-google"></i>
-          </a>
         </div>
-      </div>
-    </span>
-  </div>
-</div>
-
-<div class="page-modal wx-share js-wx-box">
-    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
-    <p>扫一扫，分享到微信</p>
-    <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/03/27/ceph集群替换mon节点ip地址/" alt="微信分享二维码">
-    </div>
-</div>
-
-<div class="mask js-mask"></div>
-      
-      <div class="clearfix"></div>
-    </div>
+        <div class="clearfix"></div>
+    </header>
   </div>
 </article>
-
-  
-<nav id="article-nav">
-  
-    <a href="/2018/03/27/ceph-kvstore-tool工具简单介绍/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          ceph-kvstore-tool工具简单介绍
-        
-      </div>
-    </a>
   
   
-    <a href="/2018/03/27/leveldb-python基础操作方法/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">leveldb python基础操作方法</div>
-      <i class="icon-circle-right"></i>
-    </a>
-  
-</nav>
-
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-  
-  
+    </div></section>
   
 
-  
-
-  
-
-  
-
-
+    
 
 
           </div>
@@ -428,9 +225,9 @@ cluster f6110559-f0f1-4e14-9213-f29471329ee9
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: true,
+		isPost: false,
 		isArchive: false,
-		isTag: false,
+		isTag: true,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,

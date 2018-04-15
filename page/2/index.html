@@ -150,6 +150,85 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/03/08/记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程/">记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程</a>
+    </h1>
+  
+
+        
+        <a href="/2018/03/08/记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程/" class="archive-article-date">
+  	<time datetime="2018-03-08T13:22:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-08</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程</p>
+<p>在一次对ceph集群做模拟故障测试过程中，外置内核客户端挂载ceph集群，客户端开启fio进行写，dd进行读的过程中。对集群节点的某个osd磁盘进行拔盘操作。客户端读取，写入中断一段时间，之后继续恢复读写。在插入磁盘之后，发现有个其他的osd 没有up.如下图：<br>
+        
+          <a class="article-more-a" href="/2018/03/08/记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ceph</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/03/08/记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+  
     <article id="post-flashcache介绍" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -227,6 +306,8 @@
 
 
 
+
+
   
     <article id="post-ceph条带化介绍" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
@@ -299,6 +380,8 @@
         
     </div>
 </aside>
+
+
 
 
 
@@ -380,6 +463,8 @@
 
 
 
+
+
   
     <article id="post-centos7系统默认io-scheduler介绍" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
@@ -456,6 +541,8 @@
 
 
 
+
+
   
   
     <nav id="page-nav">
@@ -478,7 +565,8 @@
       	</div>
     </div>
   </div>
-</footer>
+  </footer>
+
     </div>
     <script>
 	var yiliaConfig = {
@@ -569,11 +657,7 @@ var _hmt = _hmt || [];
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">io</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">flashcache</a>
+                <a href="javascript:void(0)" class="js-tag color4">cosbench</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -581,7 +665,15 @@ var _hmt = _hmt || [];
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">flashcache</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">flamegraph</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">io</a>
               </li>
             
             <div class="clearfix"></div>
