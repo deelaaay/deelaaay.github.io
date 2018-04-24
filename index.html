@@ -150,6 +150,86 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-nginx反向代理和负载均衡最基础配置实现" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/04/24/nginx反向代理和负载均衡最基础配置实现/">nginx反向代理和负载均衡最基础配置实现</a>
+    </h1>
+  
+
+        
+        <a href="/2018/04/24/nginx反向代理和负载均衡最基础配置实现/" class="archive-article-date">
+  	<time datetime="2018-04-24T09:39:44.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-24</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>本文仅在最基础的nginx环境下做反向代理和负载均衡的大概配置介绍，具体调优以及其他功能暂不考虑。仅仅展现这2个功能的基本实现配置，本文记录仅供参考。</p>
+<p><strong>环境：</strong></p>
+<p>单台centos7的虚拟机，nginx安装使用yum进行安装。默认nginx配置文件在/etc/nginx/ 下 nginx.conf文件。<br>
+        
+          <a class="article-more-a" href="/2018/04/24/nginx反向代理和负载均衡最基础配置实现/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">nginx</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/04/24/nginx反向代理和负载均衡最基础配置实现/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+  
     <article id="post-tdb文件简介" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -870,90 +950,6 @@ node3  192.168.1.143
 
 
   
-    <article id="post-rbd对象组成以及介绍" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/03/26/rbd对象组成以及介绍/">rbd对象组成以及介绍</a>
-    </h1>
-  
-
-        
-        <a href="/2018/03/26/rbd对象组成以及介绍/" class="archive-article-date">
-  	<time datetime="2018-03-26T12:39:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-26</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>创建format 2格式的image 加上–image-format=2参数，下面直接看下rbd format2下有哪些对象</p>
-<pre><code>[root@node1 ~]# rbd create image --size 100M --image-format=2
-[root@node1 ~]# rados ls -p rbd 
-rbd_directory
-rbd_id.image
-rbd_header.3289416b8b4567
-</code></pre>
-        
-          <a class="article-more-a" href="/2018/03/26/rbd对象组成以及介绍/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ceph</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/03/26/rbd对象组成以及介绍/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1063,7 +1059,7 @@ var _hmt = _hmt || [];
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">blktrace btt blkparse</a>
+                <a href="javascript:void(0)" class="js-tag color5">ceph</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1071,7 +1067,11 @@ var _hmt = _hmt || [];
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">ceph</a>
+                <a href="javascript:void(0)" class="js-tag color2">blktrace btt blkparse</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">flashcache</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1079,7 +1079,7 @@ var _hmt = _hmt || [];
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">tdbdump  tdbbakcup tdbtool</a>
+                <a href="javascript:void(0)" class="js-tag color1">nginx</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1087,7 +1087,7 @@ var _hmt = _hmt || [];
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">flashcache</a>
+                <a href="javascript:void(0)" class="js-tag color2">tdbdump  tdbbakcup tdbtool</a>
               </li>
              
               <li class="article-tag-list-item">
