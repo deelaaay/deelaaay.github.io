@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="deelaaay learning">
 <meta property="og:description" content="公司提出测试需求，将Hadoop2.7与ceph10.2 S3对象存储进行集成测试，hadoop官网介绍：官网介绍后查阅相关资料完成对接测试，现将环境部署，对接测试完整过程，整理如下：">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-04-25T10:04:39.974Z">
+<meta property="og:updated_time" content="2018-04-25T10:07:47.776Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="hadoop2.7.3通过s3对接ceph10.2 radosgw测试">
 <meta name="twitter:description" content="公司提出测试需求，将Hadoop2.7与ceph10.2 S3对象存储进行集成测试，hadoop官网介绍：官网介绍后查阅相关资料完成对接测试，现将环境部署，对接测试完整过程，整理如下：">
@@ -171,8 +171,8 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>公司提出测试需求，将Hadoop2.7与ceph10.2 S3对象存储进行集成测试，hadoop官网介绍：<a href="http://hadoop.apache.org/docs/current/hadoop-aws/tools/hadoop-aws/index.html" target="_blank" rel="noopener">官网介绍</a><br>后查阅相关资料完成对接测试，现将环境部署，对接测试完整过程，整理如下：<br><a id="more"></a><br><strong>hadoop环境</strong></p>
-<p>2台主机 主机名分别为master slave .  master作为hadoop namenode，slave作为datanode.<br>hadoop集群部署过程参考： <a href="hadoop集群部署" title="http://www.178pt.com/156.html">hadoop集群部署</a></p>
-<p>ceph10.2 radosgw配置过程参考：<a href="radosgw" title="http://www.178pt.com/250.html">radosgw配置</a></p>
+<p>2台主机 主机名分别为master slave .  master作为hadoop namenode，slave作为datanode.<br>hadoop集群部署过程参考： <a href="&quot;http://www.178pt.com/156.html&quot;">hadoop集群部署</a></p>
+<p>ceph10.2 radosgw配置过程参考：<a href="&quot;http://www.178pt.com/250.html&quot;">radosgw配置</a></p>
 <p><strong>hadoop集成s3</strong></p>
 <p>在master（namenode）节点上修改core-site.xml，增加如下配置（endpoint key根据实际填写）：</p>
 <pre><code>&lt;!-- Put site-specific property overrides in this file. --&gt;
@@ -932,15 +932,15 @@ var _hmt = _hmt || [];
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">io</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">ceph</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">flashcache</a>
+                <a href="javascript:void(0)" class="js-tag color2">blktrace btt blkparse</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">io</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -948,15 +948,11 @@ var _hmt = _hmt || [];
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">flashcache</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">ceph10.2 radosgw  hadoop</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">leveldb ceph</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">flamegraph</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -968,7 +964,11 @@ var _hmt = _hmt || [];
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">blktrace btt blkparse</a>
+                <a href="javascript:void(0)" class="js-tag color1">flamegraph</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">leveldb ceph</a>
               </li>
             
             <div class="clearfix"></div>
