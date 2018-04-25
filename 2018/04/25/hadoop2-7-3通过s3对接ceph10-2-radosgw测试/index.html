@@ -6,18 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives: 2018/4 | deelaaay learning</title>
+  <title>hadoop2.7.3通过s3对接ceph10.2 radosgw测试 | deelaaay learning</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="自我定位">
-<meta property="og:type" content="website">
-<meta property="og:title" content="deelaaay learning">
-<meta property="og:url" content="http://yoursite.com/archives/2018/04/index.html">
+  <meta name="description" content="公司提出测试需求，将Hadoop2.7与ceph10.2 S3对象存储进行集成测试，hadoop官网介绍：官网介绍后查阅相关资料完成对接测试，现将环境部署，对接测试完整过程，整理如下：">
+<meta name="keywords" content="ceph10.2 radosgw  hadoop">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hadoop2.7.3通过s3对接ceph10.2 radosgw测试">
+<meta property="og:url" content="http://yoursite.com/2018/04/25/hadoop2-7-3通过s3对接ceph10-2-radosgw测试/index.html">
 <meta property="og:site_name" content="deelaaay learning">
-<meta property="og:description" content="自我定位">
+<meta property="og:description" content="公司提出测试需求，将Hadoop2.7与ceph10.2 S3对象存储进行集成测试，hadoop官网介绍：官网介绍后查阅相关资料完成对接测试，现将环境部署，对接测试完整过程，整理如下：">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-04-25T10:04:39.974Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="deelaaay learning">
-<meta name="twitter:description" content="自我定位">
+<meta name="twitter:title" content="hadoop2.7.3通过s3对接ceph10.2 radosgw测试">
+<meta name="twitter:description" content="公司提出测试需求，将Hadoop2.7与ceph10.2 S3对象存储进行集成测试，hadoop官网介绍：官网介绍后查阅相关资料完成对接测试，现将环境部署，对接测试完整过程，整理如下：">
   
     <link rel="alternative" href="/atom.xml" title="deelaaay learning" type="application/atom+xml">
   
@@ -148,36 +150,571 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-hadoop2-7-3通过s3对接ceph10-2-radosgw测试" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/04/25/hadoop2-7-3通过s3对接ceph10-2-radosgw测试/" class="archive-article-date">
-  	<time datetime="2018-04-25T10:02:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-25</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/04/25/hadoop2-7-3通过s3对接ceph10-2-radosgw测试/">hadoop2.7.3通过s3对接ceph10.2 radosgw测试</a>
+    <h1 class="article-title" itemprop="name">
+      hadoop2.7.3通过s3对接ceph10.2 radosgw测试
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2018/04/25/hadoop2-7-3通过s3对接ceph10-2-radosgw测试/" class="archive-article-date">
+  	<time datetime="2018-04-25T10:02:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-25</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>公司提出测试需求，将Hadoop2.7与ceph10.2 S3对象存储进行集成测试，hadoop官网介绍：<a href="http://hadoop.apache.org/docs/current/hadoop-aws/tools/hadoop-aws/index.html" target="_blank" rel="noopener">官网介绍</a><br>后查阅相关资料完成对接测试，现将环境部署，对接测试完整过程，整理如下：<br><a id="more"></a><br><strong>hadoop环境</strong></p>
+<p>2台主机 主机名分别为master slave .  master作为hadoop namenode，slave作为datanode.<br>hadoop集群部署过程参考： <a href="hadoop集群部署" title="http://www.178pt.com/156.html">hadoop集群部署</a></p>
+<p>ceph10.2 radosgw配置过程参考：<a href="radosgw" title="http://www.178pt.com/250.html">radosgw配置</a></p>
+<p><strong>hadoop集成s3</strong></p>
+<p>在master（namenode）节点上修改core-site.xml，增加如下配置（endpoint key根据实际填写）：</p>
+<pre><code>&lt;!-- Put site-specific property overrides in this file. --&gt;
+
+&lt;configuration&gt;
+&lt;property&gt;
+    &lt;name&gt;fs.defaultFS&lt;/name&gt;
+    &lt;value&gt;hdfs://master:9000&lt;/value&gt;
+&lt;/property&gt;
+&lt;property&gt;
+    &lt;name&gt;io.file.buffer.size&lt;/name&gt;
+    &lt;value&gt;131072&lt;/value&gt;
+&lt;/property&gt;
+&lt;property&gt;
+    &lt;name&gt;hadoop.tmp.dir&lt;/name&gt;
+    &lt;value&gt;file:/usr/hadoop/tmp&lt;/value&gt;
+    &lt;description&gt;Abase for other temporary   directories.&lt;/description&gt;
+&lt;/property&gt;
+
+##增加如下内容
+&lt;property&gt;
+      &lt;name&gt;fs.s3a.access.key&lt;/name&gt;
+      &lt;value&gt;YZ8H5J5B4BS4HGJ6U8YC&lt;/value&gt;
+      &lt;description&gt;AWS access key ID. Omit for Role-based authentication.&lt;/description&gt;
+&lt;/property&gt;
+
+&lt;property&gt;
+      &lt;name&gt;fs.s3a.secret.key&lt;/name&gt;
+      &lt;value&gt;KzPrV6ytwoZoQCMHzbnXXMQKrjH5MLnD3Wsb0AjJ&lt;/value&gt;
+      &lt;description&gt;AWS secret key&lt;/description&gt;
+&lt;/property&gt;
+
+&lt;property&gt;
+      &lt;name&gt;fs.s3a.endpoint&lt;/name&gt;
+      &lt;value&gt;192.168.1.31:7480&lt;/value&gt;
+      &lt;description&gt;AWS S3 endpoint to connect to. An up-to-date list is
+    provided in the AWS Documentation: regions and endpoints. Without this
+    property, the standard region (s3.amazonaws.com) is assumed.
+      &lt;/description&gt;
+&lt;/property&gt;
+
+&lt;property&gt;
+      &lt;name&gt;fs.s3a.connection.ssl.enabled&lt;/name&gt;
+      &lt;value&gt;false&lt;/value&gt;
+      &lt;description&gt;Enables or disables SSL connections to S3.&lt;/description&gt;
+&lt;/property&gt;
+##增加结束
+&lt;/configuration&gt;
+</code></pre><p>在master  slave 2个hadoop节点上拷贝s3相关的jar包，否则会报错。</p>
+<pre><code>[root@master etc]# pwd
+/usr/hadoop/hadoop-2.7.3/etc
+[root@master etc]# cp hadoop/share/hadoop/tools/lib/hadoop-aws-2.7.3.jar hadoop/share/hadoop/common/lib/
+[root@master etc]# cp hadoop/share/hadoop/tools/lib/aws-java-sdk-1.7.4.jar hadoop/share/hadoop/common/lib/
+[root@master etc]# cp hadoop/share/hadoop/tools/lib/joda-time-2.9.4.jar hadoop/share/hadoop/common/lib/
+[root@master etc]# cp hadoop/share/hadoop/tools/lib/jackson-*.jar hadoop/share/hadoop/common/lib/
+</code></pre><p>重启hadoop</p>
+<pre><code>[root@master etc]# stop-all.sh
+[root@master etc]# start-all.sh
+</code></pre><p><strong>hadoop集成s3测试</strong></p>
+<p>ceph 节点上创建桶hadoop,并上传文件</p>
+<pre><code>[root@radosgw1 ~]# s3cmd mb s3://hadoop
+Bucket &apos;s3://hadoop/&apos; created
+[root@radosgw1 ~]# s3cmd put abc s3://hadoop
+upload: &apos;abc&apos; -&gt; &apos;s3://hadoop/abc&apos;  [1 of 1]
+     1109 of 1109   100% in    1s  1096.74 B/s  done
+[root@radosgw1 ~]# s3cmd ls s3://hadoop
+2018-04-25 08:47      1109   s3://hadoop/abc
+</code></pre><p>hadoop master节点上查看</p>
+<pre><code>[root@master ~]# hadoop fs -ls s3a://hadoop/
+Found 1 items
+-rw-rw-rw-   1       1109 2018-04-25 16:47 s3a://hadoop/abc
+</code></pre><p>1、 从hadoop client本机上传文件到对象存储</p>
+<pre><code>[root@master ~]# ls ceshi.txt 
+ceshi.txt
+[root@master ~]# hadoop fs -put ceshi.txt s3a://hadoop/
+[root@master ~]# hadoop fs -ls s3a://hadoop/
+Found 2 items
+-rw-rw-rw-   1       1109 2018-04-25 16:47 s3a://hadoop/abc
+-rw-rw-rw-   1       1083 2018-04-25 16:52 s3a://hadoop/ceshi.txt
+[root@master ~]#
+</code></pre><p>集群端查看</p>
+<pre><code>[root@radosgw1 ~]# s3cmd ls s3://hadoop
+2018-04-25 08:47      1109   s3://hadoop/abc
+2018-04-25 08:52      1083   s3://hadoop/ceshi.txt
+</code></pre><p>2、 将文件从对象存储下载到本地</p>
+<pre><code> [root@master ~]# rm -f ceshi.txt 
+[root@master ~]# ls ceshi.txt
+ls: cannot access ceshi.txt: No such file or directory
+[root@master ~]# hadoop fs -get s3a://hadoop/ceshi.txt 
+[root@master ~]# ls ceshi.txt
+ceshi.txt
+[root@master ~]#
+</code></pre><p>3、 将文件从对象拷贝到hdfs文件系统</p>
+<pre><code>[root@master ~]# hdfs dfs -ls /
+Found 4 items
+drwxr-xr-x   - root supergroup          0 2018-04-25 15:21 /haha
+drwxr-xr-x   - root supergroup          0 2018-04-25 12:10 /input
+drwxr-xr-x   - root supergroup          0 2018-04-25 12:11 /output
+drwx------   - root supergroup          0 2018-04-25 12:11 /tmp
+[root@master ~]# hdfs dfs -ls /ceshi.txt
+ls: `/ceshi.txt&apos;: No such file or directory
+
+[root@master ~]# hadoop distcp s3a://hadoop/ceshi.txt /ceshi.txt
+18/04/25 17:00:10 INFO tools.DistCp: Input Options: DistCpOptions{atomicCommit=false, syncFolder=false, deleteMissing=false, ignoreFailures=false, maxMaps=20, sslConfigurationFile=&apos;null&apos;, copyStrategy=&apos;uniformsize&apos;, sourceFileListing=null, sourcePaths=[s3a://hadoop/ceshi.txt], targetPath=/ceshi.txt, targetPathExists=false, preserveRawXattrs=false}
+18/04/25 17:00:10 INFO client.RMProxy: Connecting to ResourceManager at master/192.168.1.20:8032
+18/04/25 17:00:30 INFO Configuration.deprecation: io.sort.mb is deprecated. Instead, use mapreduce.task.io.sort.mb
+18/04/25 17:00:30 INFO Configuration.deprecation: io.sort.factor is deprecated. Instead, use mapreduce.task.io.sort.factor
+18/04/25 17:00:31 INFO client.RMProxy: Connecting to ResourceManager at master/192.168.1.20:8032
+18/04/25 17:00:31 INFO mapreduce.JobSubmitter: number of splits:1
+18/04/25 17:00:32 INFO mapreduce.JobSubmitter: Submitting tokens for job: job_1524633996089_0009
+18/04/25 17:00:32 INFO impl.YarnClientImpl: Submitted application application_1524633996089_0009
+18/04/25 17:00:32 INFO mapreduce.Job: The url to track the job: http://master:8088/proxy/application_1524633996089_0009/
+18/04/25 17:00:32 INFO tools.DistCp: DistCp job-id: job_1524633996089_0009
+18/04/25 17:00:32 INFO mapreduce.Job: Running job: job_1524633996089_0009
+18/04/25 17:00:40 INFO mapreduce.Job: Job job_1524633996089_0009 running in uber mode : false
+18/04/25 17:00:40 INFO mapreduce.Job:  map 0% reduce 0%
+18/04/25 17:00:52 INFO mapreduce.Job:  map 100% reduce 0%
+18/04/25 17:01:05 INFO mapreduce.Job: Job job_1524633996089_0009 completed successfully
+18/04/25 17:01:05 INFO mapreduce.Job: Counters: 38
+File System Counters
+    FILE: Number of bytes read=0
+    FILE: Number of bytes written=121596
+    FILE: Number of read operations=0
+    FILE: Number of large read operations=0
+    FILE: Number of write operations=0
+    HDFS: Number of bytes read=330
+    HDFS: Number of bytes written=1083
+    HDFS: Number of read operations=14
+    HDFS: Number of large read operations=0
+    HDFS: Number of write operations=4
+    S3A: Number of bytes read=1083
+    S3A: Number of bytes written=0
+    S3A: Number of read operations=3
+    S3A: Number of large read operations=0
+    S3A: Number of write operations=0
+Job Counters 
+    Launched map tasks=1
+    Other local map tasks=1
+    Total time spent by all maps in occupied slots (ms)=20780
+    Total time spent by all reduces in occupied slots (ms)=0
+    Total time spent by all map tasks (ms)=20780
+    Total vcore-milliseconds taken by all map tasks=20780
+    Total megabyte-milliseconds taken by all map tasks=21278720
+Map-Reduce Framework
+    Map input records=1
+    Map output records=0
+    Input split bytes=135
+    Spilled Records=0
+    Failed Shuffles=0
+    Merged Map outputs=0
+    GC time elapsed (ms)=154
+    CPU time spent (ms)=1350
+    Physical memory (bytes) snapshot=113676288
+    Virtual memory (bytes) snapshot=862224384
+    Total committed heap usage (bytes)=29032448
+File Input Format Counters 
+    Bytes Read=195
+File Output Format Counters 
+    Bytes Written=0
+org.apache.hadoop.tools.mapred.CopyMapper$Counter
+    BYTESCOPIED=1083
+    BYTESEXPECTED=1083
+    COPY=1
+
+[root@master ~]# hdfs dfs -ls /ceshi.txt
+-rw-r--r--   1 root supergroup       1083 2018-04-25 17:00 /ceshi.txt
+[root@master ~]# 
+</code></pre><p>4、  将文件从HDFS文件系统拷贝到s3对象存储中</p>
+<pre><code>s3对象列出所有文件
+[root@radosgw1 ~]# s3cmd ls s3://hadoop
+2018-04-25 08:47      1109   s3://hadoop/abc
+2018-04-25 08:52      1083   s3://hadoop/ceshi.txt
+[root@radosgw1 ~]# 
+
+将hdfs文件系统下的/haha目录中anaconda-ks.cfg文件传到s3对象存储里面
+[root@master ~]# hdfs dfs -ls /haha
+Found 1 items
+-rw-r--r--   1 root supergroup       1083 2018-04-25 15:21 /haha/anaconda-ks.cfg
+
+[root@master ~]# hadoop distcp /haha/anaconda-ks.cfg s3a://hadoop/
+18/04/25 17:06:18 INFO tools.DistCp: Input Options: DistCpOptions{atomicCommit=false, syncFolder=false, deleteMissing=false, ignoreFailures=false, maxMaps=20, sslConfigurationFile=&apos;null&apos;, copyStrategy=&apos;uniformsize&apos;, sourceFileListing=null, sourcePaths=[/haha/anaconda-ks.cfg], targetPath=s3a://hadoop/, targetPathExists=true, preserveRawXattrs=false}
+18/04/25 17:06:18 INFO client.RMProxy: Connecting to ResourceManager at master/192.168.1.20:8032
+18/04/25 17:06:24 INFO Configuration.deprecation: io.sort.mb is deprecated. Instead, use mapreduce.task.io.sort.mb
+18/04/25 17:06:24 INFO Configuration.deprecation: io.sort.factor is deprecated. Instead, use mapreduce.task.io.sort.factor
+18/04/25 17:06:25 INFO client.RMProxy: Connecting to ResourceManager at master/192.168.1.20:8032
+18/04/25 17:06:26 INFO mapreduce.JobSubmitter: number of splits:1
+18/04/25 17:06:26 INFO mapreduce.JobSubmitter: Submitting tokens for job: job_1524633996089_0010
+18/04/25 17:06:26 INFO impl.YarnClientImpl: Submitted application application_1524633996089_0010
+18/04/25 17:06:26 INFO mapreduce.Job: The url to track the job: http://master:8088/proxy/application_1524633996089_0010/
+18/04/25 17:06:26 INFO tools.DistCp: DistCp job-id: job_1524633996089_0010
+18/04/25 17:06:26 INFO mapreduce.Job: Running job: job_1524633996089_0010
+18/04/25 17:06:35 INFO mapreduce.Job: Job job_1524633996089_0010 running in uber mode : false
+18/04/25 17:06:35 INFO mapreduce.Job:  map 0% reduce 0%
+18/04/25 17:06:57 INFO mapreduce.Job:  map 100% reduce 0%
+18/04/25 17:08:14 INFO mapreduce.Job: Job job_1524633996089_0010 completed successfully
+18/04/25 17:08:14 INFO mapreduce.Job: Counters: 38
+File System Counters
+    FILE: Number of bytes read=0
+    FILE: Number of bytes written=121562
+    FILE: Number of read operations=0
+    FILE: Number of large read operations=0
+    FILE: Number of write operations=0
+    HDFS: Number of bytes read=1459
+    HDFS: Number of bytes written=0
+    HDFS: Number of read operations=10
+    HDFS: Number of large read operations=0
+    HDFS: Number of write operations=2
+    S3A: Number of bytes read=0
+    S3A: Number of bytes written=1083
+    S3A: Number of read operations=11
+    S3A: Number of large read operations=0
+    S3A: Number of write operations=3
+Job Counters 
+    Launched map tasks=1
+    Other local map tasks=1
+    Total time spent by all maps in occupied slots (ms)=86489
+    Total time spent by all reduces in occupied slots (ms)=0
+    Total time spent by all map tasks (ms)=86489
+    Total vcore-milliseconds taken by all map tasks=86489
+    Total megabyte-milliseconds taken by all map tasks=88564736
+Map-Reduce Framework
+    Map input records=1
+    Map output records=0
+    Input split bytes=134
+    Spilled Records=0
+    Failed Shuffles=0
+    Merged Map outputs=0
+    GC time elapsed (ms)=151
+    CPU time spent (ms)=1760
+    Physical memory (bytes) snapshot=116514816
+    Virtual memory (bytes) snapshot=863125504
+    Total committed heap usage (bytes)=29032448
+File Input Format Counters 
+    Bytes Read=242
+File Output Format Counters 
+    Bytes Written=0
+org.apache.hadoop.tools.mapred.CopyMapper$Counter
+    BYTESCOPIED=1083
+    BYTESEXPECTED=1083
+    COPY=1
+[root@master ~]# 
+
+s3集群端验证
+[root@radosgw1 ~]# s3cmd ls s3://hadoop
+2018-04-25 08:47      1109   s3://hadoop/abc
+2018-04-25 09:08      1083   s3://hadoop/anaconda-ks.cfg
+2018-04-25 08:52      1083   s3://hadoop/ceshi.txt
+[root@radosgw1 ~]# 
+</code></pre><p>5、 将对象存储中的文件作为mapreduce的输入，进行计算之后将结果输出到hdfs文件系统中。</p>
+<pre><code>将对象存储中的/hadoop/abc文件作为mapreduce的文件输入，计算结果输出到hdfs的/result目录    
+[root@master ~]# hadoop fs -ls s3a://hadoop/
+Found 3 items
+-rw-rw-rw-   1       1109 2018-04-25 16:47 s3a://hadoop/abc
+-rw-rw-rw-   1       1083 2018-04-25 17:08 s3a://hadoop/anaconda-ks.cfg
+-rw-rw-rw-   1       1083 2018-04-25 16:52 s3a://hadoop/ceshi.txt
+[root@master ~]# hdfs dfs -ls /result
+ls: `/result&apos;: No such file or directory
+[root@master ~]#
+</code></pre><p>当前hdfs是没有/result目录的，下面进行计算操作</p>
+<pre><code>[root@master ~]# hadoop jar /usr/hadoop/hadoop-2.7.3/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.3.jar wordcount s3a://hadoop/abc /result
+18/04/25 17:19:53 INFO client.RMProxy: Connecting to ResourceManager at master/192.168.1.20:8032
+18/04/25 17:19:55 INFO input.FileInputFormat: Total input paths to process : 1
+18/04/25 17:19:56 INFO mapreduce.JobSubmitter: number of splits:1
+18/04/25 17:19:56 INFO mapreduce.JobSubmitter: Submitting tokens for job: job_1524633996089_0011
+18/04/25 17:19:57 INFO impl.YarnClientImpl: Submitted application application_1524633996089_0011
+18/04/25 17:19:57 INFO mapreduce.Job: The url to track the job: http://master:8088/proxy/application_1524633996089_0011/
+18/04/25 17:19:57 INFO mapreduce.Job: Running job: job_1524633996089_0011
+18/04/25 17:20:06 INFO mapreduce.Job: Job job_1524633996089_0011 running in uber mode : false
+18/04/25 17:20:06 INFO mapreduce.Job:  map 0% reduce 0%
+18/04/25 17:20:23 INFO mapreduce.Job:  map 100% reduce 0%
+18/04/25 17:20:31 INFO mapreduce.Job:  map 100% reduce 100%
+18/04/25 17:20:32 INFO mapreduce.Job: Job job_1524633996089_0011 completed successfully
+18/04/25 17:20:32 INFO mapreduce.Job: Counters: 54
+File System Counters
+    FILE: Number of bytes read=1442
+    FILE: Number of bytes written=240937
+    FILE: Number of read operations=0
+    FILE: Number of large read operations=0
+    FILE: Number of write operations=0
+    HDFS: Number of bytes read=81
+    HDFS: Number of bytes written=1121
+    HDFS: Number of read operations=5
+    HDFS: Number of large read operations=0
+    HDFS: Number of write operations=2
+    S3A: Number of bytes read=1109
+    S3A: Number of bytes written=0
+    S3A: Number of read operations=1
+    S3A: Number of large read operations=0
+    S3A: Number of write operations=0
+Job Counters 
+    Launched map tasks=1
+    Launched reduce tasks=1
+    Rack-local map tasks=1
+    Total time spent by all maps in occupied slots (ms)=14541
+    Total time spent by all reduces in occupied slots (ms)=5450
+    Total time spent by all map tasks (ms)=14541
+    Total time spent by all reduce tasks (ms)=5450
+    Total vcore-milliseconds taken by all map tasks=14541
+    Total vcore-milliseconds taken by all reduce tasks=5450
+    Total megabyte-milliseconds taken by all map tasks=14889984
+    Total megabyte-milliseconds taken by all reduce tasks=5580800
+Map-Reduce Framework
+    Map input records=43
+    Map output records=104
+    Map output bytes=1517
+    Map output materialized bytes=1442
+    Input split bytes=81
+    Combine input records=104
+    Combine output records=79
+    Reduce input groups=79
+    Reduce shuffle bytes=1442
+    Reduce input records=79
+    Reduce output records=79
+    Spilled Records=158
+    Shuffled Maps =1
+    Failed Shuffles=0
+    Merged Map outputs=1
+    GC time elapsed (ms)=230
+    CPU time spent (ms)=2230
+    Physical memory (bytes) snapshot=324866048
+    Virtual memory (bytes) snapshot=1723260928
+    Total committed heap usage (bytes)=162926592
+Shuffle Errors
+    BAD_ID=0
+    CONNECTION=0
+    IO_ERROR=0
+    WRONG_LENGTH=0
+    WRONG_MAP=0
+    WRONG_REDUCE=0
+File Input Format Counters 
+    Bytes Read=1109
+File Output Format Counters 
+    Bytes Written=1121
+[root@master ~]#
+</code></pre><p>计算成功后，查看hdfs目录，下面可以看到目录存在，且计算结果文件也存在，且返回SUCCESS</p>
+<pre><code>[root@master ~]# hdfs dfs -ls /result
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2018-04-25 17:20 /result/_SUCCESS
+-rw-r--r--   1 root supergroup       1121 2018-04-25 17:20 /result/part-r-00000
+[root@master ~]# 
+</code></pre><p>6、 将对象存储中的文件作为mapreduce的输入，进行计算之后将结果输出到对象存储桶中。</p>
+<pre><code>首先查看对象存储桶中hadoop下result目录是否存在。待会输出结果会传到这里。
+[root@master ~]# hadoop fs -ls s3a://hadoop/result
+ls: `s3a://hadoop/result&apos;: No such file or directory
+
+[root@master ~]# hadoop jar /usr/hadoop/hadoop-2.7.3/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.3.jar wordcount s3a://hadoop/abc s3a://hadoop/result
+18/04/25 17:25:27 INFO client.RMProxy: Connecting to ResourceManager at master/192.168.1.20:8032
+18/04/25 17:25:39 INFO input.FileInputFormat: Total input paths to process : 1
+18/04/25 17:25:40 INFO mapreduce.JobSubmitter: number of splits:1
+18/04/25 17:25:41 INFO mapreduce.JobSubmitter: Submitting tokens for job: job_1524633996089_0012
+18/04/25 17:25:41 INFO impl.YarnClientImpl: Submitted application application_1524633996089_0012
+18/04/25 17:25:41 INFO mapreduce.Job: The url to track the job: http://master:8088/proxy/application_1524633996089_0012/
+18/04/25 17:25:41 INFO mapreduce.Job: Running job: job_1524633996089_0012
+18/04/25 17:25:53 INFO mapreduce.Job: Job job_1524633996089_0012 running in uber mode : false
+18/04/25 17:25:53 INFO mapreduce.Job:  map 0% reduce 0%
+18/04/25 17:26:57 INFO mapreduce.Job:  map 100% reduce 0%
+18/04/25 17:27:18 INFO mapreduce.Job:  map 100% reduce 67%
+18/04/25 17:27:27 INFO mapreduce.Job:  map 100% reduce 100%
+18/04/25 17:32:44 INFO mapreduce.Job: Job job_1524633996089_0012 completed successfully
+18/04/25 17:32:44 INFO mapreduce.Job: Counters: 54
+File System Counters
+    FILE: Number of bytes read=1442
+    FILE: Number of bytes written=240925
+    FILE: Number of read operations=0
+    FILE: Number of large read operations=0
+    FILE: Number of write operations=0
+    HDFS: Number of bytes read=81
+    HDFS: Number of bytes written=0
+    HDFS: Number of read operations=1
+    HDFS: Number of large read operations=0
+    HDFS: Number of write operations=0
+    S3A: Number of bytes read=1109
+    S3A: Number of bytes written=1121
+    S3A: Number of read operations=19
+    S3A: Number of large read operations=0
+    S3A: Number of write operations=5
+Job Counters 
+    Launched map tasks=1
+    Launched reduce tasks=1
+    Rack-local map tasks=1
+    Total time spent by all maps in occupied slots (ms)=22928
+    Total time spent by all reduces in occupied slots (ms)=198775
+    Total time spent by all map tasks (ms)=22928
+    Total time spent by all reduce tasks (ms)=198775
+    Total vcore-milliseconds taken by all map tasks=22928
+    Total vcore-milliseconds taken by all reduce tasks=198775
+    Total megabyte-milliseconds taken by all map tasks=23478272
+    Total megabyte-milliseconds taken by all reduce tasks=203545600
+Map-Reduce Framework
+    Map input records=43
+    Map output records=104
+    Map output bytes=1517
+    Map output materialized bytes=1442
+    Input split bytes=81
+    Combine input records=104
+    Combine output records=79
+    Reduce input groups=79
+    Reduce shuffle bytes=1442
+    Reduce input records=79
+    Reduce output records=79
+    Spilled Records=158
+    Shuffled Maps =1
+    Failed Shuffles=0
+    Merged Map outputs=1
+    GC time elapsed (ms)=256
+    CPU time spent (ms)=1550
+    Physical memory (bytes) snapshot=336670720
+    Virtual memory (bytes) snapshot=1724592128
+    Total committed heap usage (bytes)=162926592
+Shuffle Errors
+    BAD_ID=0
+    CONNECTION=0
+    IO_ERROR=0
+    WRONG_LENGTH=0
+    WRONG_MAP=0
+    WRONG_REDUCE=0
+File Input Format Counters 
+    Bytes Read=1109
+File Output Format Counters 
+    Bytes Written=1121
+[root@master ~]# 
+</code></pre><p>成功后，验证查看</p>
+<pre><code>hadoop节点验证
+[root@master ~]# hadoop fs -ls s3a://hadoop/result
+Found 2 items
+-rw-rw-rw-   1          0 2018-04-25 17:33 s3a://hadoop/result/_SUCCESS
+-rw-rw-rw-   1       1121 2018-04-25 17:32 s3a://hadoop/result/part-r-00000
+[root@master ~]# 
+
+ceph集群节点验证
+[root@radosgw1 ~]# s3cmd ls s3://hadoop/result/
+2018-04-25 09:33         0   s3://hadoop/result/_SUCCESS
+2018-04-25 09:32      1121   s3://hadoop/result/part-r-00000
+</code></pre><p>7、 将 HDFS 中的文件作为 MapReduce 的输入，计算结果输出到对象存储的存储空间中</p>
+<pre><code>下面将hdfs中ceshi.txt作为计算输入，将结果输出对象存储中hadoop/output目录中。 前期查看
+
+[root@master ~]# hdfs dfs -ls /
+Found 6 items
+-rw-r--r--   1 root supergroup       1083 2018-04-25 17:00 /ceshi.txt
+
+[root@master ~]# hadoop fs -ls s3a://hadoop/output
+ls: `s3a://hadoop/output&apos;: No such file or directory
+
+开始计算并输出
+
+[root@master ~]# hadoop jar /usr/hadoop/hadoop-2.7.3/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.3.jar wordcount /ceshi.txt  s3a://hadoop/output
+18/04/25 17:39:55 INFO client.RMProxy: Connecting to ResourceManager at master/192.168.1.20:8032
+18/04/25 17:40:04 INFO input.FileInputFormat: Total input paths to process : 1
+18/04/25 17:40:05 INFO mapreduce.JobSubmitter: number of splits:1
+18/04/25 17:40:05 INFO mapreduce.JobSubmitter: Submitting tokens for job: job_1524633996089_0013
+18/04/25 17:40:06 INFO impl.YarnClientImpl: Submitted application application_1524633996089_0013
+18/04/25 17:40:06 INFO mapreduce.Job: The url to track the job: http://master:8088/proxy/application_1524633996089_0013/
+18/04/25 17:40:06 INFO mapreduce.Job: Running job: job_1524633996089_0013
+18/04/25 17:40:19 INFO mapreduce.Job: Job job_1524633996089_0013 running in uber mode : false
+18/04/25 17:40:19 INFO mapreduce.Job:  map 0% reduce 0%
+18/04/25 17:41:16 INFO mapreduce.Job:  map 100% reduce 0%
+18/04/25 17:41:36 INFO mapreduce.Job:  map 100% reduce 67%
+18/04/25 17:41:45 INFO mapreduce.Job:  map 100% reduce 100%
+18/04/25 17:46:38 INFO mapreduce.Job: Job job_1524633996089_0013 completed successfully
+18/04/25 17:46:38 INFO mapreduce.Job: Counters: 54
+File System Counters
+    FILE: Number of bytes read=1404
+    FILE: Number of bytes written=240873
+    FILE: Number of read operations=0
+    FILE: Number of large read operations=0
+    FILE: Number of write operations=0
+    HDFS: Number of bytes read=1176
+    HDFS: Number of bytes written=0
+    HDFS: Number of read operations=2
+    HDFS: Number of large read operations=0
+    HDFS: Number of write operations=0
+    S3A: Number of bytes read=0
+    S3A: Number of bytes written=1091
+    S3A: Number of read operations=18
+    S3A: Number of large read operations=0
+    S3A: Number of write operations=5
+Job Counters 
+    Launched map tasks=1
+    Launched reduce tasks=1
+    Data-local map tasks=1
+    Total time spent by all maps in occupied slots (ms)=17302
+    Total time spent by all reduces in occupied slots (ms)=173487
+    Total time spent by all map tasks (ms)=17302
+    Total time spent by all reduce tasks (ms)=173487
+    Total vcore-milliseconds taken by all map tasks=17302
+    Total vcore-milliseconds taken by all reduce tasks=173487
+    Total megabyte-milliseconds taken by all map tasks=17717248
+    Total megabyte-milliseconds taken by all reduce tasks=177650688
+Map-Reduce Framework
+    Map input records=41
+    Map output records=102
+    Map output bytes=1483
+    Map output materialized bytes=1404
+    Input split bytes=93
+    Combine input records=102
+    Combine output records=77
+    Reduce input groups=77
+    Reduce shuffle bytes=1404
+    Reduce input records=77
+    Reduce output records=77
+    Spilled Records=154
+    Shuffled Maps =1
+    Failed Shuffles=0
+    Merged Map outputs=1
+    GC time elapsed (ms)=261
+    CPU time spent (ms)=1570
+    Physical memory (bytes) snapshot=325062656
+    Virtual memory (bytes) snapshot=1724448768
+    Total committed heap usage (bytes)=162926592
+Shuffle Errors
+    BAD_ID=0
+    CONNECTION=0
+    IO_ERROR=0
+    WRONG_LENGTH=0
+    WRONG_MAP=0
+    WRONG_REDUCE=0
+File Input Format Counters 
+    Bytes Read=1083
+File Output Format Counters 
+    Bytes Written=1091
+</code></pre><p>在hadoop节点和集群节点验证</p>
+<pre><code>[root@master ~]# hadoop fs -ls s3a://hadoop/output
+Found 2 items
+-rw-rw-rw-   1          0 2018-04-25 17:47 s3a://hadoop/output/_SUCCESS
+-rw-rw-rw-   1       1091 2018-04-25 17:46 s3a://hadoop/output/part-r-00000
+[root@master ~]# 
+
+
+[root@radosgw1 ~]# s3cmd ls s3://hadoop/output/
+2018-04-25 09:47         0   s3://hadoop/output/_SUCCESS
+2018-04-25 09:46      1091   s3://hadoop/output/part-r-00000
+[root@radosgw1 ~]# 
+</code></pre><p>可以看到集群端和hadoop节点端都能看到。</p>
+<p>至此，配置测试结束。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -189,209 +726,108 @@
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/04/25/hadoop2-7-3通过s3对接ceph10-2-radosgw测试/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/04/24/nginx反向代理和负载均衡最基础配置实现/" class="archive-article-date">
-  	<time datetime="2018-04-24T09:39:44.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-24</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2018/04/24/nginx反向代理和负载均衡最基础配置实现/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">nginx反向代理和负载均衡最基础配置实现</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/04/24/nginx反向代理和负载均衡最基础配置实现/">nginx反向代理和负载均衡最基础配置实现</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">nginx</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/04/23/tdb文件简介/" class="archive-article-date">
-  	<time datetime="2018-04-23T09:50:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-23</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/04/23/tdb文件简介/">tdb文件简介</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">tdbdump  tdbbakcup tdbtool</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/04/21/blktrace-工具简介/" class="archive-article-date">
-  	<time datetime="2018-04-21T14:00:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-21</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/04/21/blktrace-工具简介/">blktrace 工具简介</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">blktrace btt blkparse</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/04/15/cosbench例子-参考/" class="archive-article-date">
-  	<time datetime="2018-04-15T11:30:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-15</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/04/15/cosbench例子-参考/">cosbench例子-参考</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">cosbench</a>
-        		</li>
-      		
-		</ul>
-	</div>
 
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/04/02/集群所有mon-store-db丢失恢复/" class="archive-article-date">
-  	<time datetime="2018-04-02T11:42:38.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-02</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/04/02/集群所有mon-store-db丢失恢复/">集群所有mon store.db丢失恢复</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ceph</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
-
-    
 
 
           </div>
@@ -415,8 +851,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
