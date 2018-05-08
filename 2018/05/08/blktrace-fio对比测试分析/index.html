@@ -6,18 +6,31 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Tag: blktrace btt blkparse | deelaaay learning</title>
+  <title>blktrace+fio对比测试分析 | deelaaay learning</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="自我定位">
-<meta property="og:type" content="website">
-<meta property="og:title" content="deelaaay learning">
-<meta property="og:url" content="http://yoursite.com/tags/blktrace-btt-blkparse/index.html">
+  <meta name="description" content="利用BLKTRACE分析磁盘IO  在Linux系统上，查看磁盘的负载情况，咱们一般使用iostat监控工具，iostat的详细介绍查看另外的培训资料。其中很重要的参数就是await，await表示单个I/O所需的平均时间，但它同时包含了I/O Scheduler所消耗的时间和硬件所消耗的时间，所以不能作为硬件性能的指标。那如何才能分辨一个io从下发到返回整个时间上，是硬件层耗时多还是在io调度上">
+<meta name="keywords" content="blktrace fio">
+<meta property="og:type" content="article">
+<meta property="og:title" content="blktrace+fio对比测试分析">
+<meta property="og:url" content="http://yoursite.com/2018/05/08/blktrace-fio对比测试分析/index.html">
 <meta property="og:site_name" content="deelaaay learning">
-<meta property="og:description" content="自我定位">
+<meta property="og:description" content="利用BLKTRACE分析磁盘IO  在Linux系统上，查看磁盘的负载情况，咱们一般使用iostat监控工具，iostat的详细介绍查看另外的培训资料。其中很重要的参数就是await，await表示单个I/O所需的平均时间，但它同时包含了I/O Scheduler所消耗的时间和硬件所消耗的时间，所以不能作为硬件性能的指标。那如何才能分辨一个io从下发到返回整个时间上，是硬件层耗时多还是在io调度上">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://i.imgur.com/tyws5Pz.png">
+<meta property="og:image" content="https://i.imgur.com/pbfZKtL.jpg">
+<meta property="og:image" content="https://i.imgur.com/nGTPClj.jpg">
+<meta property="og:image" content="https://i.imgur.com/QbV8sv4.jpg">
+<meta property="og:image" content="https://i.imgur.com/O8hjNoU.jpg">
+<meta property="og:image" content="https://i.imgur.com/5YcmCt4.jpg">
+<meta property="og:image" content="https://i.imgur.com/FiYWzt6.jpg">
+<meta property="og:image" content="https://i.imgur.com/ap1qitG.jpg">
+<meta property="og:image" content="https://i.imgur.com/wm94VIu.jpg">
+<meta property="og:image" content="https://i.imgur.com/sVzF5Lq.jpg">
+<meta property="og:updated_time" content="2018-05-08T08:25:44.517Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="deelaaay learning">
-<meta name="twitter:description" content="自我定位">
+<meta name="twitter:title" content="blktrace+fio对比测试分析">
+<meta name="twitter:description" content="利用BLKTRACE分析磁盘IO  在Linux系统上，查看磁盘的负载情况，咱们一般使用iostat监控工具，iostat的详细介绍查看另外的培训资料。其中很重要的参数就是await，await表示单个I/O所需的平均时间，但它同时包含了I/O Scheduler所消耗的时间和硬件所消耗的时间，所以不能作为硬件性能的指标。那如何才能分辨一个io从下发到返回整个时间上，是硬件层耗时多还是在io调度上">
+<meta name="twitter:image" content="https://i.imgur.com/tyws5Pz.png">
   
     <link rel="alternative" href="/atom.xml" title="deelaaay learning" type="application/atom+xml">
   
@@ -159,60 +172,383 @@ var _hmt = _hmt || [];
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-blktrace-fio对比测试分析" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/04/21/blktrace-工具简介/" class="archive-article-date">
-  	<time datetime="2018-04-21T14:00:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-21</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/04/21/blktrace-工具简介/">blktrace 工具简介</a>
+    <h1 class="article-title" itemprop="name">
+      blktrace+fio对比测试分析
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2018/05/08/blktrace-fio对比测试分析/" class="archive-article-date">
+  	<time datetime="2018-05-08T08:13:20.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-08</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>利用BLKTRACE分析磁盘IO </p>
+<p>在Linux系统上，查看磁盘的负载情况，咱们一般使用iostat监控工具，iostat的详细介绍查看另外的培训资料。其中很重要的参数就是await，await表示单个I/O所需的平均时间，但它同时包含了I/O Scheduler所消耗的时间和硬件所消耗的时间，所以不能作为硬件性能的指标。那如何才能分辨一个io从下发到返回整个时间上，是硬件层耗时多还是在io调度上耗时多呢？如何查看io在各个时间段所消耗的时间呢？那么，blktrace在这种场合就能派上用场，因为它能记录I/O所经历的各个步骤，从中可以分析是IO Scheduler慢还是硬件响应慢，以及各个时间段所用时间。<br><a id="more"></a><br>blktrace的原理<br>一个I/O请求进入block layer之后，可能会经历下面的过程：</p>
+<ul>
+<li>Remap: 可能被DM(Device Mapper)或MD(Multiple Device, Software RAID) remap到其它设备</li>
+<li>Split: 可能会因为I/O请求与扇区边界未对齐、或者size太大而被分拆(split)成多个物理I/O</li>
+<li>Merge: 可能会因为与其它I/O请求的物理位置相邻而合并(merge)成一个I/O</li>
+</ul>
+<ul>
+<li>被IO Scheduler依照调度策略发送给driver</li>
+</ul>
+<ul>
+<li>被driver提交给硬件，经过HBA、电缆（光纤、网线等）、交换机（SAN或网络）、最后到达存储设备，设备完成IO请求之后再把结果发回。</li>
+</ul>
+<p>blktrace能记录I/O所经历的各个步骤，来看一下它记录的数据，包含9个字段，下图标示了其中8个字段的含义，大致的意思是“哪个进程在访问哪个硬盘的哪个扇区，进行什么操作，进行到哪个步骤，时间戳是多少”：<br><img src="https://i.imgur.com/tyws5Pz.png" alt=""></p>
+<ul>
+<li>第一个字段：8,0 这个字段是设备号 major device ID和minor device ID。-第二个字段：3 表示CPU</li>
+<li>第三个字段：11 序列号</li>
+<li>第四个字段：0.009507758 Time Stamp是时间偏移</li>
+<li>第五个字段：PID 本次IO对应的进程ID</li>
+<li>第六个字段：Event，这个字段非常重要，反映了IO进行到了那一步</li>
+<li>第七个字段：R表示 Read， W是Write，D表示block，B表示BarrierOperation</li>
+<li>第八个字段：223490+56，表示的是起始block number 和 number of blocks，即我们常说的Offset 和 Size(扇区？？)</li>
+<li>第九个字段： 进程名</li>
+</ul>
+<p>其中第六个字段非常有用：每一个字母都代表了IO请求所经历的某个阶段。</p>
+<ul>
+<li>A  映射值对应设备 IO was remapped to a different device</li>
+<li>B  IO反弹，由于32位地址长度限制，所以需要copy数据到低位内存，这会有性能损耗。IO bounced</li>
+<li>C  IO完成 IO completion</li>
+<li>D  将IO发送给驱动 IO issued to driver</li>
+<li>F  IO请求，前合并 IO front merged with request on queue</li>
+<li>G  获取 请求 Get request</li>
+<li>I  IO插入请求队列 IO inserted onto request queue</li>
+<li>M  IO请求，后合并 IO back merged with request on queue</li>
+<li>P  插上块设备队列（队列插入机制） Plug request</li>
+<li>Q  io被请求队列处理代码接管。 IO handled by request queue code</li>
+<li>S  等待发送请求。 Sleep request</li>
+<li>T  由于超时而拔出设备队列 Unplug due to timeout</li>
+<li>U  拔出设备队列 Unplug request</li>
+<li>X  开始新的扇区 Split</li>
+</ul>
+<p>其中最重要的几个阶段如下：</p>
+<pre><code>Q – 即将生成IO请求
+|
+G – IO请求生成
+|
+I – IO请求进入IO Scheduler队列
+|
+D – IO请求进入driver
+|
+C – IO请求执行完毕
+</code></pre><p>根据以上步骤对应的时间戳就可以计算出I/O请求在每个阶段所消耗的时间：</p>
+<pre><code>Q2G – 生成IO请求所消耗的时间，包括remap和split的时间；
+G2I – IO请求进入IO Scheduler所消耗的时间，包括merge的时间；
+I2D – IO请求在IO Scheduler中等待的时间；
+D2C – IO请求在driver和硬件上所消耗的时间；
+Q2C – 整个IO请求所消耗的时间(Q2I + I2D + D2C = Q2C)，相当于iostat的await。
+</code></pre><p>btt工具，blkparse等参考<a href="http://www.idcat.cn/2018/04/21/blktrace-%E5%B7%A5%E5%85%B7%E7%AE%80%E4%BB%8B/" title="http://www.idcat.cn/2018/04/21/blktrace-%E5%B7%A5%E5%85%B7%E7%AE%80%E4%BB%8B/" target="_blank" rel="noopener">http://www.idcat.cn/2018/04/21/blktrace-%E5%B7%A5%E5%85%B7%E7%AE%80%E4%BB%8B/</a></p>
+<h1 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h1><p><strong>1、4k direct=1</strong> </p>
+<p>通过fio对本地磁盘sdc挂载点进行4K小文件顺序写测试，期间监控磁盘信息。完成fio测试后，手动终止监控程序，然后进行数据分析。并与iostat的数据进行对比分析。</p>
+<p>fio 开启测试</p>
+<pre><code>[root@node1 samba-test]# fio -filename=./4k_file -direct=1 -iodepth=1 -thread -rw=write -ioengine=libaio -bs=4k -size=3G -numjobs=4  -times=300 -group_reporting -name=mytest2
+mytest2: (g=0): rw=write, bs=4K-4K/4K-4K/4K-4K, ioengine=libaio, iodepth=1
+...
+fio-2.2.5
+Starting 4 threads
+</code></pre><p>注意：</p>
+<p>1、direct=1即o_direct直写io。不会经过系统缓存，即没有合并</p>
+<p>2、numjobs=4 bs=4k  对应iostat即队列深度为4.</p>
+<p>3、bs=4k 对应iostat扇区数为8 </p>
+<p>开启监控磁盘sdc</p>
+<pre><code>[root@node1 ~]# blktrace -d /dev/sdc   
+</code></pre><p>iostat监控</p>
+<p><img src="https://i.imgur.com/pbfZKtL.jpg" alt=""></p>
+<p>FIO运行结束后，终止blktrace进程</p>
+<p>收集数据</p>
+<pre><code>[root@node1 fioblk]# blktrace -d /dev/sdc
+^C=== sdc ===
+  CPU  0:              5504242 events,   258012 KiB data
+  CPU  1:              5693967 events,   266905 KiB data
+  Total:              11198209 events (dropped 0),   524917 KiB data
+[root@node1 fioblk]# ll
+total 524920
+-rw-r--r-- 1 root root 264203656 Apr 27 14:08 sdc.blktrace.0
+-rw-r--r-- 1 root root 273310432 Apr 27 14:08 sdc.blktrace.1
+[root@node1 fioblk]#
+</code></pre><p>会看到生成文件数以当前cpu个数命名。</p>
+<p>生成数据</p>
+<p>blkparse -i sdc -d sdc.blktrace.bin</p>
+<p>会将所有数据汇总到文件sdc.blktrace.bin里面。期间我截图了如下，代表3个io的过程。对比上面介绍。<br> <img src="https://i.imgur.com/nGTPClj.jpg" alt=""><br>WS表示同步写</p>
+<p>分析数据</p>
+<p>生成所有数据，后面介绍针对性的数据。</p>
+<pre><code>[root@node1 fioblk]# btt -i sdc.blktrace.bin -A |less 
+</code></pre><p><img src="https://i.imgur.com/QbV8sv4.jpg" alt=""></p>
+<ul>
+<li>Q2G – 生成IO请求所消耗的时间，包括remap和split的时间；本例0.009ms</li>
+<li>G2I – IO请求进入IO Scheduler所消耗的时间，包括merge的时间;0.001ms</li>
+<li>I2D – IO请求在IO Scheduler中等待的时间；0.0009ms</li>
+<li>D2C – IO请求在driver和硬件上所消耗的时间；0.7ms</li>
+</ul>
+<p>因此：</p>
+<p>Q2C – 整个IO请求所消耗的时间(Q2I + I2D + D2C = Q2C)，相当于iostat的await。 几乎0.78ms与iostat wait值一致。在io scheduler上几乎没有消耗任何时间。</p>
+<p>生成iops 和bw每秒值</p>
+<pre><code>btt -i sdc.blktrace.bin -q sdc.q2c_latency
+total 1079400
+-rw-r--r-- 1 root root      2759 Apr 27 14:45 8,32_iops_fp.dat
+-rw-r--r-- 1 root root      4340 Apr 27 14:45 8,32_mbps_fp.dat
+-rw-r--r-- 1 root root 264203656 Apr 27 14:08 sdc.blktrace.0
+-rw-r--r-- 1 root root 273310432 Apr 27 14:08 sdc.blktrace.1
+-rw-r--r-- 1 root root 537514088 Apr 27 14:16 sdc.blktrace.bin
+-rw-r--r-- 1 root root  30244692 Apr 27 14:45 sdc.q2c_latency_8,32_q2c.dat
+-rw-r--r-- 1 root root      2759 Apr 27 14:45 sys_iops_fp.dat
+-rw-r--r-- 1 root root      4340 Apr 27 14:45 sys_mbps_fp.dat
+</code></pre><p>生成io大小分布</p>
+<pre><code>btt -i sdc.blktrace.bin -B sdc.offset
+[root@node1 fioblk]# ll
+total 1183168
+-rw-r--r-- 1 root root      2759 Apr 27 14:57 8,32_iops_fp.dat
+-rw-r--r-- 1 root root      4340 Apr 27 14:57 8,32_mbps_fp.dat
+-rw-r--r-- 1 root root 264203656 Apr 27 14:08 sdc.blktrace.0
+-rw-r--r-- 1 root root 273310432 Apr 27 14:08 sdc.blktrace.1
+-rw-r--r-- 1 root root 537514088 Apr 27 14:16 sdc.blktrace.bin
+-rw-r--r-- 1 root root  53125272 Apr 27 14:57 sdc.offset_8,32_c.dat
+-rw-r--r-- 1 root root  53125272 Apr 27 14:57 sdc.offset_8,32_w.dat
+</code></pre><p>本例只有write,所有生成了_w _c   写是w  读是r  c是w+c 本例c和w一样大。查看文件内容</p>
+<pre><code>0.000002716 52608272 52608280
+0.000129844 52608000 52608008
+0.000324497 52607688 52607696
+0.000927928 52606144 52606152
+0.001015187 52608280 52608288
+0.001449302 52608008 52608016
+</code></pre><p>第一行为时间，第二个为其实扇区大小，第3行为每个io结束扇区大小。可以算出每个io为8个扇区大小，既4k 与测试实际相符合。</p>
+<p><strong>2、1M direct=1</strong></p>
+<p>fio运行</p>
+<pre><code>[root@node1 samba-test]# fio -filename=./1m_file -direct=1 -iodepth=1 -thread -rw=write -ioengine=libaio -bs=1M -size=3G -numjobs=4  -times=300 -group_reporting -name=mytest2
+mytest2: (g=0): rw=write, bs=1M-1M/1M-1M/1M-1M, ioengine=libaio, iodepth=1
+...
+fio-2.2.5
+Starting 4 threads
+mytest2: Laying out IO file(s) (1 file(s) / 3072MB)
+</code></pre><p>注意：</p>
+<ul>
+<li>1、bs=1M ，sdc块设备最大单次io大小为512，因此会分为2个io写入，numjobs=4,因此队列深度为2*4 = 8 </li>
+<li>[root@node1 1m]# cat /sys/block/sdc/queue/max_sectors_kb<br>512</li>
+<li>[root@node1 ~]# cat /sys/block/sdc/queue/nr_requests<br>128   磁盘最大队列深度。</li>
+<li>2、bs=1M  最大io数为512kb，除以512byte扇区大小为操作扇区数1024<br>与iostat一致。</li>
+</ul>
+<p>blktrace取值</p>
+<pre><code>[root@node1 1m]# blktrace -d /dev/sdc
+</code></pre><p>iostat取值<br><img src="https://i.imgur.com/O8hjNoU.jpg" alt=""></p>
+<p>fio运行完成后，生成数据，并分析数据</p>
+<p>生成数据</p>
+<pre><code>[root@node1 1m]# blkparse -i sdc -d sdc.blktrace.bin
+</code></pre><p><img src="https://i.imgur.com/5YcmCt4.jpg" alt=""></p>
+<p>可以看到Q-C一个完整的io路径。右边起始扇区+1024个扇区数。与实际相符合。</p>
+<p>分析数据</p>
+<pre><code>root@node1 1m]# btt -i sdc.blktrace.bin -A | less
+</code></pre><p><img src="https://i.imgur.com/FiYWzt6.jpg" alt=""></p>
+<ul>
+<li>Q2G – 生成IO请求所消耗的时间，包括remap和split的时间；<br>本例0.7ms 因为有块分为2部分。1m分为2个512kb io，单个512kb io 到扇区后得与扇区对齐等等</li>
+<li>G2I – IO请求进入IO Scheduler所消耗的时间，包括merge的时间;<br>0.009ms  没有进行合并 绕过缓存了。</li>
+<li>I2D – IO请求在IO Scheduler中等待的时间；<br>2.8ms</li>
+<li>D2C – IO请求在driver和硬件上所消耗的时间；<br>34.5 ms</li>
+</ul>
+<p>因此：</p>
+<p>Q2C – 整个IO请求所消耗的时间(Q2I + I2D + D2C = Q2C)，相当于iostat的await。 为38.1ms与iostat wait值几乎一致。在io scheduler上几乎没有消耗任何时间。时间花费在driver硬件层。</p>
+<p>生成iops 和bw每秒值</p>
+<pre><code>btt -i sdc.blktrace.bin -q sdc.q2c_latency
+[root@node1 1m]# ll
+total 14508
+-rw-r--r-- 1 root root     913 Apr 27 15:40 8,32_iops_fp.dat
+-rw-r--r-- 1 root root    1731 Apr 27 15:40 8,32_mbps_fp.dat
+-rw-r--r-- 1 root root 3295528 Apr 27 15:20 sdc.blktrace.0
+-rw-r--r-- 1 root root 3894704 Apr 27 15:20 sdc.blktrace.1
+-rw-r--r-- 1 root root 7190232 Apr 27 15:28 sdc.blktrace.bin
+-rw-r--r-- 1 root root  452027 Apr 27 15:40 sdc.q2c_latency_8,32_q2c.dat
+-rw-r--r-- 1 root root     913 Apr 27 15:40 sys_iops_fp.dat
+-rw-r--r-- 1 root root    1731 Apr 27 15:40 sys_mbps_fp.dat
+</code></pre><p>生成io大小分布</p>
+<pre><code>btt -i sdc.blktrace.bin -B sdc.offset
+[root@node1 1m]# ll
+total 16148
+-rw-r--r-- 1 root root     913 Apr 27 15:44 8,32_iops_fp.dat
+-rw-r--r-- 1 root root    1731 Apr 27 15:44 8,32_mbps_fp.dat
+-rw-r--r-- 1 root root 3295528 Apr 27 15:20 sdc.blktrace.0
+-rw-r--r-- 1 root root 3894704 Apr 27 15:20 sdc.blktrace.1
+-rw-r--r-- 1 root root 7190232 Apr 27 15:28 sdc.blktrace.bin
+-rw-r--r-- 1 root root  835954 Apr 27 15:44 sdc.offset_8,32_c.dat
+-rw-r--r-- 1 root root  835954 Apr 27 15:44 sdc.offset_8,32_w.dat
+-rw-r--r-- 1 root root  452027 Apr 27 15:40 sdc.q2c_latency_8,32_q2c.dat
+-rw-r--r-- 1 root root     913 Apr 27 15:44 sys_iops_fp.dat
+-rw-r--r-- 1 root root    1731 Apr 27 15:44 sys_mbps_fp.dat
+</code></pre><p>只有写，即_w 与_c一致。查看_w文件sdc.offset_8,32_w.dat</p>
+<pre><code>127.845942908 65054784 65055808
+127.846185883 65055808 65056832
+127.952831800 65056832 65057856
+127.953065986 65057856 65058880
+127.955207647 65058880 65059904
+</code></pre><p>第一行为时间，第二个为其实扇区大小，第3行为每个io结束扇区大小。可以算出每个io为1024个扇区大小，既1M 与测试实际相符合。</p>
+<p><strong>3、4k direct=0</strong></p>
+<pre><code>[root@node1 samba-test]# fio -filename=./4k_file_direct0  -direct=0 -iodepth=1 -thread -rw=write -ioengine=libaio -bs=4k -size=3G -numjobs=4  -times=300 -group_reporting -name=mytest2
+mytest2: (g=0): rw=write, bs=4K-4K/4K-4K/4K-4K, ioengine=libaio, iodepth=1
+...
+fio-2.2.5
+Starting 4 threads
+mytest2: Laying out IO file(s) (1 file(s) / 3072MB)
+</code></pre><ul>
+<li>direct=0后 启动io buffer </li>
+</ul>
+<p>iostat监控<br><img src="https://i.imgur.com/ap1qitG.jpg" alt=""></p>
+<p>blktrace监控数据</p>
+<p>生成数据</p>
+<pre><code>[root@node1 1m]# blkparse -i sdc -d sdc.blktrace.bin
+</code></pre><p><img src="https://i.imgur.com/wm94VIu.jpg" alt=""></p>
+<p>4k对象大小，在io路径变成1024 既最大512kb字节，很明显进行IO合并，大部分io动作都是Q G I来回循环，即生成io请求到io请求队列，就返回继续申请新的io到队列，整体由内核kworker进行io任务的调度，在内存swapper中完成io写入。W表示异步写。</p>
+<p>分析数据</p>
+<pre><code>[root@node1 1m]# btt -i sdc.blktrace.bin -A | less
+</code></pre><p><img src="https://i.imgur.com/sVzF5Lq.jpg" alt=""></p>
+<ul>
+<li>Q2G – 生成IO请求所消耗的时间，包括remap和split的时间；<br>本例5.6ms</li>
+<li>G2I – IO请求进入IO Scheduler所消耗的时间，包括merge的时间;<br>0.009ms  没有进行合并。</li>
+<li>I2D – IO请求在IO Scheduler中等待的时间；<br>635 ms</li>
+<li>D2C – IO请求在driver和硬件上所消耗的时间；<br>188 ms</li>
+<li>Q2C – 整个IO请求所消耗的时间(Q2I + I2D + D2C = Q2C)，相当于iostat的await。 为828.6ms与iostat wait值几乎一致。在io scheduler上消耗太多时间。在driver硬件层耗时相对少一些，但是也很大了达到188ms。<br>其中M2D io合并时间平均4.5s.</li>
+</ul>
+<p>生成io大小分布</p>
+<pre><code>btt -i sdc.blktrace.bin -B sdc.offset
+
+93.463618386 74670904 74671928
+   93.463870465 74671928 74672952
+   93.464140190 74672952 74673976
+   93.464445965 74673976 74675000
+   93.464740898 74675000 74676024
+   93.465027976 74676024 74677048
+   93.465313376 74677048 74678072
+</code></pre><p>同样的是以1024个扇区为最小io。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">blktrace btt blkparse</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">blktrace fio</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/05/08/blktrace-fio对比测试分析/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
   
   
-    </div></section>
+    <a href="/2018/04/25/hadoop2-7-3通过s3对接ceph10-2-radosgw测试/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">hadoop2.7.3通过s3对接ceph10.2 radosgw测试</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+  
+  
   
 
-    
+  
+
+  
+
+  
+
+
 
 
           </div>
@@ -236,9 +572,9 @@ var _hmt = _hmt || [];
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,
