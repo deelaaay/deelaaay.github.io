@@ -5,14 +5,14 @@
   
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-  <link rel="dns-prefetch" href="http://yoursite.com">
+  <link rel="dns-prefetch" href="http://idcat.cn">
   <title>记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程 | deelaaay learning</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程 在一次对ceph集群做模拟故障测试过程中，外置内核客户端挂载ceph集群，客户端开启fio进行写，dd进行读的过程中。对集群节点的某个osd磁盘进行拔盘操作。客户端读取，写入中断一段时间，之后继续恢复读写。在插入磁盘之后，发现有个其他的osd 没有up.如下图：">
 <meta name="keywords" content="ceph">
 <meta property="og:type" content="article">
 <meta property="og:title" content="记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程">
-<meta property="og:url" content="http://yoursite.com/2018/03/08/记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程/index.html">
+<meta property="og:url" content="http://idcat.cn/2018/03/08/记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程/index.html">
 <meta property="og:site_name" content="deelaaay learning">
 <meta property="og:description" content="记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程 在一次对ceph集群做模拟故障测试过程中，外置内核客户端挂载ceph集群，客户端开启fio进行写，dd进行读的过程中。对集群节点的某个osd磁盘进行拔盘操作。客户端读取，写入中断一段时间，之后继续恢复读写。在插入磁盘之后，发现有个其他的osd 没有up.如下图：">
 <meta property="og:locale" content="zh-Hans">
@@ -352,7 +352,7 @@ Pass completed, 0 bad blocks found. (0/0/0 errors)
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/03/08/记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://idcat.cn/2018/03/08/记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -517,7 +517,11 @@ var _hmt = _hmt || [];
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">ceph</a>
+                <a href="javascript:void(0)" class="js-tag color2">blktrace btt blkparse</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">io</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -525,11 +529,7 @@ var _hmt = _hmt || [];
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">blktrace btt blkparse</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">io</a>
+                <a href="javascript:void(0)" class="js-tag color5">ceph</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -541,7 +541,7 @@ var _hmt = _hmt || [];
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">cosbench</a>
+                <a href="javascript:void(0)" class="js-tag color1">nginx</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -549,11 +549,11 @@ var _hmt = _hmt || [];
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">systemtap</a>
+                <a href="javascript:void(0)" class="js-tag color4">cosbench</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">nginx</a>
+                <a href="javascript:void(0)" class="js-tag color5">systemtap</a>
               </li>
              
               <li class="article-tag-list-item">

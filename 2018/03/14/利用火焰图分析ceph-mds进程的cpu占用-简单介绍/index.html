@@ -5,14 +5,14 @@
   
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-  <link rel="dns-prefetch" href="http://yoursite.com">
+  <link rel="dns-prefetch" href="http://idcat.cn">
   <title>利用火焰图分析ceph-mds进程的cpu占用-简单介绍 | deelaaay learning</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="利用火焰图分析ceph-mds进程的cpu占用-简单介绍 Perf工具简介 它是 Linux 系统原生提供的性能分析工具，用来进行软件性能分析的工具。是linux中用于分析性能问题的一大利器，可以针对一个运行着的程序，对系统进行采样，会返回 CPU 正在执行的函数名以及调用栈（stack）。通常，它的执行频率是 99Hz（每秒99次），如果99次都返回同一个函数名，那就说明 CPU 这一秒钟都在执">
 <meta name="keywords" content="flamegraph">
 <meta property="og:type" content="article">
 <meta property="og:title" content="利用火焰图分析ceph-mds进程的cpu占用-简单介绍">
-<meta property="og:url" content="http://yoursite.com/2018/03/14/利用火焰图分析ceph-mds进程的cpu占用-简单介绍/index.html">
+<meta property="og:url" content="http://idcat.cn/2018/03/14/利用火焰图分析ceph-mds进程的cpu占用-简单介绍/index.html">
 <meta property="og:site_name" content="deelaaay learning">
 <meta property="og:description" content="利用火焰图分析ceph-mds进程的cpu占用-简单介绍 Perf工具简介 它是 Linux 系统原生提供的性能分析工具，用来进行软件性能分析的工具。是linux中用于分析性能问题的一大利器，可以针对一个运行着的程序，对系统进行采样，会返回 CPU 正在执行的函数名以及调用栈（stack）。通常，它的执行频率是 99Hz（每秒99次），如果99次都返回同一个函数名，那就说明 CPU 这一秒钟都在执">
 <meta property="og:locale" content="zh-Hans">
@@ -282,7 +282,7 @@ var _hmt = _hmt || [];
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/03/14/利用火焰图分析ceph-mds进程的cpu占用-简单介绍/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://idcat.cn/2018/03/14/利用火焰图分析ceph-mds进程的cpu占用-简单介绍/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -447,7 +447,11 @@ var _hmt = _hmt || [];
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">ceph</a>
+                <a href="javascript:void(0)" class="js-tag color2">blktrace btt blkparse</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">io</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -455,11 +459,7 @@ var _hmt = _hmt || [];
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">blktrace btt blkparse</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">io</a>
+                <a href="javascript:void(0)" class="js-tag color5">ceph</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -471,7 +471,7 @@ var _hmt = _hmt || [];
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">cosbench</a>
+                <a href="javascript:void(0)" class="js-tag color1">nginx</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -479,11 +479,11 @@ var _hmt = _hmt || [];
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">systemtap</a>
+                <a href="javascript:void(0)" class="js-tag color4">cosbench</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">nginx</a>
+                <a href="javascript:void(0)" class="js-tag color5">systemtap</a>
               </li>
              
               <li class="article-tag-list-item">
