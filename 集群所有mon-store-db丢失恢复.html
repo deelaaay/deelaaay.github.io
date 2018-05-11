@@ -7,18 +7,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://idcat.cn">
-  <title>Tag: leveldb ceph | deelaaay learning</title>
+  <title>集群所有mon store.db丢失恢复 | deelaaay learning</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="自我定位">
-<meta property="og:type" content="website">
-<meta property="og:title" content="deelaaay learning">
-<meta property="og:url" content="http://idcat.cn/tags/leveldb-ceph/index.html">
+  <meta name="description" content="1、模拟测试环境 三台虚拟机，每台虚拟机一个osd，均是mon节点，mds节点 node1  192.168.1.141  node2  192.168.1.142  node3  192.168.1.143">
+<meta name="keywords" content="ceph">
+<meta property="og:type" content="article">
+<meta property="og:title" content="集群所有mon store.db丢失恢复">
+<meta property="og:url" content="http://idcat.cn/集群所有mon-store-db丢失恢复.html">
 <meta property="og:site_name" content="deelaaay learning">
-<meta property="og:description" content="自我定位">
+<meta property="og:description" content="1、模拟测试环境 三台虚拟机，每台虚拟机一个osd，均是mon节点，mds节点 node1  192.168.1.141  node2  192.168.1.142  node3  192.168.1.143">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-04-02T11:50:00.576Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="deelaaay learning">
-<meta name="twitter:description" content="自我定位">
+<meta name="twitter:title" content="集群所有mon store.db丢失恢复">
+<meta name="twitter:description" content="1、模拟测试环境 三台虚拟机，每台虚拟机一个osd，均是mon节点，mds节点 node1  192.168.1.141  node2  192.168.1.142  node3  192.168.1.143">
   
     <link rel="alternative" href="/atom.xml" title="deelaaay learning" type="application/atom+xml">
   
@@ -160,60 +162,347 @@ var _hmt = _hmt || [];
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-集群所有mon-store-db丢失恢复" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/leveldb-python基础操作方法.html" class="archive-article-date">
-  	<time datetime="2018-03-27T12:06:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-27</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/leveldb-python基础操作方法.html">leveldb python基础操作方法</a>
+    <h1 class="article-title" itemprop="name">
+      集群所有mon store.db丢失恢复
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/集群所有mon-store-db丢失恢复.html" class="archive-article-date">
+  	<time datetime="2018-04-02T11:42:38.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-02</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1、模拟测试环境</p>
+<p>三台虚拟机，每台虚拟机一个osd，均是mon节点，mds节点</p>
+<pre><code>node1  192.168.1.141 
+node2  192.168.1.142 
+node3  192.168.1.143 
+</code></pre><a id="more"></a>
+<p>2、模拟所有节点的mon  数据丢失 </p>
+<p>在3个集群节点上停止mon服务，拷贝数据到其他路径</p>
+<pre><code>[root@node1 ~]# systemctl stop ceph-mon@node1
+[root@node1 ~]# mv /var/lib/ceph/mon/ceph-node1/store.db /tmp/
+
+[root@node2 ~]# systemctl stop ceph-mon@node2
+[root@node2 ~]# mv /var/lib/ceph/mon/ceph-node2/store.db/ /tmp/
+
+[root@node3 ~]# systemctl stop ceph-mon@node3
+[root@node3 ~]# mv  /var/lib/ceph/mon/ceph-node3/store.db/ /tmp
+</code></pre><p>3、从osd上获取monmap信息</p>
+<p>先停止所有的osd服务，然后每个节点创建临时目录</p>
+<pre><code>[root@node1 ~]# systemctl stop ceph-osd@0
+[root@node2 ~]# systemctl stop ceph-osd@1
+[root@node3 ~]# systemctl stop ceph-osd@2
+[root@node1 ~]# mkdir /tmp/monstore
+[root@node2 ~]# mkdir /tmp/monstore
+[root@node3 ~]# mkdir /tmp/monstore
+</code></pre><p>首先在node1上操作，该节点只有一个osd。从这个osd上收集mon相关的数据，存放到/tmp/monstore 目录</p>
+<pre><code>[root@node1 ~]# ceph-objectstore-tool --data-path /var/lib/ceph/osd/ceph-0/ --op update-mon-db --mon-store-path /tmp/monstore/
+osd.0   : 0 osdmaps trimmed, 31 osdmaps added.
+      256 pgs added.
+</code></pre><p>因为有多台osd机器多个osd的话，就得在每台服务器每个osd上分别执行上面命令。这个目录的数据一定要保持递增的。弄完一台就传递数据到下一台接着弄。</p>
+<p>因为本例中有3个节点，每个节点只有一个osd，所以node1上只需要执行一次即可。</p>
+<p>传递数据到node2上</p>
+<pre><code>[root@node1 store.db]# rsync -avz /tmp/monstore/ node2:/tmp/monstore/
+sending incremental file list
+./
+store.db/
+store.db/000003.log
+store.db/CURRENT
+store.db/LOCK
+store.db/MANIFEST-000002
+
+sent 27853 bytes  received 95 bytes  18632.00 bytes/sec
+total size is 329590  speedup is 11.79
+</code></pre><p>在node2节点上从osd上获取mon相关数据</p>
+<pre><code>[root@node2 ~]# ceph-objectstore-tool --data-path /var/lib/ceph/osd/ceph-1/ --op update-mon-db --mon-store-path /tmp/monstore/
+osd.1   : 0 osdmaps trimmed, 0 osdmaps added.
+      96 pgs added.
+</code></pre><p>传递数据到node3</p>
+<pre><code>[root@node2 ~]# rsync -avz /tmp/monstore/ node3:/tmp/monstore/
+sending incremental file list
+./
+store.db/
+store.db/000005.sst
+store.db/000006.log
+store.db/CURRENT
+store.db/LOCK
+store.db/MANIFEST-000004
+
+sent 37210 bytes  received 114 bytes  74648.00 bytes/sec
+total size is 132524  speedup is 3.55
+</code></pre><p>在node3上获取mon数据</p>
+<pre><code>[root@node3 store.db]# ceph-objectstore-tool --data-path /var/lib/ceph/osd/ceph-2/ --op update-mon-db --mon-store-path /tmp/monstore/
+osd.2   : 0 osdmaps trimmed, 0 osdmaps added.
+      82 pgs added.
+</code></pre><p>之后，将这个 目录的数据传递到所有需要恢复mon节点上，本例为node1 node2 node3(已有最新数据)</p>
+<pre><code>[root@node3 store.db]# rsync -avz /tmp/monstore/ node1:/tmp/monstore/
+root@node1&apos;s password: 
+sending incremental file list
+store.db/
+store.db/000005.sst
+store.db/000008.sst
+store.db/000009.log
+store.db/CURRENT
+store.db/MANIFEST-000007
+
+sent 41661 bytes  received 117 bytes  16711.20 bytes/sec
+total size is 134943  speedup is 3.23
+
+[root@node3 store.db]# rsync -avz /tmp/monstore/ node2:/tmp/monstore/
+sending incremental file list
+store.db/
+store.db/000008.sst
+store.db/000009.log
+store.db/CURRENT
+store.db/MANIFEST-000007
+
+sent 10113 bytes  received 98 bytes  20422.00 bytes/sec
+total size is 134943  speedup is 13.22
+</code></pre><p>4、恢复mon数据</p>
+<p>删除之前默认路径存在的数据，或者新建目录</p>
+<pre><code>[root@node1 mon]# mkdir /var/lib/ceph/mon/ceph-node1/
+[root@node1 ceph-node1]# ceph-monstore-tool /tmp/monstore/ rebuild
+[root@node1 ceph-node1]# cp -ra /tmp/monstore/* /var/lib/ceph/mon/ceph-node1/
+[root@node1 ceph-node1]# touch /var/lib/ceph/mon/ceph-node1/done
+[root@node1 ceph-node1]# touch /var/lib/ceph/mon/ceph-node1/systemd
+[root@node1 ceph-node1]# chown ceph:ceph -R /var/lib/ceph/mon/ceph-node1/
+</code></pre><p>在node2 node3节点上分别执行上面操作</p>
+<p>5、重启mon</p>
+<p>所有节点重启mon服务</p>
+<pre><code>[root@node1 ceph-node1]# systemctl restart ceph-mon@node1
+Job for ceph-mon@node1.service failed because start of the service was attempted too often. See &quot;systemctl status ceph-mon@node1.service&quot; and &quot;journalctl -xe&quot; for details.
+To force a start use &quot;systemctl reset-failed ceph-mon@node1.service&quot; followed by &quot;systemctl start ceph-mon@node1.service&quot; again.
+[root@node1 ceph-node1]# systemctl reset-failed ceph-mon@node1.service
+[root@node1 ceph-node1]# systemctl start ceph-mon@node1.service
+</code></pre><p>最终查看mon均没有启动，查看日志显示如下信息：</p>
+<pre><code>2018-04-02 17:55:29.419474 7f71222da700  1 leveldb: Compacting 5@0 + 0@1 files
+2018-04-02 17:55:29.419975 7f71284cc600  0 mon.node1 does not exist in monmap, will attempt to join an existing cluster
+2018-04-02 17:55:29.420158 7f71284cc600 -1 no public_addr or public_network specified, and mon.node1 not present in monmap or ceph.conf
+</code></pre><p>提示节点不在monmap表中。</p>
+<p>参考之前写的文件 <a href="http://www.idcat.cn/2018/03/27/ceph%E9%9B%86%E7%BE%A4%E6%9B%BF%E6%8D%A2mon%E8%8A%82%E7%82%B9ip%E5%9C%B0%E5%9D%80/" title="更换mon ip地址" target="_blank" rel="noopener">http://www.idcat.cn/2018/03/27/ceph%E9%9B%86%E7%BE%A4%E6%9B%BF%E6%8D%A2mon%E8%8A%82%E7%82%B9ip%E5%9C%B0%E5%9D%80/</a></p>
+<p>6、加入monmap</p>
+<pre><code>[root@node1 tmp]# monmaptool --create --generate -c /etc/ceph/ceph.conf /tmp/monaaa
+monmaptool: monmap file /tmp/monaaa
+monmaptool: set fsid to 911c57dc-a930-4da8-ab0e-69f6b6586e3d
+monmaptool: writing epoch 0 to /tmp/monaaa (3 monitors)
+
+[root@node1 tmp]# monmaptool --print /tmp/monaaa 
+monmaptool: monmap file /tmp/monaaa
+epoch 0
+fsid 911c57dc-a930-4da8-ab0e-69f6b6586e3d
+last_changed 2018-04-02 18:25:56.526811
+created 2018-04-02 18:25:56.526811
+0: 192.168.1.141:6789/0 mon.noname-a
+1: 192.168.1.142:6789/0 mon.noname-b
+2: 192.168.1.143:6789/0 mon.noname-c
+</code></pre><p>可以看到主机名显示为noname-a 等。。</p>
+<p>删除主机节点</p>
+<pre><code>[root@node1 tmp]# monmaptool --rm noname-a /tmp/monaaa 
+monmaptool: monmap file /tmp/monaaa
+monmaptool: removing noname-a
+monmaptool: writing epoch 0 to /tmp/monaaa (2 monitors)
+
+[root@node1 tmp]# monmaptool --rm noname-b /tmp/monaaa 
+monmaptool: monmap file /tmp/monaaa
+monmaptool: removing noname-b
+monmaptool: writing epoch 0 to /tmp/monaaa (1 monitors)
+
+[root@node1 tmp]# monmaptool --rm noname-c /tmp/monaaa 
+monmaptool: monmap file /tmp/monaaa
+monmaptool: removing noname-c
+monmaptool: writing epoch 0 to /tmp/monaaa (0 monitors)
+</code></pre><p>添加新的主机节点</p>
+<pre><code>[root@node1 tmp]# monmaptool --add node1 192.168.1.141:6789 /tmp/monaaa 
+monmaptool: monmap file /tmp/monaaa
+monmaptool: writing epoch 0 to /tmp/monaaa (1 monitors)
+
+[root@node1 tmp]# monmaptool --add node2 192.168.1.142:6789 /tmp/monaaa     
+monmaptool: monmap file /tmp/monaaa
+monmaptool: writing epoch 0 to /tmp/monaaa (2 monitors)
+
+[root@node1 tmp]# monmaptool --add node3 192.168.1.143:6789 /tmp/monaaa 
+monmaptool: monmap file /tmp/monaaa
+monmaptool: writing epoch 0 to /tmp/monaaa (3 monitors)
+</code></pre><p>将该monaaa文件传到node2 node3 需要恢复mon信息的节点上</p>
+<pre><code>[root@node1 tmp]# scp /tmp/monaaa node2:/tmp/
+monaaa                                                                                     100%  481    43.3KB/s   00:00    
+[root@node1 tmp]# scp /tmp/monaaa node3:/tmp/
+monaaa                                                                                     100%  481   570.6KB/s   00:00    
+</code></pre><p>在各个节点上注入新的monmap表信息</p>
+<pre><code>[root@node1 ~]# ceph-mon -i node1 --inject-monmap /tmp/monaaa 
+[root@node2 ~]# ceph-mon -i node2 --inject-monmap /tmp/monaaa
+[root@node3 ~]# ceph-mon -i node3 --inject-monmap /tmp/monaaa 
+</code></pre><p>启动mon</p>
+<pre><code>[root@node1 ~]# systemctl start ceph-mon@node1
+[root@node2 ~]# systemctl start ceph-mon@node2
+[root@node3 ~]# systemctl start ceph-mon@node3
+</code></pre><p>查看集群状态</p>
+<p>[root@node2 ~]# ceph -s</p>
+<pre><code>cluster 911c57dc-a930-4da8-ab0e-69f6b6586e3d
+ health HEALTH_OK
+ monmap e1: 3 mons at {node1=192.168.1.141:6789/0,node2=192.168.1.142:6789/0,node3=192.168.1.143:6789/0}
+        election epoch 2, quorum 0,1,2 node1,node2,node3
+ osdmap e31: 3 osds: 3 up, 3 in
+        flags sortbitwise,require_jewel_osds
+  pgmap v1: 256 pgs, 3 pools, 2068 bytes data, 20 objects
+        0 kB used, 0 kB / 0 kB avail
+             225 active+clean
+              28 active+clean+scrubbing
+               3 active+clean+scrubbing+deep
+</code></pre><p>至此 集群恢复OK</p>
+<p>参考<a href="http://www.zphj1987.com/2017/04/19/why-rm-object-can-get/" target="_blank" rel="noopener">http://www.zphj1987.com/2017/04/19/why-rm-object-can-get/</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">leveldb ceph</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ceph</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://idcat.cn/集群所有mon-store-db丢失恢复.html" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/cosbench例子-参考.html" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          cosbench例子-参考
+        
+      </div>
+    </a>
   
   
-    </div></section>
+    <a href="/ceph-多区域radosgw网关配置.html" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">ceph 多区域radosgw网关配置</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+  
+  
   
 
-    
+  
+  
+  
+	<script>
+	(function(){
+		var bp = document.createElement('script');
+		bp.src = '//push.zhanzhang.baidu.com/push.js';
+		var s = document.getElementsByTagName("script")[0];
+		s.parentNode.insertBefore(bp, s);
+	})();
+	</script>     
+   
+
+  
+
+  
+
+
 
 
           </div>
@@ -237,9 +526,9 @@ var _hmt = _hmt || [];
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,

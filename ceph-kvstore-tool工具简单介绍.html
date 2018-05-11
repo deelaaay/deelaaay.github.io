@@ -7,18 +7,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://idcat.cn">
-  <title>Tag: leveldb ceph | deelaaay learning</title>
+  <title>ceph-kvstore-tool工具简单介绍 | deelaaay learning</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="自我定位">
-<meta property="og:type" content="website">
-<meta property="og:title" content="deelaaay learning">
-<meta property="og:url" content="http://idcat.cn/tags/leveldb-ceph/index.html">
+  <meta name="description" content="参考https://blog.csdn.net/scaleqiao/article/details/51946042 大家都知道Ceph的很多数据比如PG log、Monitor的数据都存在kvstore里（leveldb或者RocksDB中），Ceph也提供了查看kvstore里数据的工具，它就是ceph-kvstore-tool。">
+<meta name="keywords" content="ceph">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ceph-kvstore-tool工具简单介绍">
+<meta property="og:url" content="http://idcat.cn/ceph-kvstore-tool工具简单介绍.html">
 <meta property="og:site_name" content="deelaaay learning">
-<meta property="og:description" content="自我定位">
+<meta property="og:description" content="参考https://blog.csdn.net/scaleqiao/article/details/51946042 大家都知道Ceph的很多数据比如PG log、Monitor的数据都存在kvstore里（leveldb或者RocksDB中），Ceph也提供了查看kvstore里数据的工具，它就是ceph-kvstore-tool。">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-03-27T12:09:04.629Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="deelaaay learning">
-<meta name="twitter:description" content="自我定位">
+<meta name="twitter:title" content="ceph-kvstore-tool工具简单介绍">
+<meta name="twitter:description" content="参考https://blog.csdn.net/scaleqiao/article/details/51946042 大家都知道Ceph的很多数据比如PG log、Monitor的数据都存在kvstore里（leveldb或者RocksDB中），Ceph也提供了查看kvstore里数据的工具，它就是ceph-kvstore-tool。">
   
     <link rel="alternative" href="/atom.xml" title="deelaaay learning" type="application/atom+xml">
   
@@ -160,60 +162,541 @@ var _hmt = _hmt || [];
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-ceph-kvstore-tool工具简单介绍" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/leveldb-python基础操作方法.html" class="archive-article-date">
-  	<time datetime="2018-03-27T12:06:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-27</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/leveldb-python基础操作方法.html">leveldb python基础操作方法</a>
+    <h1 class="article-title" itemprop="name">
+      ceph-kvstore-tool工具简单介绍
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/ceph-kvstore-tool工具简单介绍.html" class="archive-article-date">
+  	<time datetime="2018-03-27T12:07:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-27</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>参考<a href="https://blog.csdn.net/scaleqiao/article/details/51946042" target="_blank" rel="noopener">https://blog.csdn.net/scaleqiao/article/details/51946042</a></p>
+<p>大家都知道Ceph的很多数据比如PG log、Monitor的数据都存在kvstore里（leveldb或者RocksDB中），Ceph也提供了查看kvstore里数据的工具，它就是ceph-kvstore-tool。<br><a id="more"></a><br>1 安装ceph-kvstore-tool工具</p>
+<p>如果你是从官网释放的rpm包安装的Ceph，那么ceph-kvstore-tool默认是没有安装的，它包含在ceph-test这个rpm中，你可以通过以下方法安装。</p>
+<pre><code>yum install ceph-test  
+</code></pre><p>2 ceph-kvstore-tool命令使用介绍</p>
+<p>以下介绍基于Ceph 10.2.3版本，</p>
+<pre><code>[root@ceph02 ~]# ceph --version
+ceph version 10.2.3 (ecc23778eb545d8dd55e2e4735b53cc93f92e65b) 
+</code></pre><p>查看帮助</p>
+<pre><code>[root@ceph02 ~]# ceph-kvstore-tool -h
+Usage: ceph-kvstore-tool &lt;leveldb|rocksdb|...&gt; &lt;store path&gt; command [args...]
+
+Commands:
+  list [prefix]
+  list-crc [prefix]
+  exists &lt;prefix&gt; [key]
+  get &lt;prefix&gt; &lt;key&gt; [out &lt;file&gt;]
+  crc &lt;prefix&gt; &lt;key&gt;
+  get-size [&lt;prefix&gt; &lt;key&gt;]
+  set &lt;prefix&gt; &lt;key&gt; [ver &lt;N&gt;|in &lt;file&gt;]
+  store-copy &lt;path&gt; [num-keys-per-tx]
+  store-crc &lt;path&gt;
+</code></pre><p>描述的比较简单，但是基本上告诉你了这个命令的用法。当前使用的是leveldb数据库，store path指定的是leveldb数据库路径，例如mon 目录的store.db， osd目录下的current/omap 目录。</p>
+<p>我们知道leveldb是一个kvstore也就是kv的数据库，prefix就是数据库的表名。key就是表里面的key值，而value值这里通过get 后指定输出到out file中。<br>如下所示，list输出格式为 表名：key</p>
+<p>查看mon leveldb数据则停止mon服务，osd也是如此</p>
+<pre><code>[root@ceph02 ~]# systemctl stop ceph-mon@ceph02
+
+[root@ceph02 ~]# ceph-kvstore-tool leveldb /var/lib/ceph/mon/ceph-ceph02/store.db/  list |head -n 5
+2018-03-27 17:18:52.735099 7fede398b040  1 leveldb: Recovering log #265
+2018-03-27 17:18:52.735886 7fede398b040  1 leveldb: Level-0 table #267: started
+2018-03-27 17:18:52.737658 7fede398b040  1 leveldb: Level-0 table #267: 54804 bytes OK
+auth:1
+auth:10
+auth:100
+auth:101
+auth:102 
+</code></pre><p>查看所有表名</p>
+<pre><code>[root@ceph02 ~]# ceph-kvstore-tool leveldb /var/lib/ceph/mon/ceph-ceph02/store.db/ list |awk -F &apos;:&apos; &apos;{print $1}&apos;|uniq
+2018-03-27 17:24:59.608065 7f8580087040  1 leveldb: Recovering log #268
+2018-03-27 17:24:59.656403 7f8580087040  1 leveldb: Delete type=3 #266
+
+2018-03-27 17:24:59.656449 7f8580087040  1 leveldb: Delete type=0 #268
+
+auth
+logm
+mds_health
+mds_metadata
+mdsmap
+monitor
+monitor_store
+monmap
+osd_metadata
+osdmap
+paxos
+pgmap
+pgmap_meta
+pgmap_osd
+pgmap_pg 
+</code></pre><p>从中我们发现了比较熟悉的各种map，mdsmap、monmap、osdmap、pgmap、auth等。而如上所讲，其中每一张表都有很多表项组成，接下来我们使用ceph-kvstore-tool来查看一下monmap这个表中某个表项中的数据。</p>
+<pre><code>[root@ceph02 ~]# ceph-kvstore-tool leveldb /var/lib/ceph/mon/ceph-ceph02/store.db/ list| grep monmap
+2018-03-27 17:26:52.435840 7f6601faf040  1 leveldb: Recovering log #270
+2018-03-27 17:26:52.440832 7f6601faf040  1 leveldb: Delete type=3 #269
+
+2018-03-27 17:26:52.440874 7f6601faf040  1 leveldb: Delete type=0 #270
+
+monmap:1
+monmap:2
+monmap:first_committed
+monmap:last_committed
+monmap:latest
+</code></pre><p>从中，可以看出monmap目前有三个表项，看看monmap:1这项包含什么数据。其中指定leveldb数据库，get获取表monmap，中key为1 的值，将值out指定到文件monmap.1.txt中</p>
+<pre><code>[root@ceph02 ~]# ceph-kvstore-tool leveldb /var/lib/ceph/mon/ceph-ceph02/store.db/ get monmap 1 out monmap.1.txt
+2018-03-27 17:30:25.096235 7f8181d4b040  1 leveldb: Recovering log #272
+(monmap, 1)
+2018-03-27 17:30:25.120278 7f8181d4b040  1 leveldb: Delete type=3 #271
+
+2018-03-27 17:30:25.120318 7f8181d4b040  1 leveldb: Delete type=0 #272
+
+[root@ceph02 ~]# file monmap.1.txt 
+monmap.1.txt: DBase 3 data file (301334528 records)
+</code></pre><p>导出来的这个文件是一个DBase文件，是编译过的，需要使用工具来解析它。我们知道Ceph中很多数据都是经过序列化（encode）之后持久化的（这里有篇文章有相关的介绍<a href="https://www.ustack.com/blog/cephxuliehua/），所以要解析这些数据需要将它们反序列化（decode），Ceph提供了一个反序列化的工具ceph-dencode，关于ceph-dencoder的使用会在以后介绍。" target="_blank" rel="noopener">https://www.ustack.com/blog/cephxuliehua/），所以要解析这些数据需要将它们反序列化（decode），Ceph提供了一个反序列化的工具ceph-dencode，关于ceph-dencoder的使用会在以后介绍。</a></p>
+<pre><code>[root@ceph02 ~]# ceph-dencoder import monmap.1.txt type MonMap decode dump_json
+{
+   &quot;epoch&quot;: 1,
+&quot;fsid&quot;: &quot;f6110559-f0f1-4e14-9213-f29471329ee9&quot;,
+&quot;modified&quot;: &quot;2017-02-09 15:34:21.701901&quot;,
+&quot;created&quot;: &quot;2017-02-09 15:34:21.701901&quot;,
+&quot;mons&quot;: [
+    {
+        &quot;rank&quot;: 0,
+        &quot;name&quot;: &quot;ceph02&quot;,
+        &quot;addr&quot;: &quot;192.168.0.40:6789\/0&quot;
+    }
+]
+</code></pre><p>}<br>可以看到内容。如下查看monmap表中key为1 的size</p>
+<pre><code>[root@ceph02 ~]# ceph-kvstore-tool leveldb /var/lib/ceph/mon/ceph-ceph02/store.db/ get-size monmap 1
+2018-03-27 17:39:57.819864 7f2800190040  1 leveldb: Recovering log #276
+log - 0
+misc - 65908
+sst - 12156146
+total - 12222054
+total: 12222054
+estimated store size: 12222054
+(monmap,1) size 192
+2018-03-27 17:39:57.821447 7f2800190040  1 leveldb: Delete type=0 #276
+
+2018-03-27 17:39:57.821473 7f2800190040  1 leveldb: Delete type=3 #275
+</code></pre><p>如下查看osdmap信息</p>
+<pre><code>[root@ceph02 ~]# ceph-kvstore-tool leveldb /var/lib/ceph/mon/ceph-ceph02/store.db/ list osdmap
+2018-03-27 17:43:46.711599 7fcf02a6a040  1 leveldb: Recovering log #280
+osdmap:1
+osdmap:10
+osdmap:11
+。。。
+osdmap:19
+。。。。
+osdmap:full_45
+osdmap:full_46
+osdmap:full_47
+osdmap:full_48
+</code></pre><p>查看full_48内容</p>
+<pre><code>[root@ceph02 ~]# ceph-kvstore-tool leveldb /var/lib/ceph/mon/ceph-ceph02/store.db/ get osdmap full_48 out osdmap-full48.txt
+2018-03-27 17:44:34.623250 7f8bd795f040  1 leveldb: Recovering log #282
+(osdmap, full_48)
+2018-03-27 17:44:34.624751 7f8bd795f040  1 leveldb: Delete type=3 #281
+
+2018-03-27 17:44:34.624785 7f8bd795f040  1 leveldb: Delete type=0 #282 
+
+
+[root@ceph02 ~]# ceph-dencoder import osdmap-full48.txt type OSDMap decode dump_json
+{
+&quot;epoch&quot;: 48,
+&quot;fsid&quot;: &quot;f6110559-f0f1-4e14-9213-f29471329ee9&quot;,
+&quot;created&quot;: &quot;2017-02-09 15:34:22.284668&quot;,
+&quot;modified&quot;: &quot;2018-03-27 16:55:39.569689&quot;,
+&quot;flags&quot;: &quot;sortbitwise&quot;,
+&quot;cluster_snapshot&quot;: &quot;&quot;,
+&quot;pool_max&quot;: 2,
+&quot;max_osd&quot;: 5,
+&quot;pools&quot;: [
+    {
+        &quot;pool&quot;: 0,
+        &quot;pool_name&quot;: &quot;rbd&quot;,
+        &quot;flags&quot;: 1,
+        &quot;flags_names&quot;: &quot;hashpspool&quot;,
+        &quot;type&quot;: 1,
+        &quot;size&quot;: 1,
+        &quot;min_size&quot;: 1,
+        &quot;crush_ruleset&quot;: 0,
+        &quot;object_hash&quot;: 2,
+        &quot;pg_num&quot;: 64,
+        &quot;pg_placement_num&quot;: 64,
+        &quot;crash_replay_interval&quot;: 0,
+        &quot;last_change&quot;: &quot;22&quot;,
+        &quot;last_force_op_resend&quot;: &quot;0&quot;,
+        &quot;auid&quot;: 0,
+        &quot;snap_mode&quot;: &quot;selfmanaged&quot;,
+        &quot;snap_seq&quot;: 0,
+        &quot;snap_epoch&quot;: 0,
+        &quot;pool_snaps&quot;: [],
+        &quot;removed_snaps&quot;: &quot;[]&quot;,
+        &quot;quota_max_bytes&quot;: 0,
+        &quot;quota_max_objects&quot;: 0,
+        &quot;tiers&quot;: [],
+        &quot;tier_of&quot;: -1,
+        &quot;read_tier&quot;: -1,
+        &quot;write_tier&quot;: -1,
+        &quot;cache_mode&quot;: &quot;none&quot;,
+        &quot;target_max_bytes&quot;: 0,
+        &quot;target_max_objects&quot;: 0,
+        &quot;cache_target_dirty_ratio_micro&quot;: 0,
+        &quot;cache_target_dirty_high_ratio_micro&quot;: 0,
+        &quot;cache_target_full_ratio_micro&quot;: 0,
+        &quot;cache_min_flush_age&quot;: 0,
+        &quot;cache_min_evict_age&quot;: 0,
+        &quot;erasure_code_profile&quot;: &quot;&quot;,
+        &quot;hit_set_params&quot;: {
+            &quot;type&quot;: &quot;none&quot;
+        },
+        &quot;hit_set_period&quot;: 0,
+        &quot;hit_set_count&quot;: 0,
+        &quot;use_gmt_hitset&quot;: true,
+        &quot;min_read_recency_for_promote&quot;: 0,
+        &quot;min_write_recency_for_promote&quot;: 0,
+        &quot;hit_set_grade_decay_rate&quot;: 0,
+        &quot;hit_set_search_last_n&quot;: 0,
+        &quot;grade_table&quot;: [],
+        &quot;stripe_width&quot;: 0,
+        &quot;expected_num_objects&quot;: 0,
+        &quot;fast_read&quot;: false,
+        &quot;options&quot;: {}
+    },
+    {
+        &quot;pool&quot;: 1,
+        &quot;pool_name&quot;: &quot;data&quot;,
+        &quot;flags&quot;: 1,
+        &quot;flags_names&quot;: &quot;hashpspool&quot;,
+        &quot;type&quot;: 1,
+        &quot;size&quot;: 1,
+        &quot;min_size&quot;: 1,
+        &quot;crush_ruleset&quot;: 0,
+        &quot;object_hash&quot;: 2,
+        &quot;pg_num&quot;: 64,
+        &quot;pg_placement_num&quot;: 64,
+        &quot;crash_replay_interval&quot;: 45,
+        &quot;last_change&quot;: &quot;29&quot;,
+        &quot;last_force_op_resend&quot;: &quot;0&quot;,
+        &quot;auid&quot;: 0,
+        &quot;snap_mode&quot;: &quot;selfmanaged&quot;,
+        &quot;snap_seq&quot;: 0,
+        &quot;snap_epoch&quot;: 0,
+        &quot;pool_snaps&quot;: [],
+        &quot;removed_snaps&quot;: &quot;[]&quot;,
+        &quot;quota_max_bytes&quot;: 0,
+        &quot;quota_max_objects&quot;: 0,
+        &quot;tiers&quot;: [],
+        &quot;tier_of&quot;: -1,
+        &quot;read_tier&quot;: -1,
+        &quot;write_tier&quot;: -1,
+        &quot;cache_mode&quot;: &quot;none&quot;,
+        &quot;target_max_bytes&quot;: 0,
+        &quot;target_max_objects&quot;: 0,
+        &quot;cache_target_dirty_ratio_micro&quot;: 400000,
+        &quot;cache_target_dirty_high_ratio_micro&quot;: 600000,
+        &quot;cache_target_full_ratio_micro&quot;: 800000,
+        &quot;cache_min_flush_age&quot;: 0,
+        &quot;cache_min_evict_age&quot;: 0,
+        &quot;erasure_code_profile&quot;: &quot;&quot;,
+        &quot;hit_set_params&quot;: {
+            &quot;type&quot;: &quot;none&quot;
+        },
+        &quot;hit_set_period&quot;: 0,
+        &quot;hit_set_count&quot;: 0,
+        &quot;use_gmt_hitset&quot;: true,
+        &quot;min_read_recency_for_promote&quot;: 0,
+        &quot;min_write_recency_for_promote&quot;: 0,
+        &quot;hit_set_grade_decay_rate&quot;: 0,
+        &quot;hit_set_search_last_n&quot;: 0,
+        &quot;grade_table&quot;: [],
+        &quot;stripe_width&quot;: 0,
+        &quot;expected_num_objects&quot;: 0,
+        &quot;fast_read&quot;: false,
+        &quot;options&quot;: {}
+    },
+    {
+        &quot;pool&quot;: 2,
+        &quot;pool_name&quot;: &quot;metadata&quot;,
+        &quot;flags&quot;: 1,
+        &quot;flags_names&quot;: &quot;hashpspool&quot;,
+        &quot;type&quot;: 1,
+        &quot;size&quot;: 1,
+        &quot;min_size&quot;: 1,
+        &quot;crush_ruleset&quot;: 0,
+        &quot;object_hash&quot;: 2,
+        &quot;pg_num&quot;: 64,
+        &quot;pg_placement_num&quot;: 64,
+        &quot;crash_replay_interval&quot;: 0,
+        &quot;last_change&quot;: &quot;32&quot;,
+        &quot;last_force_op_resend&quot;: &quot;0&quot;,
+        &quot;auid&quot;: 0,
+        &quot;snap_mode&quot;: &quot;selfmanaged&quot;,
+        &quot;snap_seq&quot;: 0,
+        &quot;snap_epoch&quot;: 0,
+        &quot;pool_snaps&quot;: [],
+        &quot;removed_snaps&quot;: &quot;[]&quot;,
+        &quot;quota_max_bytes&quot;: 0,
+        &quot;quota_max_objects&quot;: 0,
+        &quot;tiers&quot;: [],
+        &quot;tier_of&quot;: -1,
+        &quot;read_tier&quot;: -1,
+        &quot;write_tier&quot;: -1,
+        &quot;cache_mode&quot;: &quot;none&quot;,
+        &quot;target_max_bytes&quot;: 0,
+        &quot;target_max_objects&quot;: 0,
+        &quot;cache_target_dirty_ratio_micro&quot;: 400000,
+        &quot;cache_target_dirty_high_ratio_micro&quot;: 600000,
+        &quot;cache_target_full_ratio_micro&quot;: 800000,
+        &quot;cache_min_flush_age&quot;: 0,
+        &quot;cache_min_evict_age&quot;: 0,
+        &quot;erasure_code_profile&quot;: &quot;&quot;,
+        &quot;hit_set_params&quot;: {
+            &quot;type&quot;: &quot;none&quot;
+        },
+        &quot;hit_set_period&quot;: 0,
+        &quot;hit_set_count&quot;: 0,
+        &quot;use_gmt_hitset&quot;: true,
+        &quot;min_read_recency_for_promote&quot;: 0,
+        &quot;min_write_recency_for_promote&quot;: 0,
+        &quot;hit_set_grade_decay_rate&quot;: 0,
+        &quot;hit_set_search_last_n&quot;: 0,
+        &quot;grade_table&quot;: [],
+        &quot;stripe_width&quot;: 0,
+        &quot;expected_num_objects&quot;: 0,
+        &quot;fast_read&quot;: false,
+        &quot;options&quot;: {}
+    }
+],
+&quot;osds&quot;: [
+    {
+        &quot;osd&quot;: 3,
+        &quot;uuid&quot;: &quot;74267031-f0a0-4bbc-9952-11726bdda80b&quot;,
+        &quot;up&quot;: 0,
+        &quot;in&quot;: 0,
+        &quot;weight&quot;: 0.000000,
+        &quot;primary_affinity&quot;: 1.000000,
+        &quot;last_clean_begin&quot;: 38,
+        &quot;last_clean_end&quot;: 40,
+        &quot;up_from&quot;: 43,
+        &quot;up_thru&quot;: 43,
+        &quot;down_at&quot;: 46,
+        &quot;lost_at&quot;: 0,
+        &quot;public_addr&quot;: &quot;192.168.1.169:6805\/17244&quot;,
+        &quot;cluster_addr&quot;: &quot;192.168.1.169:6806\/17244&quot;,
+        &quot;heartbeat_back_addr&quot;: &quot;192.168.1.169:6807\/17244&quot;,
+        &quot;heartbeat_front_addr&quot;: &quot;192.168.1.169:6808\/17244&quot;,
+        &quot;state&quot;: [
+            &quot;autoout&quot;,
+            &quot;exists&quot;
+        ]
+    },
+    {
+        &quot;osd&quot;: 4,
+        &quot;uuid&quot;: &quot;9ca8254e-3036-49b7-a340-66831590b37b&quot;,
+        &quot;up&quot;: 1,
+        &quot;in&quot;: 1,
+        &quot;weight&quot;: 1.000000,
+        &quot;primary_affinity&quot;: 1.000000,
+        &quot;last_clean_begin&quot;: 36,
+        &quot;last_clean_end&quot;: 40,
+        &quot;up_from&quot;: 43,
+        &quot;up_thru&quot;: 43,
+        &quot;down_at&quot;: 42,
+        &quot;lost_at&quot;: 0,
+        &quot;public_addr&quot;: &quot;192.168.1.169:6801\/17240&quot;,
+        &quot;cluster_addr&quot;: &quot;192.168.1.169:6802\/17240&quot;,
+        &quot;heartbeat_back_addr&quot;: &quot;192.168.1.169:6803\/17240&quot;,
+        &quot;heartbeat_front_addr&quot;: &quot;192.168.1.169:6804\/17240&quot;,
+        &quot;state&quot;: [
+            &quot;exists&quot;,
+            &quot;up&quot;
+        ]
+    }
+],
+&quot;osd_xinfo&quot;: [
+    {
+        &quot;osd&quot;: 3,
+        &quot;down_stamp&quot;: &quot;2018-03-27 16:26:00.221545&quot;,
+        &quot;laggy_probability&quot;: 0.000000,
+        &quot;laggy_interval&quot;: 0,
+        &quot;features&quot;: 576460752032874495,
+        &quot;old_weight&quot;: 65536
+    },
+    {
+        &quot;osd&quot;: 4,
+        &quot;down_stamp&quot;: &quot;2018-03-27 15:46:44.704581&quot;,
+        &quot;laggy_probability&quot;: 0.000000,
+        &quot;laggy_interval&quot;: 0,
+        &quot;features&quot;: 576460752032874495,
+        &quot;old_weight&quot;: 0
+    }
+],
+&quot;pg_temp&quot;: [],
+&quot;primary_temp&quot;: [],
+&quot;blacklist&quot;: {},
+&quot;erasure_code_profiles&quot;: {
+    &quot;default&quot;: {
+        &quot;k&quot;: &quot;2&quot;,
+        &quot;m&quot;: &quot;1&quot;,
+        &quot;plugin&quot;: &quot;jerasure&quot;,
+        &quot;technique&quot;: &quot;reed_sol_van&quot;
+    }
+}
+} 
+</code></pre><p>后期具体使用过程结合实际情况进行。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">leveldb ceph</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ceph</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://idcat.cn/ceph-kvstore-tool工具简单介绍.html" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/ceph-dencoder基本使用.html" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          ceph-dencoder基本使用
+        
+      </div>
+    </a>
   
   
-    </div></section>
+    <a href="/ceph集群替换mon节点ip地址.html" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">ceph集群替换mon节点ip地址</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+  
+  
   
 
-    
+  
+  
+  
+	<script>
+	(function(){
+		var bp = document.createElement('script');
+		bp.src = '//push.zhanzhang.baidu.com/push.js';
+		var s = document.getElementsByTagName("script")[0];
+		s.parentNode.insertBefore(bp, s);
+	})();
+	</script>     
+   
+
+  
+
+  
+
+
 
 
           </div>
@@ -237,9 +720,9 @@ var _hmt = _hmt || [];
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,

@@ -7,18 +7,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://idcat.cn">
-  <title>Tag: leveldb ceph | deelaaay learning</title>
+  <title>ceph获取crushmap-查看对象分布-目录绑定-查看条带 | deelaaay learning</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="自我定位">
-<meta property="og:type" content="website">
-<meta property="og:title" content="deelaaay learning">
-<meta property="og:url" content="http://idcat.cn/tags/leveldb-ceph/index.html">
+  <meta name="description" content="本文仅仅记录下常用命令，以备自己查询使用。 crushmap获取crush  map 要获取集群的crush map，执行命令： ceph osd  getcrushmap -o {compiled-crushmap-filename} ceph将crush输出（-o）到你指定的文件，由于crush map是已编译的，所以需要反编译；">
+<meta name="keywords" content="ceph">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ceph获取crushmap-查看对象分布-目录绑定-查看条带">
+<meta property="og:url" content="http://idcat.cn/ceph获取crushmap-查看对象分布-目录绑定-查看条带.html">
 <meta property="og:site_name" content="deelaaay learning">
-<meta property="og:description" content="自我定位">
+<meta property="og:description" content="本文仅仅记录下常用命令，以备自己查询使用。 crushmap获取crush  map 要获取集群的crush map，执行命令： ceph osd  getcrushmap -o {compiled-crushmap-filename} ceph将crush输出（-o）到你指定的文件，由于crush map是已编译的，所以需要反编译；">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-03-12T13:17:21.346Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="deelaaay learning">
-<meta name="twitter:description" content="自我定位">
+<meta name="twitter:title" content="ceph获取crushmap-查看对象分布-目录绑定-查看条带">
+<meta name="twitter:description" content="本文仅仅记录下常用命令，以备自己查询使用。 crushmap获取crush  map 要获取集群的crush map，执行命令： ceph osd  getcrushmap -o {compiled-crushmap-filename} ceph将crush输出（-o）到你指定的文件，由于crush map是已编译的，所以需要反编译；">
   
     <link rel="alternative" href="/atom.xml" title="deelaaay learning" type="application/atom+xml">
   
@@ -160,60 +162,266 @@ var _hmt = _hmt || [];
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-ceph获取crushmap-查看对象分布-目录绑定-查看条带" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/leveldb-python基础操作方法.html" class="archive-article-date">
-  	<time datetime="2018-03-27T12:06:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-27</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/leveldb-python基础操作方法.html">leveldb python基础操作方法</a>
+    <h1 class="article-title" itemprop="name">
+      ceph获取crushmap-查看对象分布-目录绑定-查看条带
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/ceph获取crushmap-查看对象分布-目录绑定-查看条带.html" class="archive-article-date">
+  	<time datetime="2018-03-12T12:54:07.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-12</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>本文仅仅记录下常用命令，以备自己查询使用。</p>
+<h1 id="crushmap"><a href="#crushmap" class="headerlink" title="crushmap"></a>crushmap</h1><p><strong>获取crush  map</strong></p>
+<p>要获取集群的crush map，执行命令：</p>
+<pre><code>ceph osd  getcrushmap -o {compiled-crushmap-filename}
+</code></pre><p>ceph将crush输出（-o）到你指定的文件，由于crush map是已编译的，所以需要反编译；</p>
+<a id="more"></a>
+<p><strong>反编译crush map</strong></p>
+<p>要反编译crush map， 执行命令：</p>
+<pre><code>crushtool -d {compiled-crushmap-filename}  -o {decompiled-crushmap-filename}
+</code></pre><p>ceph将反编译（-d）二进制crush图，且输出（-o）到你指定的文件；</p>
+<p><strong>编译crush map</strong></p>
+<p>要编译crush map，执行命令：</p>
+<pre><code>crushtool -c  {decompiled-crushmap-filename}  -o {compiled-crushmap-filename}
+</code></pre><p>　　ceph将已编译的crush map保存到你指定的文件；</p>
+<p><strong>注入crush map</strong></p>
+<p>要把crush map应用到集群，执行命令：</p>
+<pre><code>ceph osd  setcrushmap -i {compiled-crushmap-filename}
+</code></pre><p>ceph 将把你指定的已编译的crush  map输入到集群；</p>
+<h1 id="查看对象分布"><a href="#查看对象分布" class="headerlink" title="查看对象分布"></a>查看对象分布</h1><p>查看文件系统下某个文件的对象集合</p>
+<pre><code>[root@node192 jiushan-dir1]# cephfs ./10M show_layout
+WARNING: This tool is deprecated.  Use the layout.* xattrs to query and modify layouts.
+layout.data_pool:     3
+layout.object_size:   4194304
+layout.stripe_unit:   4194304
+layout.stripe_count:  1
+
+[root@node192 jiushan-dir1]# cephfs ./10M show_location 
+WARNING: This tool is deprecated.  Use the layout.* xattrs to query and modify layouts.
+location.file_offset:  0
+location.object_offset:0
+location.object_no:    0
+location.object_size:  4194304
+location.object_name:  10000001458.00000000
+location.block_offset: 0
+location.block_size:   4194304
+location.osd:          0
+
+[root@node192 jiushan-dir1]# cephfs ./10M map
+WARNING: This tool is deprecated.  Use the layout.* xattrs to query and modify layouts.
+FILE OFFSET                    OBJECT        OFFSET        LENGTH  OSD
+          0      10000001458.00000000             0       4194304  0
+    4194304      10000001458.00000001             0       4194304  5
+    8388608      10000001458.00000002             0       4194304  2
+
+
+
+[root@node248 ~]# rados -p data ls
+100000003e9.00000000
+100000003e9.00000006
+100000003e9.00000002
+100000003e9.00000008
+100000003e9.00000001
+100000003e9.00000005
+100000003e9.00000004
+100000003e9.00000009
+100000003e9.00000003
+100000003e9.00000007
+
+[root@node248 ~]# ceph osd map data   100000003e9.00000007
+osdmap e39 pool &apos;data&apos; (1) object &apos;100000003e9.00000007&apos; -&gt; pg 1.e5b260d4 (1.d4) -&gt; up ([0,4], p0) acting ([0,4], p0)
+
+[root@node ~]# ceph osd tree
+ID WEIGHT   TYPE NAME          UP/DOWN REWEIGHT PRIMARY-AFFINITY 
+ -1 18.13797 root default                                         
+ -2  7.25519     host node253                                   
+ 0  3.62759         osd.0           up  1.00000          1.00000 
+ 2  3.62759         osd.2           up  1.00000          1.00000 
+ -3  7.25519     host node250                                   
+ 1  3.62759         osd.1           up  1.00000          1.00000 
+ 3  3.62759         osd.3           up  1.00000          1.00000 
+ -4  3.62759     host node248                                   
+ 4  3.62759         osd.4           up  1.00000          1.00000 
+
+[root@node248 ~]# cd /var/lib/ceph/osd/ceph-4/current/
+[root@node248 current]# ls 1.d4_head/
+100000003e9.00000007__head_E5B260D4__1  __head_000000D4__1
+</code></pre><h1 id="目录绑定，查看条带"><a href="#目录绑定，查看条带" class="headerlink" title="目录绑定，查看条带"></a>目录绑定，查看条带</h1><p><strong>目录绑定到哪个存储池</strong></p>
+<pre><code>getfattr -n ceph.dir.layout.pool /ceph
+</code></pre><p><strong>查看文件条带</strong></p>
+<pre><code>getfattr -n ceph.file.layout file1 
+# file: file1
+ceph.file.layout=&quot;stripe_unit=4194304 stripe_count=1 object_size=4194304 pool=pool-rule-c2&quot;
+</code></pre><p>pool=存储池 </p>
+<p><strong>查看目录所有信息</strong></p>
+<pre><code>getfattr -n ceph.dir.layout nfs-1
+#file: nfs-1
+ceph.dir.layout=&quot;stripe_unit=4194304 stripe_count=1 object_size=4194304 pool=pool-rule-c2&quot;
+</code></pre><p><strong>设置 setfattr</strong></p>
+<pre><code>[root@ceph226 ceph]# getfattr -n ceph.dir.layout nfs-2
+nfs-2: ceph.dir.layout: No such attribute
+
+[root@ceph226 ceph]# setfattr -n ceph.dir.layout.pool -v pool-rule-c2 nfs-2
+[root@ceph226 ceph]# getfattr -n ceph.dir.layout.pool  nfs-2
+#file: nfs-2
+ceph.dir.layout.pool=&quot;pool-rule-c2&quot;
+
+[root@ceph226 ceph]# getfattr -n ceph.dir.layout  nfs-2
+# file: nfs-2
+ceph.dir.layout=&quot;stripe_unit=4194304 stripe_count=1 object_size=4194304 pool=pool-rule-c2&quot;
+</code></pre>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">leveldb ceph</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ceph</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://idcat.cn/ceph获取crushmap-查看对象分布-目录绑定-查看条带.html" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/利用火焰图分析ceph-mds进程的cpu占用-简单介绍.html" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          利用火焰图分析ceph-mds进程的cpu占用-简单介绍
+        
+      </div>
+    </a>
   
   
-    </div></section>
+    <a href="/记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程.html" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+  
+  
   
 
-    
+  
+  
+  
+	<script>
+	(function(){
+		var bp = document.createElement('script');
+		bp.src = '//push.zhanzhang.baidu.com/push.js';
+		var s = document.getElementsByTagName("script")[0];
+		s.parentNode.insertBefore(bp, s);
+	})();
+	</script>     
+   
+
+  
+
+  
+
+
 
 
           </div>
@@ -237,9 +445,9 @@ var _hmt = _hmt || [];
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,

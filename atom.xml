@@ -18,8 +18,8 @@
   
   <entry>
     <title>systemtap-centos7上安装调试</title>
-    <link href="http://idcat.cn/2018/05/11/systemtap-centos7%E4%B8%8A%E5%AE%89%E8%A3%85%E8%B0%83%E8%AF%95/"/>
-    <id>http://idcat.cn/2018/05/11/systemtap-centos7上安装调试/</id>
+    <link href="http://idcat.cn/systemtap-centos7%E4%B8%8A%E5%AE%89%E8%A3%85%E8%B0%83%E8%AF%95.html"/>
+    <id>http://idcat.cn/systemtap-centos7上安装调试.html</id>
     <published>2018-05-11T02:04:36.000Z</published>
     <updated>2018-05-11T02:07:10.100Z</updated>
     
@@ -40,8 +40,8 @@
   
   <entry>
     <title>记录一次因对象权限不对导致osd无法启动的排查过程</title>
-    <link href="http://idcat.cn/2018/05/11/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E5%9B%A0%E5%AF%B9%E8%B1%A1%E6%9D%83%E9%99%90%E4%B8%8D%E5%AF%B9%E5%AF%BC%E8%87%B4osd%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8%E7%9A%84%E6%8E%92%E6%9F%A5%E8%BF%87%E7%A8%8B/"/>
-    <id>http://idcat.cn/2018/05/11/记录一次因对象权限不对导致osd无法启动的排查过程/</id>
+    <link href="http://idcat.cn/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E5%9B%A0%E5%AF%B9%E8%B1%A1%E6%9D%83%E9%99%90%E4%B8%8D%E5%AF%B9%E5%AF%BC%E8%87%B4osd%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8%E7%9A%84%E6%8E%92%E6%9F%A5%E8%BF%87%E7%A8%8B.html"/>
+    <id>http://idcat.cn/记录一次因对象权限不对导致osd无法启动的排查过程.html</id>
     <published>2018-05-11T02:03:48.000Z</published>
     <updated>2018-05-11T02:06:39.057Z</updated>
     
@@ -60,8 +60,8 @@
   
   <entry>
     <title>blktrace+fio对比测试分析</title>
-    <link href="http://idcat.cn/2018/05/08/blktrace-fio%E5%AF%B9%E6%AF%94%E6%B5%8B%E8%AF%95%E5%88%86%E6%9E%90/"/>
-    <id>http://idcat.cn/2018/05/08/blktrace-fio对比测试分析/</id>
+    <link href="http://idcat.cn/blktrace-fio%E5%AF%B9%E6%AF%94%E6%B5%8B%E8%AF%95%E5%88%86%E6%9E%90.html"/>
+    <id>http://idcat.cn/blktrace-fio对比测试分析.html</id>
     <published>2018-05-08T08:13:20.000Z</published>
     <updated>2018-05-08T08:25:44.517Z</updated>
     
@@ -81,8 +81,8 @@
   
   <entry>
     <title>hadoop2.7.3通过s3对接ceph10.2 radosgw测试</title>
-    <link href="http://idcat.cn/2018/04/25/hadoop2-7-3%E9%80%9A%E8%BF%87s3%E5%AF%B9%E6%8E%A5ceph10-2-radosgw%E6%B5%8B%E8%AF%95/"/>
-    <id>http://idcat.cn/2018/04/25/hadoop2-7-3通过s3对接ceph10-2-radosgw测试/</id>
+    <link href="http://idcat.cn/hadoop2-7-3%E9%80%9A%E8%BF%87s3%E5%AF%B9%E6%8E%A5ceph10-2-radosgw%E6%B5%8B%E8%AF%95.html"/>
+    <id>http://idcat.cn/hadoop2-7-3通过s3对接ceph10-2-radosgw测试.html</id>
     <published>2018-04-25T10:02:18.000Z</published>
     <updated>2018-04-25T10:15:36.977Z</updated>
     
@@ -101,8 +101,8 @@
   
   <entry>
     <title>nginx反向代理和负载均衡最基础配置实现</title>
-    <link href="http://idcat.cn/2018/04/24/nginx%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E5%92%8C%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E6%9C%80%E5%9F%BA%E7%A1%80%E9%85%8D%E7%BD%AE%E5%AE%9E%E7%8E%B0/"/>
-    <id>http://idcat.cn/2018/04/24/nginx反向代理和负载均衡最基础配置实现/</id>
+    <link href="http://idcat.cn/nginx%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E5%92%8C%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E6%9C%80%E5%9F%BA%E7%A1%80%E9%85%8D%E7%BD%AE%E5%AE%9E%E7%8E%B0.html"/>
+    <id>http://idcat.cn/nginx反向代理和负载均衡最基础配置实现.html</id>
     <published>2018-04-24T09:39:44.000Z</published>
     <updated>2018-04-24T09:40:56.474Z</updated>
     
@@ -123,8 +123,8 @@
   
   <entry>
     <title>tdb文件简介</title>
-    <link href="http://idcat.cn/2018/04/23/tdb%E6%96%87%E4%BB%B6%E7%AE%80%E4%BB%8B/"/>
-    <id>http://idcat.cn/2018/04/23/tdb文件简介/</id>
+    <link href="http://idcat.cn/tdb%E6%96%87%E4%BB%B6%E7%AE%80%E4%BB%8B.html"/>
+    <id>http://idcat.cn/tdb文件简介.html</id>
     <published>2018-04-23T09:50:57.000Z</published>
     <updated>2018-04-23T09:53:02.997Z</updated>
     
@@ -144,8 +144,8 @@
   
   <entry>
     <title>blktrace 工具简介</title>
-    <link href="http://idcat.cn/2018/04/21/blktrace-%E5%B7%A5%E5%85%B7%E7%AE%80%E4%BB%8B/"/>
-    <id>http://idcat.cn/2018/04/21/blktrace-工具简介/</id>
+    <link href="http://idcat.cn/blktrace-%E5%B7%A5%E5%85%B7%E7%AE%80%E4%BB%8B.html"/>
+    <id>http://idcat.cn/blktrace-工具简介.html</id>
     <published>2018-04-21T14:00:18.000Z</published>
     <updated>2018-04-21T14:07:43.764Z</updated>
     
@@ -165,8 +165,8 @@
   
   <entry>
     <title>cosbench例子-参考</title>
-    <link href="http://idcat.cn/2018/04/15/cosbench%E4%BE%8B%E5%AD%90-%E5%8F%82%E8%80%83/"/>
-    <id>http://idcat.cn/2018/04/15/cosbench例子-参考/</id>
+    <link href="http://idcat.cn/cosbench%E4%BE%8B%E5%AD%90-%E5%8F%82%E8%80%83.html"/>
+    <id>http://idcat.cn/cosbench例子-参考.html</id>
     <published>2018-04-15T11:30:01.000Z</published>
     <updated>2018-04-15T11:34:50.074Z</updated>
     
@@ -185,8 +185,8 @@
   
   <entry>
     <title>集群所有mon store.db丢失恢复</title>
-    <link href="http://idcat.cn/2018/04/02/%E9%9B%86%E7%BE%A4%E6%89%80%E6%9C%89mon-store-db%E4%B8%A2%E5%A4%B1%E6%81%A2%E5%A4%8D/"/>
-    <id>http://idcat.cn/2018/04/02/集群所有mon-store-db丢失恢复/</id>
+    <link href="http://idcat.cn/%E9%9B%86%E7%BE%A4%E6%89%80%E6%9C%89mon-store-db%E4%B8%A2%E5%A4%B1%E6%81%A2%E5%A4%8D.html"/>
+    <id>http://idcat.cn/集群所有mon-store-db丢失恢复.html</id>
     <published>2018-04-02T11:42:38.000Z</published>
     <updated>2018-04-02T11:50:00.576Z</updated>
     
@@ -210,8 +210,8 @@ node3  192.168.1.143
   
   <entry>
     <title>ceph 多区域radosgw网关配置</title>
-    <link href="http://idcat.cn/2018/03/28/ceph-%E5%A4%9A%E5%8C%BA%E5%9F%9Fradosgw%E7%BD%91%E5%85%B3%E9%85%8D%E7%BD%AE/"/>
-    <id>http://idcat.cn/2018/03/28/ceph-多区域radosgw网关配置/</id>
+    <link href="http://idcat.cn/ceph-%E5%A4%9A%E5%8C%BA%E5%9F%9Fradosgw%E7%BD%91%E5%85%B3%E9%85%8D%E7%BD%AE.html"/>
+    <id>http://idcat.cn/ceph-多区域radosgw网关配置.html</id>
     <published>2018-03-28T14:06:36.000Z</published>
     <updated>2018-03-28T14:07:43.015Z</updated>
     
@@ -233,8 +233,8 @@ node3  192.168.1.143
   
   <entry>
     <title>ceph-dencoder基本使用</title>
-    <link href="http://idcat.cn/2018/03/27/ceph-dencoder%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/"/>
-    <id>http://idcat.cn/2018/03/27/ceph-dencoder基本使用/</id>
+    <link href="http://idcat.cn/ceph-dencoder%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8.html"/>
+    <id>http://idcat.cn/ceph-dencoder基本使用.html</id>
     <published>2018-03-27T14:06:41.000Z</published>
     <updated>2018-03-27T14:07:21.265Z</updated>
     
@@ -255,8 +255,8 @@ node3  192.168.1.143
   
   <entry>
     <title>ceph-kvstore-tool工具简单介绍</title>
-    <link href="http://idcat.cn/2018/03/27/ceph-kvstore-tool%E5%B7%A5%E5%85%B7%E7%AE%80%E5%8D%95%E4%BB%8B%E7%BB%8D/"/>
-    <id>http://idcat.cn/2018/03/27/ceph-kvstore-tool工具简单介绍/</id>
+    <link href="http://idcat.cn/ceph-kvstore-tool%E5%B7%A5%E5%85%B7%E7%AE%80%E5%8D%95%E4%BB%8B%E7%BB%8D.html"/>
+    <id>http://idcat.cn/ceph-kvstore-tool工具简单介绍.html</id>
     <published>2018-03-27T12:07:00.000Z</published>
     <updated>2018-03-27T12:09:04.629Z</updated>
     
@@ -276,8 +276,8 @@ node3  192.168.1.143
   
   <entry>
     <title>ceph集群替换mon节点ip地址</title>
-    <link href="http://idcat.cn/2018/03/27/ceph%E9%9B%86%E7%BE%A4%E6%9B%BF%E6%8D%A2mon%E8%8A%82%E7%82%B9ip%E5%9C%B0%E5%9D%80/"/>
-    <id>http://idcat.cn/2018/03/27/ceph集群替换mon节点ip地址/</id>
+    <link href="http://idcat.cn/ceph%E9%9B%86%E7%BE%A4%E6%9B%BF%E6%8D%A2mon%E8%8A%82%E7%82%B9ip%E5%9C%B0%E5%9D%80.html"/>
+    <id>http://idcat.cn/ceph集群替换mon节点ip地址.html</id>
     <published>2018-03-27T12:06:32.000Z</published>
     <updated>2018-03-27T12:11:28.596Z</updated>
     
@@ -296,8 +296,8 @@ node3  192.168.1.143
   
   <entry>
     <title>leveldb python基础操作方法</title>
-    <link href="http://idcat.cn/2018/03/27/leveldb-python%E5%9F%BA%E7%A1%80%E6%93%8D%E4%BD%9C%E6%96%B9%E6%B3%95/"/>
-    <id>http://idcat.cn/2018/03/27/leveldb-python基础操作方法/</id>
+    <link href="http://idcat.cn/leveldb-python%E5%9F%BA%E7%A1%80%E6%93%8D%E4%BD%9C%E6%96%B9%E6%B3%95.html"/>
+    <id>http://idcat.cn/leveldb-python基础操作方法.html</id>
     <published>2018-03-27T12:06:04.000Z</published>
     <updated>2018-03-27T12:10:47.129Z</updated>
     
@@ -321,8 +321,8 @@ node3  192.168.1.143
   
   <entry>
     <title>rbd对象组成以及介绍</title>
-    <link href="http://idcat.cn/2018/03/26/rbd%E5%AF%B9%E8%B1%A1%E7%BB%84%E6%88%90%E4%BB%A5%E5%8F%8A%E4%BB%8B%E7%BB%8D/"/>
-    <id>http://idcat.cn/2018/03/26/rbd对象组成以及介绍/</id>
+    <link href="http://idcat.cn/rbd%E5%AF%B9%E8%B1%A1%E7%BB%84%E6%88%90%E4%BB%A5%E5%8F%8A%E4%BB%8B%E7%BB%8D.html"/>
+    <id>http://idcat.cn/rbd对象组成以及介绍.html</id>
     <published>2018-03-26T12:39:50.000Z</published>
     <updated>2018-03-26T12:50:34.560Z</updated>
     
@@ -347,8 +347,8 @@ rbd_header.3289416b8b4567
   
   <entry>
     <title>利用火焰图分析ceph-mds进程的cpu占用-简单介绍</title>
-    <link href="http://idcat.cn/2018/03/14/%E5%88%A9%E7%94%A8%E7%81%AB%E7%84%B0%E5%9B%BE%E5%88%86%E6%9E%90ceph-mds%E8%BF%9B%E7%A8%8B%E7%9A%84cpu%E5%8D%A0%E7%94%A8-%E7%AE%80%E5%8D%95%E4%BB%8B%E7%BB%8D/"/>
-    <id>http://idcat.cn/2018/03/14/利用火焰图分析ceph-mds进程的cpu占用-简单介绍/</id>
+    <link href="http://idcat.cn/%E5%88%A9%E7%94%A8%E7%81%AB%E7%84%B0%E5%9B%BE%E5%88%86%E6%9E%90ceph-mds%E8%BF%9B%E7%A8%8B%E7%9A%84cpu%E5%8D%A0%E7%94%A8-%E7%AE%80%E5%8D%95%E4%BB%8B%E7%BB%8D.html"/>
+    <id>http://idcat.cn/利用火焰图分析ceph-mds进程的cpu占用-简单介绍.html</id>
     <published>2018-03-14T12:53:48.000Z</published>
     <updated>2018-03-14T12:59:08.579Z</updated>
     
@@ -369,8 +369,8 @@ rbd_header.3289416b8b4567
   
   <entry>
     <title>ceph获取crushmap-查看对象分布-目录绑定-查看条带</title>
-    <link href="http://idcat.cn/2018/03/12/ceph%E8%8E%B7%E5%8F%96crushmap-%E6%9F%A5%E7%9C%8B%E5%AF%B9%E8%B1%A1%E5%88%86%E5%B8%83-%E7%9B%AE%E5%BD%95%E7%BB%91%E5%AE%9A-%E6%9F%A5%E7%9C%8B%E6%9D%A1%E5%B8%A6/"/>
-    <id>http://idcat.cn/2018/03/12/ceph获取crushmap-查看对象分布-目录绑定-查看条带/</id>
+    <link href="http://idcat.cn/ceph%E8%8E%B7%E5%8F%96crushmap-%E6%9F%A5%E7%9C%8B%E5%AF%B9%E8%B1%A1%E5%88%86%E5%B8%83-%E7%9B%AE%E5%BD%95%E7%BB%91%E5%AE%9A-%E6%9F%A5%E7%9C%8B%E6%9D%A1%E5%B8%A6.html"/>
+    <id>http://idcat.cn/ceph获取crushmap-查看对象分布-目录绑定-查看条带.html</id>
     <published>2018-03-12T12:54:07.000Z</published>
     <updated>2018-03-12T13:17:21.346Z</updated>
     
@@ -393,8 +393,8 @@ rbd_header.3289416b8b4567
   
   <entry>
     <title>记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程</title>
-    <link href="http://idcat.cn/2018/03/08/%E8%AE%B0%E5%BD%95%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%86%99%E5%85%A5%E8%BF%87%E7%A8%8B%E4%B8%AD%E8%BF%9B%E8%A1%8C%E6%8B%94%E7%9B%98%E6%93%8D%E4%BD%9C%E5%AF%BC%E8%87%B4osd%E6%97%A5%E5%BF%97%E5%88%86%E5%8C%BA%E6%95%85%E9%9A%9C%E7%9A%84%E4%BF%AE%E5%A4%8D%E8%BF%87%E7%A8%8B/"/>
-    <id>http://idcat.cn/2018/03/08/记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程/</id>
+    <link href="http://idcat.cn/%E8%AE%B0%E5%BD%95%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%86%99%E5%85%A5%E8%BF%87%E7%A8%8B%E4%B8%AD%E8%BF%9B%E8%A1%8C%E6%8B%94%E7%9B%98%E6%93%8D%E4%BD%9C%E5%AF%BC%E8%87%B4osd%E6%97%A5%E5%BF%97%E5%88%86%E5%8C%BA%E6%95%85%E9%9A%9C%E7%9A%84%E4%BF%AE%E5%A4%8D%E8%BF%87%E7%A8%8B.html"/>
+    <id>http://idcat.cn/记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程.html</id>
     <published>2018-03-08T13:22:25.000Z</published>
     <updated>2018-03-08T13:43:44.605Z</updated>
     
@@ -414,8 +414,8 @@ rbd_header.3289416b8b4567
   
   <entry>
     <title>flashcache介绍</title>
-    <link href="http://idcat.cn/2018/03/08/flashcache%E4%BB%8B%E7%BB%8D/"/>
-    <id>http://idcat.cn/2018/03/08/flashcache介绍/</id>
+    <link href="http://idcat.cn/flashcache%E4%BB%8B%E7%BB%8D.html"/>
+    <id>http://idcat.cn/flashcache介绍.html</id>
     <published>2018-03-08T13:21:33.000Z</published>
     <updated>2018-03-08T13:43:39.092Z</updated>
     
@@ -436,8 +436,8 @@ rbd_header.3289416b8b4567
   
   <entry>
     <title>ceph条带化介绍</title>
-    <link href="http://idcat.cn/2018/03/04/ceph%E6%9D%A1%E5%B8%A6%E5%8C%96%E4%BB%8B%E7%BB%8D/"/>
-    <id>http://idcat.cn/2018/03/04/ceph条带化介绍/</id>
+    <link href="http://idcat.cn/ceph%E6%9D%A1%E5%B8%A6%E5%8C%96%E4%BB%8B%E7%BB%8D.html"/>
+    <id>http://idcat.cn/ceph条带化介绍.html</id>
     <published>2018-03-04T13:59:41.000Z</published>
     <updated>2018-03-08T13:39:40.217Z</updated>
     

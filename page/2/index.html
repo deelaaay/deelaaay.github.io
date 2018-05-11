@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta name="google-site-verification" content="5_ThYU83P_c_1Cw6mhGsUSQKKq0LsSCInvlWnaoNAPU" />
   <meta charset="utf-8">
   
   <meta name="renderer" content="webkit">
@@ -168,12 +169,12 @@ var _hmt = _hmt || [];
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/03/27/ceph-dencoder基本使用/">ceph-dencoder基本使用</a>
+      <a class="article-title" href="/ceph-dencoder基本使用.html">ceph-dencoder基本使用</a>
     </h1>
   
 
         
-        <a href="/2018/03/27/ceph-dencoder基本使用/" class="archive-article-date">
+        <a href="/ceph-dencoder基本使用.html" class="archive-article-date">
   	<time datetime="2018-03-27T14:06:41.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-27</time>
 </a>
         
@@ -185,7 +186,7 @@ var _hmt = _hmt || [];
 <p>0 简介</p>
 <p>贯穿Ceph OSD端数据处理的一个核心结构就是ObjectStore::Transaction，OSD处理的所有操作以及其关联的数据都会封装进入Transaction中的bufferlist结构里，这里的封装也就是序列化(encode)，它将各种数据结构无论简单或者复杂都作为字节流，存入bufferlist中。最终Transaction会由具体的ObjectStore后端实现来处理，当然，处理时会对bufferlist中的数据进行反序列化（decode）。而本文介绍的ceph-dencoder工具就是Ceph提供的可以进行encode、decode以及dump ceph相关数据结构的工具，同时它也可以用来调试以及测试Ceph不同版本之间的兼容性。今天这里主要介绍它的decode功能，其他功能大家可以自行研究。<br>
         
-          <a class="article-more-a" href="/2018/03/27/ceph-dencoder基本使用/#more">more >></a>
+          <a class="article-more-a" href="/ceph-dencoder基本使用.html#more">more >></a>
         
       
 
@@ -209,7 +210,7 @@ var _hmt = _hmt || [];
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2018/03/27/ceph-dencoder基本使用/">展开全文 >></a>
+          <a class="article-more-a" href="/ceph-dencoder基本使用.html">展开全文 >></a>
         </p>
       
 
@@ -248,12 +249,12 @@ var _hmt = _hmt || [];
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/03/27/ceph-kvstore-tool工具简单介绍/">ceph-kvstore-tool工具简单介绍</a>
+      <a class="article-title" href="/ceph-kvstore-tool工具简单介绍.html">ceph-kvstore-tool工具简单介绍</a>
     </h1>
   
 
         
-        <a href="/2018/03/27/ceph-kvstore-tool工具简单介绍/" class="archive-article-date">
+        <a href="/ceph-kvstore-tool工具简单介绍.html" class="archive-article-date">
   	<time datetime="2018-03-27T12:07:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-27</time>
 </a>
         
@@ -264,7 +265,7 @@ var _hmt = _hmt || [];
         <p>参考<a href="https://blog.csdn.net/scaleqiao/article/details/51946042" target="_blank" rel="noopener">https://blog.csdn.net/scaleqiao/article/details/51946042</a></p>
 <p>大家都知道Ceph的很多数据比如PG log、Monitor的数据都存在kvstore里（leveldb或者RocksDB中），Ceph也提供了查看kvstore里数据的工具，它就是ceph-kvstore-tool。<br>
         
-          <a class="article-more-a" href="/2018/03/27/ceph-kvstore-tool工具简单介绍/#more">more >></a>
+          <a class="article-more-a" href="/ceph-kvstore-tool工具简单介绍.html#more">more >></a>
         
       
 
@@ -288,7 +289,7 @@ var _hmt = _hmt || [];
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2018/03/27/ceph-kvstore-tool工具简单介绍/">展开全文 >></a>
+          <a class="article-more-a" href="/ceph-kvstore-tool工具简单介绍.html">展开全文 >></a>
         </p>
       
 
@@ -327,12 +328,12 @@ var _hmt = _hmt || [];
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/03/27/ceph集群替换mon节点ip地址/">ceph集群替换mon节点ip地址</a>
+      <a class="article-title" href="/ceph集群替换mon节点ip地址.html">ceph集群替换mon节点ip地址</a>
     </h1>
   
 
         
-        <a href="/2018/03/27/ceph集群替换mon节点ip地址/" class="archive-article-date">
+        <a href="/ceph集群替换mon节点ip地址.html" class="archive-article-date">
   	<time datetime="2018-03-27T12:06:32.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-27</time>
 </a>
         
@@ -342,7 +343,7 @@ var _hmt = _hmt || [];
       
         <p>是由：原来单节点虚拟机集群，搬迁服务器，从A服务器复制虚拟机到B服务器上。然后启动后发现改节点IP地址已经变换，且无法恢复到原有IP地址，则必须使用新的ip地址作为mon 地址。<br>
         
-          <a class="article-more-a" href="/2018/03/27/ceph集群替换mon节点ip地址/#more">more >></a>
+          <a class="article-more-a" href="/ceph集群替换mon节点ip地址.html#more">more >></a>
         
       
 
@@ -366,7 +367,7 @@ var _hmt = _hmt || [];
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2018/03/27/ceph集群替换mon节点ip地址/">展开全文 >></a>
+          <a class="article-more-a" href="/ceph集群替换mon节点ip地址.html">展开全文 >></a>
         </p>
       
 
@@ -405,12 +406,12 @@ var _hmt = _hmt || [];
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/03/27/leveldb-python基础操作方法/">leveldb python基础操作方法</a>
+      <a class="article-title" href="/leveldb-python基础操作方法.html">leveldb python基础操作方法</a>
     </h1>
   
 
         
-        <a href="/2018/03/27/leveldb-python基础操作方法/" class="archive-article-date">
+        <a href="/leveldb-python基础操作方法.html" class="archive-article-date">
   	<time datetime="2018-03-27T12:06:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-27</time>
 </a>
         
@@ -425,7 +426,7 @@ var _hmt = _hmt || [];
 编译源码 cd leveldb &amp;&amp; make all
 </code></pre><p>2、python版本的leveldb安装很简单，pip install leveldb<br>
         
-          <a class="article-more-a" href="/2018/03/27/leveldb-python基础操作方法/#more">more >></a>
+          <a class="article-more-a" href="/leveldb-python基础操作方法.html#more">more >></a>
         
       
 
@@ -449,7 +450,7 @@ var _hmt = _hmt || [];
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2018/03/27/leveldb-python基础操作方法/">展开全文 >></a>
+          <a class="article-more-a" href="/leveldb-python基础操作方法.html">展开全文 >></a>
         </p>
       
 
@@ -488,12 +489,12 @@ var _hmt = _hmt || [];
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/03/26/rbd对象组成以及介绍/">rbd对象组成以及介绍</a>
+      <a class="article-title" href="/rbd对象组成以及介绍.html">rbd对象组成以及介绍</a>
     </h1>
   
 
         
-        <a href="/2018/03/26/rbd对象组成以及介绍/" class="archive-article-date">
+        <a href="/rbd对象组成以及介绍.html" class="archive-article-date">
   	<time datetime="2018-03-26T12:39:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-26</time>
 </a>
         
@@ -509,7 +510,7 @@ rbd_id.image
 rbd_header.3289416b8b4567
 </code></pre>
         
-          <a class="article-more-a" href="/2018/03/26/rbd对象组成以及介绍/#more">more >></a>
+          <a class="article-more-a" href="/rbd对象组成以及介绍.html#more">more >></a>
         
       
 
@@ -533,7 +534,7 @@ rbd_header.3289416b8b4567
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2018/03/26/rbd对象组成以及介绍/">展开全文 >></a>
+          <a class="article-more-a" href="/rbd对象组成以及介绍.html">展开全文 >></a>
         </p>
       
 
@@ -572,12 +573,12 @@ rbd_header.3289416b8b4567
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/03/14/利用火焰图分析ceph-mds进程的cpu占用-简单介绍/">利用火焰图分析ceph-mds进程的cpu占用-简单介绍</a>
+      <a class="article-title" href="/利用火焰图分析ceph-mds进程的cpu占用-简单介绍.html">利用火焰图分析ceph-mds进程的cpu占用-简单介绍</a>
     </h1>
   
 
         
-        <a href="/2018/03/14/利用火焰图分析ceph-mds进程的cpu占用-简单介绍/" class="archive-article-date">
+        <a href="/利用火焰图分析ceph-mds进程的cpu占用-简单介绍.html" class="archive-article-date">
   	<time datetime="2018-03-14T12:53:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-14</time>
 </a>
         
@@ -589,7 +590,7 @@ rbd_header.3289416b8b4567
 <p><strong>Perf工具简介</strong></p>
 <p>它是 Linux 系统原生提供的性能分析工具，用来进行软件性能分析的工具。是linux中用于分析性能问题的一大利器，可以针对一个运行着的程序，对系统进行采样，会返回 CPU 正在执行的函数名以及调用栈（stack）。<br>通常，它的执行频率是 99Hz（每秒99次），如果99次都返回同一个函数名，那就说明 CPU 这一秒钟都在执行同一个函数，可能存在性能问题。<br>
         
-          <a class="article-more-a" href="/2018/03/14/利用火焰图分析ceph-mds进程的cpu占用-简单介绍/#more">more >></a>
+          <a class="article-more-a" href="/利用火焰图分析ceph-mds进程的cpu占用-简单介绍.html#more">more >></a>
         
       
 
@@ -613,7 +614,7 @@ rbd_header.3289416b8b4567
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2018/03/14/利用火焰图分析ceph-mds进程的cpu占用-简单介绍/">展开全文 >></a>
+          <a class="article-more-a" href="/利用火焰图分析ceph-mds进程的cpu占用-简单介绍.html">展开全文 >></a>
         </p>
       
 
@@ -652,12 +653,12 @@ rbd_header.3289416b8b4567
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/03/12/ceph获取crushmap-查看对象分布-目录绑定-查看条带/">ceph获取crushmap-查看对象分布-目录绑定-查看条带</a>
+      <a class="article-title" href="/ceph获取crushmap-查看对象分布-目录绑定-查看条带.html">ceph获取crushmap-查看对象分布-目录绑定-查看条带</a>
     </h1>
   
 
         
-        <a href="/2018/03/12/ceph获取crushmap-查看对象分布-目录绑定-查看条带/" class="archive-article-date">
+        <a href="/ceph获取crushmap-查看对象分布-目录绑定-查看条带.html" class="archive-article-date">
   	<time datetime="2018-03-12T12:54:07.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-12</time>
 </a>
         
@@ -671,7 +672,7 @@ rbd_header.3289416b8b4567
 <pre><code>ceph osd  getcrushmap -o {compiled-crushmap-filename}
 </code></pre><p>ceph将crush输出（-o）到你指定的文件，由于crush map是已编译的，所以需要反编译；</p>
         
-          <a class="article-more-a" href="/2018/03/12/ceph获取crushmap-查看对象分布-目录绑定-查看条带/#more">more >></a>
+          <a class="article-more-a" href="/ceph获取crushmap-查看对象分布-目录绑定-查看条带.html#more">more >></a>
         
       
 
@@ -695,7 +696,7 @@ rbd_header.3289416b8b4567
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2018/03/12/ceph获取crushmap-查看对象分布-目录绑定-查看条带/">展开全文 >></a>
+          <a class="article-more-a" href="/ceph获取crushmap-查看对象分布-目录绑定-查看条带.html">展开全文 >></a>
         </p>
       
 
@@ -734,12 +735,12 @@ rbd_header.3289416b8b4567
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/03/08/记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程/">记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程</a>
+      <a class="article-title" href="/记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程.html">记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程</a>
     </h1>
   
 
         
-        <a href="/2018/03/08/记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程/" class="archive-article-date">
+        <a href="/记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程.html" class="archive-article-date">
   	<time datetime="2018-03-08T13:22:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-08</time>
 </a>
         
@@ -750,7 +751,7 @@ rbd_header.3289416b8b4567
         <p>记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程</p>
 <p>在一次对ceph集群做模拟故障测试过程中，外置内核客户端挂载ceph集群，客户端开启fio进行写，dd进行读的过程中。对集群节点的某个osd磁盘进行拔盘操作。客户端读取，写入中断一段时间，之后继续恢复读写。在插入磁盘之后，发现有个其他的osd 没有up.如下图：<br>
         
-          <a class="article-more-a" href="/2018/03/08/记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程/#more">more >></a>
+          <a class="article-more-a" href="/记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程.html#more">more >></a>
         
       
 
@@ -774,7 +775,7 @@ rbd_header.3289416b8b4567
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2018/03/08/记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程/">展开全文 >></a>
+          <a class="article-more-a" href="/记录客户端写入过程中进行拔盘操作导致osd日志分区故障的修复过程.html">展开全文 >></a>
         </p>
       
 
@@ -813,12 +814,12 @@ rbd_header.3289416b8b4567
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/03/08/flashcache介绍/">flashcache介绍</a>
+      <a class="article-title" href="/flashcache介绍.html">flashcache介绍</a>
     </h1>
   
 
         
-        <a href="/2018/03/08/flashcache介绍/" class="archive-article-date">
+        <a href="/flashcache介绍.html" class="archive-article-date">
   	<time datetime="2018-03-08T13:21:33.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-08</time>
 </a>
         
@@ -830,7 +831,7 @@ rbd_header.3289416b8b4567
 <p>本文仅简单介绍flashcache的基本使用，安装，深度分析后期再补上。</p>
 <p>Flashcache 是facebook的一个开源方案，主要被用于数据加速。基本结构为在hdd盘前面加一层缓存，既采用固态硬盘ssd。把热数据保存在ssd中，加速数据的读写，写入的过程也是先写到ssd上，然后ssd同步到后端sata磁盘上，最后的资料将保存在sata磁盘上，这样不用担心ssd损坏会造成资料丢失的问题，同时可以有大容量，高读取速度的存储。flashcache是建立在Linux devicemapper之上的，由devicemapper在SSD和backing HDD之上创建了一个逻辑的mapped device，用户使用的就是这个mapped device。flashcache把cache（SSD）按照哈希的方式进行结构化管理。</p>
         
-          <a class="article-more-a" href="/2018/03/08/flashcache介绍/#more">more >></a>
+          <a class="article-more-a" href="/flashcache介绍.html#more">more >></a>
         
       
 
@@ -854,7 +855,7 @@ rbd_header.3289416b8b4567
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2018/03/08/flashcache介绍/">展开全文 >></a>
+          <a class="article-more-a" href="/flashcache介绍.html">展开全文 >></a>
         </p>
       
 
@@ -893,12 +894,12 @@ rbd_header.3289416b8b4567
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/03/04/ceph条带化介绍/">ceph条带化介绍</a>
+      <a class="article-title" href="/ceph条带化介绍.html">ceph条带化介绍</a>
     </h1>
   
 
         
-        <a href="/2018/03/04/ceph条带化介绍/" class="archive-article-date">
+        <a href="/ceph条带化介绍.html" class="archive-article-date">
   	<time datetime="2018-03-04T13:59:41.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-04</time>
 </a>
         
@@ -908,7 +909,7 @@ rbd_header.3289416b8b4567
       
         <p>在 RADOS 层，Ceph 本身没有条带的概念，因为一个object 是作为一个文件整体性保存的。RBD 可以控制向一个 object 的写入方式，默认是将一个 object 写满再去写下一个object；还可以通过指定 stripe_unit 和 stripe_count，来将 object 分成若干个条带即 strip。一个 RDB image 会被分为多个 object 来保存，从而使得对一个 image 的多个读写可以分在多个 object 进行，从而可以防止某个 image 非常大或者非常忙时单个节点称为性能瓶颈。还可以将 object 进一步条带化为多个条带（stripe unit）。条带（stripe）是 librados 通过 ODS 写入数据的基本单位。这么做的好处是在保持对象数目的同时，进一步减少可以同步读写的粒度（从 object 粒度减少到 stripe 粒度），从而提高读写效率。<br>
         
-          <a class="article-more-a" href="/2018/03/04/ceph条带化介绍/#more">more >></a>
+          <a class="article-more-a" href="/ceph条带化介绍.html#more">more >></a>
         
       
 
@@ -932,7 +933,7 @@ rbd_header.3289416b8b4567
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2018/03/04/ceph条带化介绍/">展开全文 >></a>
+          <a class="article-more-a" href="/ceph条带化介绍.html">展开全文 >></a>
         </p>
       
 
@@ -1073,15 +1074,15 @@ var _hmt = _hmt || [];
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">blktrace fio</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">blktrace btt blkparse</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">io</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">blktrace fio</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1093,11 +1094,7 @@ var _hmt = _hmt || [];
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">ceph10.2 radosgw  hadoop</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">nginx</a>
+                <a href="javascript:void(0)" class="js-tag color4">cosbench</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1105,7 +1102,11 @@ var _hmt = _hmt || [];
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">cosbench</a>
+                <a href="javascript:void(0)" class="js-tag color5">ceph10.2 radosgw  hadoop</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">nginx</a>
               </li>
              
               <li class="article-tag-list-item">

@@ -7,18 +7,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://idcat.cn">
-  <title>Tag: leveldb ceph | deelaaay learning</title>
+  <title>nginx反向代理和负载均衡最基础配置实现 | deelaaay learning</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="自我定位">
-<meta property="og:type" content="website">
-<meta property="og:title" content="deelaaay learning">
-<meta property="og:url" content="http://idcat.cn/tags/leveldb-ceph/index.html">
+  <meta name="description" content="本文仅在最基础的nginx环境下做反向代理和负载均衡的大概配置介绍，具体调优以及其他功能暂不考虑。仅仅展现这2个功能的基本实现配置，本文记录仅供参考。 环境： 单台centos7的虚拟机，nginx安装使用yum进行安装。默认nginx配置文件在/etc/nginx/ 下 nginx.conf文件。">
+<meta name="keywords" content="nginx">
+<meta property="og:type" content="article">
+<meta property="og:title" content="nginx反向代理和负载均衡最基础配置实现">
+<meta property="og:url" content="http://idcat.cn/nginx反向代理和负载均衡最基础配置实现.html">
 <meta property="og:site_name" content="deelaaay learning">
-<meta property="og:description" content="自我定位">
+<meta property="og:description" content="本文仅在最基础的nginx环境下做反向代理和负载均衡的大概配置介绍，具体调优以及其他功能暂不考虑。仅仅展现这2个功能的基本实现配置，本文记录仅供参考。 环境： 单台centos7的虚拟机，nginx安装使用yum进行安装。默认nginx配置文件在/etc/nginx/ 下 nginx.conf文件。">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-04-24T09:40:56.474Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="deelaaay learning">
-<meta name="twitter:description" content="自我定位">
+<meta name="twitter:title" content="nginx反向代理和负载均衡最基础配置实现">
+<meta name="twitter:description" content="本文仅在最基础的nginx环境下做反向代理和负载均衡的大概配置介绍，具体调优以及其他功能暂不考虑。仅仅展现这2个功能的基本实现配置，本文记录仅供参考。 环境： 单台centos7的虚拟机，nginx安装使用yum进行安装。默认nginx配置文件在/etc/nginx/ 下 nginx.conf文件。">
   
     <link rel="alternative" href="/atom.xml" title="deelaaay learning" type="application/atom+xml">
   
@@ -160,60 +162,328 @@ var _hmt = _hmt || [];
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-nginx反向代理和负载均衡最基础配置实现" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/leveldb-python基础操作方法.html" class="archive-article-date">
-  	<time datetime="2018-03-27T12:06:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-27</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/leveldb-python基础操作方法.html">leveldb python基础操作方法</a>
+    <h1 class="article-title" itemprop="name">
+      nginx反向代理和负载均衡最基础配置实现
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/nginx反向代理和负载均衡最基础配置实现.html" class="archive-article-date">
+  	<time datetime="2018-04-24T09:39:44.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-24</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>本文仅在最基础的nginx环境下做反向代理和负载均衡的大概配置介绍，具体调优以及其他功能暂不考虑。仅仅展现这2个功能的基本实现配置，本文记录仅供参考。</p>
+<p><strong>环境：</strong></p>
+<p>单台centos7的虚拟机，nginx安装使用yum进行安装。默认nginx配置文件在/etc/nginx/ 下 nginx.conf文件。<br><a id="more"></a></p>
+<p><strong>默认配置</strong></p>
+<p>备份默认配置文件</p>
+<pre><code>[root@node1 ~]# cp /etc/nginx/nginx.conf{,_bak}
+</code></pre><p>清空注释内容，使配置文件更加清晰</p>
+<pre><code>[root@node1 ~]# sed -i &apos;/^#/d&apos; /etc/nginx/nginx.conf
+</code></pre><p>查看默认配置</p>
+<pre><code>[root@node1 ~]# cat /etc/nginx/nginx.conf_bak  |grep -v ^# | grep -v ^$
+
+user nginx;
+worker_processes auto;
+error_log /var/log/nginx/error.log;
+pid /run/nginx.pid;
+include /usr/share/nginx/modules/*.conf;
+events {
+    worker_connections 1024;
+}
+http {
+    log_format  main  &apos;$remote_addr - $remote_user [$time_local] &quot;$request&quot; &apos;
+                  &apos;$status $body_bytes_sent &quot;$http_referer&quot; &apos;
+                  &apos;&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;&apos;;
+    access_log  /var/log/nginx/access.log  main;
+    sendfile            on;
+    tcp_nopush          on;
+    tcp_nodelay         on;
+    keepalive_timeout   65;
+    types_hash_max_size 2048;
+    include             /etc/nginx/mime.types;
+    default_type        application/octet-stream;
+
+    include /etc/nginx/conf.d/*.conf;
+    server {
+        listen       80 default_server;
+        listen       [::]:80 default_server;
+        server_name  _;
+        root         /usr/share/nginx/html;
+        include /etc/nginx/default.d/*.conf;
+        location / {
+        }
+           error_page 404 /404.html;
+            location = /40x.html {
+        }
+        error_page 500 502 503 504 /50x.html;
+            location = /50x.html {
+        }
+    }
+}
+</code></pre><p>简单介绍：</p>
+<p>http模块下面包括server 等</p>
+<ul>
+<li><p>listen server监听端口</p>
+</li>
+<li><p>server_name 通过什么域名进行访问。本例为空即本机IP</p>
+</li>
+<li><p>root 定义服务器网站根目录默认位置</p>
+</li>
+<li><p>location 通用匹配，任何未匹配到其它location的请求都会匹配到这里</p>
+</li>
+</ul>
+<p>修改默认配置下主页内容</p>
+<pre><code>[root@node1 nginx]# cat /usr/share/nginx/html/index.html 
+this is example
+</code></pre><p>访问测试</p>
+<pre><code>[root@node1 ~]# curl node1
+this is example
+</code></pre><p><strong>反向代理</strong></p>
+<p>例如客户端A访问服务端B ，然而B实际上访问了服务端C，然后返回结果给B，在返回结果给A。至始至终，客户端A是不知道C的存在的，只会认为访问B并得到返回。这样可以很好的保护了实际WEB服务端C。</p>
+<p>修改默认配置文件nginx.conf </p>
+<pre><code>server {
+    listen       80 default_server;
+    listen       [::]:80 default_server;
+    server_name  -;
+    root         /usr/share/nginx/html;
+    include /etc/nginx/default.d/*.conf;
+    location /{
+            proxy_pass http://node1:8081;
+    }
+}
+    server {
+            listen       8081 default_server;
+            root         /usr/share/nginx/html_1;
+            server_name  -;
+            index   index.html;
+            location / {
+                    }
+    }
+}
+</code></pre><p>在原有server下面增加了一个server，即新的虚拟机，后台默认端口为8081，默认root为html_ 1，该目录是从默认html 拷贝过来的，修改默认index.html内容为8081。然后在默认80端口的虚拟机上增加proxy_pass <a href="http://node1:8081" target="_blank" rel="noopener">http://node1:8081</a>; 表示客户端访问80端口的时候，其实指向了另外的虚拟机的8081端口上。修改后重载nginx。</p>
+<pre><code>[root@node1 ~]# systemctl reload nginx
+[root@node1 ~]# cat /usr/share/nginx/html_1/index.html 
+8081
+</code></pre><p>访问测试</p>
+<pre><code>[root@node1 html_1]# curl node1
+8081
+</code></pre><p>已经配置成功了。本来访问80端口的下index.html应该是this is example ，现在返回的是8081虚拟机的index.html内容。</p>
+<p><strong>负载均衡</strong></p>
+<p>单台web服务器受限于其资源限制，提供对外访问连接毕竟有限。增加多台nginx后端web服务器同时提供访问，可增加并发性能，以及提高可拓展性。nginx负载均衡支持客户端访问请求根据策略分摊到后端实际的某台web服务器上。</p>
+<p>修改默认配置文件nginx.conf </p>
+<pre><code>##在http下面增加upstream配置    
+upstream my_http {
+ #默认轮训策略，还有ip_hash ，weight，最小连接数等算法。
+    server 192.168.1.141:8081;
+    server 192.168.1.141:8082;
+    server 192.168.1.141:8083;
+  }
+
+server {
+    listen       80 default_server;
+    listen       [::]:80 default_server;
+    server_name  -;
+    root         /usr/share/nginx/html;
+    include /etc/nginx/default.d/*.conf;
+    location /{
+            proxy_pass http://my_http;
+    }
+}
+    ##本机起3个虚拟机，分别使用不同的端口号，模拟多台server服务端。root定义网站路径，index指定默认网页
+    server {
+            listen       8081 ;
+            root         /usr/share/nginx/html_1;
+            server_name  -;
+            index   index.html;
+            location / {
+
+                    }
+    }
+    server {
+            listen       8082;
+            root         /usr/share/nginx/html_2;
+            server_name  -;
+            index   index.html;
+            location / {
+                    }
+    }
+    server {
+            listen       8083;
+            root         /usr/share/nginx/html_3;
+            server_name  -;
+            index   index.html;
+            location / {
+                    }
+    }
+</code></pre><p>在原有server下面增加了一个3个server，即3台新的虚拟机，后台默认端口分别为8081、8082、8083，默认root为html_ 1，html_ 2，html_ 3。这些目录是从默认html 拷贝过来的，分别修改默认index.html内容为8081，8082，8083 然后在默认80端口的虚拟机上增加proxy_ pass <a href="http://my_http" target="_blank" rel="noopener">http://my_http</a>;   即http:// + upstream 名称 ；  表示客户端每次访问80端口的时候，其实指向了另外3台虚拟机。修改后重载nginx。</p>
+<pre><code>[root@node1 ~]# cat /usr/share/nginx/html_1/index.html 
+8081
+[root@node1 ~]# cat /usr/share/nginx/html_2/index.html 
+8082
+[root@node1 ~]# cat /usr/share/nginx/html_3/index.html 
+8083
+[root@node1 ~]# systemctl reload nginx
+</code></pre><p>访问测试</p>
+<pre><code>[root@node1 ~]# curl node1
+8081
+[root@node1 ~]# curl node1
+8082
+[root@node1 ~]# curl node1
+8083
+</code></pre><p>已经配置成功了。本来访问80端口的下index.html应该是this is example ，现在客户端每次访问80端口，依次返回的是后端3台虚拟机的index.html内容。</p>
+<p>记录到此。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">leveldb ceph</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">nginx</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://idcat.cn/nginx反向代理和负载均衡最基础配置实现.html" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/hadoop2-7-3通过s3对接ceph10-2-radosgw测试.html" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          hadoop2.7.3通过s3对接ceph10.2 radosgw测试
+        
+      </div>
+    </a>
   
   
-    </div></section>
+    <a href="/tdb文件简介.html" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">tdb文件简介</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+  
+  
   
 
-    
+  
+  
+  
+	<script>
+	(function(){
+		var bp = document.createElement('script');
+		bp.src = '//push.zhanzhang.baidu.com/push.js';
+		var s = document.getElementsByTagName("script")[0];
+		s.parentNode.insertBefore(bp, s);
+	})();
+	</script>     
+   
+
+  
+
+  
+
+
 
 
           </div>
@@ -237,9 +507,9 @@ var _hmt = _hmt || [];
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,

@@ -7,18 +7,24 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://idcat.cn">
-  <title>Tag: leveldb ceph | deelaaay learning</title>
+  <title>blktrace 工具简介 | deelaaay learning</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="自我定位">
-<meta property="og:type" content="website">
-<meta property="og:title" content="deelaaay learning">
-<meta property="og:url" content="http://idcat.cn/tags/leveldb-ceph/index.html">
+  <meta name="description" content="利用BLKTRACE分析IO性能 在Linux系统上，如果I/O发生性能问题，有没有办法进一步定位故障位置呢？iostat等最常用的工具肯定是指望不上的，blktrace在这种场合就能派上用场，因为它能记录I/O所经历的各个步骤，从中可以分析是IO Scheduler慢还是硬件响应慢。简化版io路径图：">
+<meta name="keywords" content="blktrace btt blkparse">
+<meta property="og:type" content="article">
+<meta property="og:title" content="blktrace 工具简介">
+<meta property="og:url" content="http://idcat.cn/blktrace-工具简介.html">
 <meta property="og:site_name" content="deelaaay learning">
-<meta property="og:description" content="自我定位">
+<meta property="og:description" content="利用BLKTRACE分析IO性能 在Linux系统上，如果I/O发生性能问题，有没有办法进一步定位故障位置呢？iostat等最常用的工具肯定是指望不上的，blktrace在这种场合就能派上用场，因为它能记录I/O所经历的各个步骤，从中可以分析是IO Scheduler慢还是硬件响应慢。简化版io路径图：">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://i.imgur.com/tnNhcA4.png">
+<meta property="og:image" content="https://i.imgur.com/NZL9qcm.png">
+<meta property="og:image" content="https://i.imgur.com/uLH3VD0.png">
+<meta property="og:updated_time" content="2018-04-21T14:07:43.764Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="deelaaay learning">
-<meta name="twitter:description" content="自我定位">
+<meta name="twitter:title" content="blktrace 工具简介">
+<meta name="twitter:description" content="利用BLKTRACE分析IO性能 在Linux系统上，如果I/O发生性能问题，有没有办法进一步定位故障位置呢？iostat等最常用的工具肯定是指望不上的，blktrace在这种场合就能派上用场，因为它能记录I/O所经历的各个步骤，从中可以分析是IO Scheduler慢还是硬件响应慢。简化版io路径图：">
+<meta name="twitter:image" content="https://i.imgur.com/tnNhcA4.png">
   
     <link rel="alternative" href="/atom.xml" title="deelaaay learning" type="application/atom+xml">
   
@@ -160,60 +166,241 @@ var _hmt = _hmt || [];
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-blktrace-工具简介" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/leveldb-python基础操作方法.html" class="archive-article-date">
-  	<time datetime="2018-03-27T12:06:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-27</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/leveldb-python基础操作方法.html">leveldb python基础操作方法</a>
+    <h1 class="article-title" itemprop="name">
+      blktrace 工具简介
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/blktrace-工具简介.html" class="archive-article-date">
+  	<time datetime="2018-04-21T14:00:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-21</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>利用BLKTRACE分析IO性能</p>
+<p>在Linux系统上，如果I/O发生性能问题，有没有办法进一步定位故障位置呢？iostat等最常用的工具肯定是指望不上的，blktrace在这种场合就能派上用场，因为它能记录I/O所经历的各个步骤，从中可以分析是IO Scheduler慢还是硬件响应慢。简化版io路径图：<br><a id="more"></a><br><img src="https://i.imgur.com/tnNhcA4.png" alt=""></p>
+<p>一个I/O请求进入block layer之后，可能会经历下面的过程：</p>
+<ul>
+<li>Remap: 可能被DM(Device Mapper)或MD(Multiple Device, Software RAID) remap到其它设备</li>
+<li>Split: 可能会因为I/O请求与扇区边界未对齐、或者size太大而被分拆(split)成多个物理I/O</li>
+<li>Merge: 可能会因为与其它I/O请求的物理位置相邻而合并(merge)成一个I/O</li>
+<li>被IO Scheduler依照调度策略发送给driver</li>
+<li>被driver提交给硬件，经过HBA、电缆（光纤、网线等）、交换机（SAN或网络）、最后到达存储设备，设备完成IO请求之后再把结果发回。</li>
+</ul>
+<p>blktrace能记录I/O所经历的各个步骤，来看一下它记录的数据，包含9个字段，下图标示了其中8个字段的含义，大致的意思是“哪个进程在访问哪个硬盘的哪个扇区，进行什么操作，进行到哪个步骤，时间戳是多少”：<br><img src="https://i.imgur.com/NZL9qcm.png" alt=""></p>
+<p>-第一个字段：8,0 这个字段是设备号 major device ID和minor device ID。</p>
+<p>-第二个字段：3 表示CPU</p>
+<p>-第三个字段：11 序列号</p>
+<p>-第四个字段：0.009507758 Time Stamp是时间偏移</p>
+<p>-第五个字段：PID 本次IO对应的进程ID</p>
+<p>-第六个字段：Event，这个字段非常重要，反映了IO进行到了那一步</p>
+<p>-第七个字段：R表示 Read， W是Write，D表示block，B表示Barrier Operation</p>
+<p>-第八个字段：223490+56，表示的是起始block number 和 number of blocks，即我们常说的Offset 和 Size</p>
+<p>-第九个字段： 进程名</p>
+<p>其中第六个字段非常有用：每一个字母都代表了IO请求所经历的某个阶段。</p>
+<pre><code>A  映射值对应设备 IO was remapped to a different device
+B  IO反弹，由于32位地址长度限制，所以需要copy数据到低位内存，这会有性能损耗。IO bounced
+C  IO完成 IO completion
+D  将IO发送给驱动 IO issued to driver
+F  IO请求，前合并 IO front merged with request on queue
+G  获取 请求 Get request
+I  IO插入请求队列 IO inserted onto request queue
+M  IO请求，后合并 IO back merged with request on queue
+P  插上块设备队列（队列插入机制） Plug request
+Q  io被请求队列处理代码接管。 IO handled by request queue code
+S  等待发送请求。 Sleep request
+T  由于超时而拔出设备队列 Unplug due to timeout
+U  拔出设备队列 Unplug request
+X  开始新的扇区 Split
+</code></pre><p>以下需要记清楚的：</p>
+<pre><code>Q – 即将生成IO请求
+G – IO请求生成
+I – IO请求进入IO Scheduler队列
+D – IO请求进入driver
+C – IO请求执行完毕
+</code></pre><p>注意，整个IO路径，分成很多段，每一段开始的时候，都会有一个时间戳，根据上一段开始的时间和下一段开始的时间，就可以得到IO 路径各段花费的时间。</p>
+<p>注意，我们心心念念的service time，也就是反应块设备处理能力的指标，就是从D到C所花费的时间，简称D2C。</p>
+<p>而iostat输出中的await，即整个IO从生成请求到IO请求执行完毕，即从Q到C所花费的时间，我们简称Q2C。</p>
+<p>我们知道Linux 有I/O scheduler，调度器的效率如何，I2D是重要的指标。</p>
+<p>注意，这只是blktrace输出的一个部分，很明显，我们还能拿到offset和size，根据offset，我们能拿到某一段时间里，应用程序都访问了整个块设备的那些block，从而绘制出块设备访问轨迹图。</p>
+<p><strong>blktrace centos7安装</strong></p>
+<p>yum install blktrace -y </p>
+<p>会自动生成blktrace  blkparse btt 3个工具，其中，blktrace收集数据，blkparce分析数据，btt汇总数据。</p>
+<p>blktrace的用法</p>
+<p>使用blktrace需要挂载debugfs：</p>
+<p>$ mount -t debugfs debugfs /sys/kernel/debug</p>
+<p>利用blktrace查看实时数据的方法，比如要看的硬盘是sdb：</p>
+<p>$ blktrace -d /dev/sdb -o – | blkparse -i –</p>
+<p>需要停止的时候，按Ctrl-C。</p>
+<p>个人常用方法：   </p>
+<p>blktrace -d /dev/sdc</p>
+<p>生成数据：    应用结束后，手动终止监控，会生成cpu数量的文件</p>
+<p>blkparse -i sdc -d sdc.blktrace.bin</p>
+<p>分析数据：   btt</p>
+<p>btt -i sdc.blktrace.bin -A |less</p>
+<p>汇总后，部分截图</p>
+<p><img src="https://i.imgur.com/uLH3VD0.png" alt=""></p>
+<p>根据以上步骤对应的时间戳就可以计算出I/O请求在每个阶段所消耗的时间：</p>
+<pre><code>Q2G – 生成IO请求所消耗的时间，包括remap和split的时间；
+G2I – IO请求进入IO Scheduler所消耗的时间，包括merge的时间；
+I2D – IO请求在IO Scheduler中等待的时间；
+D2C – IO请求在driver和硬件上所消耗的时间；
+Q2C – 整个IO请求所消耗的时间(Q2I + I2D + D2C = Q2C)，相当于iostat的await。
+</code></pre><p>如果I/O性能慢的话，以上指标有助于进一步定位缓慢发生的地方：</p>
+<pre><code>D2C可以作为硬件性能的指标；
+I2D可以作为IO Scheduler性能的指标。
+</code></pre><p>更多分析请参考下面链接。</p>
+<p><a href="http://bean-li.github.io/blktrace-to-report/" target="_blank" rel="noopener">本文参考 http://bean-li.github.io/blktrace-to-report/</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">leveldb ceph</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">blktrace btt blkparse</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://idcat.cn/blktrace-工具简介.html" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/tdb文件简介.html" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          tdb文件简介
+        
+      </div>
+    </a>
   
   
-    </div></section>
+    <a href="/cosbench例子-参考.html" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">cosbench例子-参考</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+  
+  
   
 
-    
+  
+  
+  
+	<script>
+	(function(){
+		var bp = document.createElement('script');
+		bp.src = '//push.zhanzhang.baidu.com/push.js';
+		var s = document.getElementsByTagName("script")[0];
+		s.parentNode.insertBefore(bp, s);
+	})();
+	</script>     
+   
+
+  
+
+  
+
+
 
 
           </div>
@@ -237,9 +424,9 @@ var _hmt = _hmt || [];
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,

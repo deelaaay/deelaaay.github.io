@@ -7,18 +7,23 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://idcat.cn">
-  <title>Tag: leveldb ceph | deelaaay learning</title>
+  <title>利用火焰图分析ceph-mds进程的cpu占用-简单介绍 | deelaaay learning</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="自我定位">
-<meta property="og:type" content="website">
-<meta property="og:title" content="deelaaay learning">
-<meta property="og:url" content="http://idcat.cn/tags/leveldb-ceph/index.html">
+  <meta name="description" content="利用火焰图分析ceph-mds进程的cpu占用-简单介绍 Perf工具简介 它是 Linux 系统原生提供的性能分析工具，用来进行软件性能分析的工具。是linux中用于分析性能问题的一大利器，可以针对一个运行着的程序，对系统进行采样，会返回 CPU 正在执行的函数名以及调用栈（stack）。通常，它的执行频率是 99Hz（每秒99次），如果99次都返回同一个函数名，那就说明 CPU 这一秒钟都在执">
+<meta name="keywords" content="flamegraph">
+<meta property="og:type" content="article">
+<meta property="og:title" content="利用火焰图分析ceph-mds进程的cpu占用-简单介绍">
+<meta property="og:url" content="http://idcat.cn/利用火焰图分析ceph-mds进程的cpu占用-简单介绍.html">
 <meta property="og:site_name" content="deelaaay learning">
-<meta property="og:description" content="自我定位">
+<meta property="og:description" content="利用火焰图分析ceph-mds进程的cpu占用-简单介绍 Perf工具简介 它是 Linux 系统原生提供的性能分析工具，用来进行软件性能分析的工具。是linux中用于分析性能问题的一大利器，可以针对一个运行着的程序，对系统进行采样，会返回 CPU 正在执行的函数名以及调用栈（stack）。通常，它的执行频率是 99Hz（每秒99次），如果99次都返回同一个函数名，那就说明 CPU 这一秒钟都在执">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://i.imgur.com/rniB5kO.jpg">
+<meta property="og:image" content="https://i.imgur.com/ZcFZ2OM.jpg">
+<meta property="og:updated_time" content="2018-03-14T12:59:08.579Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="deelaaay learning">
-<meta name="twitter:description" content="自我定位">
+<meta name="twitter:title" content="利用火焰图分析ceph-mds进程的cpu占用-简单介绍">
+<meta name="twitter:description" content="利用火焰图分析ceph-mds进程的cpu占用-简单介绍 Perf工具简介 它是 Linux 系统原生提供的性能分析工具，用来进行软件性能分析的工具。是linux中用于分析性能问题的一大利器，可以针对一个运行着的程序，对系统进行采样，会返回 CPU 正在执行的函数名以及调用栈（stack）。通常，它的执行频率是 99Hz（每秒99次），如果99次都返回同一个函数名，那就说明 CPU 这一秒钟都在执">
+<meta name="twitter:image" content="https://i.imgur.com/rniB5kO.jpg">
   
     <link rel="alternative" href="/atom.xml" title="deelaaay learning" type="application/atom+xml">
   
@@ -160,60 +165,196 @@ var _hmt = _hmt || [];
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-利用火焰图分析ceph-mds进程的cpu占用-简单介绍" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/leveldb-python基础操作方法.html" class="archive-article-date">
-  	<time datetime="2018-03-27T12:06:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-27</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/leveldb-python基础操作方法.html">leveldb python基础操作方法</a>
+    <h1 class="article-title" itemprop="name">
+      利用火焰图分析ceph-mds进程的cpu占用-简单介绍
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/利用火焰图分析ceph-mds进程的cpu占用-简单介绍.html" class="archive-article-date">
+  	<time datetime="2018-03-14T12:53:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-14</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>利用火焰图分析ceph-mds进程的cpu占用-简单介绍</p>
+<p><strong>Perf工具简介</strong></p>
+<p>它是 Linux 系统原生提供的性能分析工具，用来进行软件性能分析的工具。是linux中用于分析性能问题的一大利器，可以针对一个运行着的程序，对系统进行采样，会返回 CPU 正在执行的函数名以及调用栈（stack）。<br>通常，它的执行频率是 99Hz（每秒99次），如果99次都返回同一个函数名，那就说明 CPU 这一秒钟都在执行同一个函数，可能存在性能问题。<br><a id="more"></a><br>安装</p>
+<pre><code>yum install perf
+</code></pre><p><strong>火焰图（Flame Graphs）简介：</strong></p>
+<p><a href="http://www.brendangregg.com/flamegraphs.html" target="_blank" rel="noopener">http://www.brendangregg.com/flamegraphs.html</a></p>
+<p>火焰图是基于 perf 结果产生的 svg图片，用来展示 CPU 的调用栈。<br><img src="https://i.imgur.com/rniB5kO.jpg" alt=""></p>
+<p>y 轴表示调用栈，每一层都是一个函数。调用栈越深，火焰就越高，顶部就是正在执行的函数，下方都是它的父函数。<br>x 轴表示抽样数，如果一个函数在 x 轴占据的宽度越宽，就表示它被抽到的次数多，即执行的时间长。注意，x 轴不代表时间，而是所有的调用栈合并后，按字母顺序排列的。<br>火焰图就是看顶层的哪个函数占据的宽度最大。只要有”平顶”（plateaus），就表示该函数可能存在性能问题</p>
+<p><strong>下载</strong></p>
+<p>Git  brendangregg大神的火焰图生成程序</p>
+<pre><code>git clone https://github.com/brendangress/FlameGraph
+</code></pre><p><strong>使用</strong></p>
+<p>进入到下载目录，另外窗口客户端对集群进行写操作，期间通过perf对mds进程进行采样收集。</p>
+<p>客户端写入：</p>
+<pre><code>time  dd if=/dev/zero of=a bs=1M count=1024 oflag=direct
+</code></pre><p>对mds进程进行perf测试并采样30s</p>
+<pre><code>[root@ceph01 FlameGraph]# perf record -e cpu-clock --call-graph dwarf  -p 17484 -- sleep 30 
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.327 MB perf.data (1 samples) ]
+[root@ceph01 FlameGraph]#
+</code></pre><p><strong>分析</strong></p>
+<p>首先对之前的采样结果进行整理</p>
+<pre><code>[root@ceph01 FlameGraph]# perf script | ./stackcollapse-perf.pl &gt; ceph-mds.out
+</code></pre><p>生成火焰图</p>
+<pre><code>[root@ceph01 FlameGraph]# ./flamegraph.pl ceph-mds.out &gt; ceph-mds.svg
+</code></pre><p>下载该svg文件并通过chrome浏览器打开<br><img src="https://i.imgur.com/ZcFZ2OM.jpg" alt=""><br>总结</p>
+<p>火焰图的功能不止这一点，当然perf作为linux下的性能测试的一大神器，其功能也不仅仅这一点。该PPT的内容仅作为抛砖引玉之用。</p>
+<p>参考网站 <a href="http://www.brendangregg.com/flamegraphs.html" target="_blank" rel="noopener">http://www.brendangregg.com/flamegraphs.html</a></p>
+<p>后期关于一些测试方面的经验再做分享。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">leveldb ceph</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">flamegraph</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://idcat.cn/利用火焰图分析ceph-mds进程的cpu占用-简单介绍.html" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/rbd对象组成以及介绍.html" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          rbd对象组成以及介绍
+        
+      </div>
+    </a>
   
   
-    </div></section>
+    <a href="/ceph获取crushmap-查看对象分布-目录绑定-查看条带.html" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">ceph获取crushmap-查看对象分布-目录绑定-查看条带</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+  
+  
   
 
-    
+  
+  
+  
+	<script>
+	(function(){
+		var bp = document.createElement('script');
+		bp.src = '//push.zhanzhang.baidu.com/push.js';
+		var s = document.getElementsByTagName("script")[0];
+		s.parentNode.insertBefore(bp, s);
+	})();
+	</script>     
+   
+
+  
+
+  
+
+
 
 
           </div>
@@ -237,9 +378,9 @@ var _hmt = _hmt || [];
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,

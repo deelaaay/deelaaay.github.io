@@ -7,18 +7,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://idcat.cn">
-  <title>Tag: leveldb ceph | deelaaay learning</title>
+  <title>ceph-mon基础运维 | deelaaay learning</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="自我定位">
-<meta property="og:type" content="website">
-<meta property="og:title" content="deelaaay learning">
-<meta property="og:url" content="http://idcat.cn/tags/leveldb-ceph/index.html">
+  <meta name="description" content="全文参考https://access.redhat.com/documentation/en-us/red_hat_ceph_storage/3/html/troubleshooting_guide/troubleshooting-monitors 进行翻译，可以直接查看原文。">
+<meta name="keywords" content="ceph">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ceph-mon基础运维">
+<meta property="og:url" content="http://idcat.cn/ceph-mon基础运维.html">
 <meta property="og:site_name" content="deelaaay learning">
-<meta property="og:description" content="自我定位">
+<meta property="og:description" content="全文参考https://access.redhat.com/documentation/en-us/red_hat_ceph_storage/3/html/troubleshooting_guide/troubleshooting-monitors 进行翻译，可以直接查看原文。">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-03-08T13:40:02.488Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="deelaaay learning">
-<meta name="twitter:description" content="自我定位">
+<meta name="twitter:title" content="ceph-mon基础运维">
+<meta name="twitter:description" content="全文参考https://access.redhat.com/documentation/en-us/red_hat_ceph_storage/3/html/troubleshooting_guide/troubleshooting-monitors 进行翻译，可以直接查看原文。">
   
     <link rel="alternative" href="/atom.xml" title="deelaaay learning" type="application/atom+xml">
   
@@ -160,60 +162,261 @@ var _hmt = _hmt || [];
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-ceph-mon基础运维" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/leveldb-python基础操作方法.html" class="archive-article-date">
-  	<time datetime="2018-03-27T12:06:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-27</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/leveldb-python基础操作方法.html">leveldb python基础操作方法</a>
+    <h1 class="article-title" itemprop="name">
+      ceph-mon基础运维
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/ceph-mon基础运维.html" class="archive-article-date">
+  	<time datetime="2018-02-28T15:59:41.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-28</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>全文参考<a href="https://access.redhat.com/documentation/en-us/red_hat_ceph_storage/3/html/troubleshooting_guide/troubleshooting-monitors" target="_blank" rel="noopener">https://access.redhat.com/documentation/en-us/red_hat_ceph_storage/3/html/troubleshooting_guide/troubleshooting-monitors</a></p>
+<p>进行翻译，可以直接查看原文。<br><a id="more"></a></p>
+<h1 id="一、The-ceph-mon-Daemon-Cannot-Start"><a href="#一、The-ceph-mon-Daemon-Cannot-Start" class="headerlink" title="一、The ceph-mon Daemon Cannot Start"></a>一、The ceph-mon Daemon Cannot Start</h1><pre><code>systemctl status ceph-mon@&lt;host-name&gt;
+
+systemctl start ceph-mon@&lt;host-name&gt;
+</code></pre><p>执行star启动命令后，mon daemon 守护进程就是无法启动。检查相应主机mon的日志，默认在路劲/var/log/ceph/ceph-mon.<host-name>.log</host-name></p>
+<p>一、 如果日志包含以下类似信息，说明mon store有数据损坏</p>
+<p>Corruption: error in middle of record</p>
+<p>Corruption: 1 missing files; e.g.: /var/lib/ceph/mon/mon.0/store.db/1234567.ldb</p>
+<p><strong>修复monmap</strong></p>
+<p>如果一个 monitor拥有过时的数据或者错误的monmap表，这样它就不会加入到选举中去。因为他可能使用错误的IP地址去连接其他正常的mon ip。最安全的修复此问题的方法便是从其他正常运行mon的节点上获取最新monmap表，然后注入到问题mon节点。</p>
+<p>此方法最基础的条件便是剩余的集群拥有正常的quorum状态，或者说至少有一台主机拥有正确且最新的monmap表。<br>a、剩下的主机拥有正常的quorum状态，使用ceph mon getmap获取monmap表</p>
+<pre><code>ceph mon getmap -o /tmp/monmap
+</code></pre><p>b、如果剩余的主机没有产生quorum状态，且至少有一台主机节点拥有正确的monmap表，则通过如下方式获取monmap表</p>
+<p>停止mon服务： systemctl stop ceph-mon@host1</p>
+<p>复制monmap： ceph-mon -i mon.host1 –extract-monmap /tmp/monmap</p>
+<p>c、注入新的monmap到损坏的节点上（mon 进程必须停止）</p>
+<pre><code>ceph-mon -i mon.hosta --inject-monmap /tmp/monmap
+</code></pre><p>然后启动所有mon进程</p>
+<p>然后，在某些情况下，所有的monitor节点可能同时出现故障，例如所有的节点配置了错误的磁盘或文件系统设置，异常的断电等等都会导致monitor节点故障。如果所有mon节点上的store均故障，我们可以从其他osd节点上恢复它。使用工具ceph-monstore-tool 和ceph-objectstore-tool</p>
+<p>具体步骤如下：首先确保安装rsync 和ceph-test包</p>
+<p>运行如下命令，在所有mon数据故障节点上</p>
+<p>1、从所有osd节点上搜集集群map</p>
+<pre><code>$ ms=/tmp/monstore/
+
+$ mkdir $ms
+
+$ for host in $host_list; do
+
+rsync -avz &quot;$ms&quot; root@$host:&quot;$ms&quot;; rm -rf &quot;$ms&quot;
+
+ssh root@$host &lt;&lt;EOF
+
+for osd in  /var/lib/ceph/osd/ceph-*; do
+
+ ceph-objectstore-tool --data-path \$osd --op update-mon-db --mon-store-path $ms
+
+done
+
+EOF
+
+rsync -avz root@$host:$ms $ms; done
+</code></pre><p>2、设置合适的权限</p>
+<pre><code>$ ceph-authtool /etc/ceph/ceph.client.admin.keyring  -n mon. --cap mon &apos;allow *&apos;
+$ ceph-authtool /etc/ceph/ceph.client.admin.keyring  -n client.admin --cap mon &apos;allow *&apos; --cap osd &apos;allow *&apos; --cap mds &apos;allow *&apos;
+</code></pre><p>3、从搜集到的map信息中重建monitor store</p>
+<pre><code>$ ceph-monstore-tool /tmp/mon-store rebuild -- --keyring /etc/ceph/ceph.client.admin.keyring
+</code></pre><p>如果cephx处于none状态，则去掉后面的–keyring</p>
+<pre><code>$ ceph-monstore-tool /tmp/mon-store rebuild
+</code></pre><p>4、备份坏了的store</p>
+<pre><code>mv /var/lib/ceph/mon/mon.0/store.db  /var/lib/ceph/mon/mon.0/store.db.corrupted
+</code></pre><p>5、替换正确的store</p>
+<pre><code>mv /tmp/mon-store/store.db /var/lib/ceph/mon/mon.0/store.db
+</code></pre><p>6、修改owner</p>
+<pre><code>chown -R ceph:ceph /var/lib/ceph/mon/mon.0/store.db
+</code></pre><h1 id="二、The-ceph-mon-Daemon-Is-Running-but-Still-Marked-as-down"><a href="#二、The-ceph-mon-Daemon-Is-Running-but-Still-Marked-as-down" class="headerlink" title="二、The ceph-mon Daemon Is Running, but Still Marked as down"></a>二、The ceph-mon Daemon Is Running, but Still Marked as down</h1><p>从那台标记自己down的mon主机上执行查看状态命令 （mon.a mon.主机名）</p>
+<pre><code>ceph daemon mon.a mon_status  
+</code></pre><p>查看返回结果：</p>
+<p>1、 如果结果显示为probing  ，确认本地输出结果中其他monitor节点信息。如果主机IP地址显示不正确，则该机monmap表有点问题。如果主机IP地址显示正确，确认下mon节点之间monitor clock是否同步。或者是其他网络问题，请自行排查。</p>
+<p>2、 如果结果显示为electing，请确认下mon节点之间mon clock是否同步。</p>
+<p>时钟不同步 执行ceph health detail 显示如下</p>
+<pre><code>mon.a (rank 0) addr 127.0.0.1:6789/0 is down (out of quorum)
+
+mon.a addr 127.0.0.1:6789/0 clock skew 0.08235s &gt; max 0.05s (latency 0.0045s)
+</code></pre><p>同时，日志信息中也包含如下报错信息</p>
+<pre><code>2015-06-04 07:28:32.035795 7f806062e700 0 log [WRN] : mon.a 127.0.0.1:6789/0 clock skew 0.14s &gt; max 0.05s
+
+2015-06-04 04:31:25.773235 7f4997663700 0 log [WRN] : message from mon.1 was stamped 0.186257s in the future, clocks not synchronized
+</code></pre><p>上面显示时钟偏移了0.14s大于默认接受偏移值0.05，因此报此错误。参数mon_clock_drift_allowed决定了集群可容忍的时钟偏移量。请不要随意修改该值，这样可能会导致集群不稳定。时钟同步对于ceph来说是非常重要的，否则会带来很多意想不到的问题。其他网络问题以及NTP等时钟同步问题这里不做介绍。</p>
+<h1 id="三、The-Monitor-Store-is-Getting-Too-Big"><a href="#三、The-Monitor-Store-is-Getting-Too-Big" class="headerlink" title="三、The Monitor Store is Getting Too Big"></a>三、The Monitor Store is Getting Too Big</h1><p>ceph health 命令返回如下错误信息：</p>
+<pre><code>mon.ceph1 store is getting too big! 48031 MB &gt;= 15360 MB -- 62% avail
+</code></pre><p>ceph  monitor store实际上是一个levelDB 数据库，里面存储了很多key-values 键值对条目。该数据库存放了整个集群的map表，默认存储地址在/var/lig/ceph/mon/<cluster-name>-hostname/store.db。查询大型的mon存储可能需要时间，因此，在相应客户端查询时，mon可能会被延迟。</cluster-name></p>
+<p>修复此问题,检查数据库大小:</p>
+<p>如 </p>
+<pre><code>du -sch /var/lib/ceph/mon/ceph-host1/store.db
+47G     /var/lib/ceph/mon/ceph-ceph1/store.db/
+47G     total
+</code></pre><p><strong>释放部分空间</strong></p>
+<p>方法如下</p>
+<p>1、ceph-mon进程在运行中</p>
+<pre><code>ceph tell mon.host1 compact
+</code></pre><p>2、在启动ceph-mon进程过程中，写入配置文件中</p>
+<p>[mon]</p>
+<pre><code>mon_compact_on_start = true
+</code></pre><p>然后重启mon进程systemctl restart ceph-mon@host1</p>
+<p>确保mon处于正常的选举状态</p>
+<pre><code>ceph mon stat
+</code></pre><p>3、使用ceph-monstore-tool工具（ceph-test安装包必须先安装）</p>
+<p>首先确保ceph-daemon没有运行</p>
+<pre><code>systemctl stop ceph-mon@host1
+
+ceph-monstore-tool /var/lib/ceph/mon/mon.node1 compact
+
+systemctl start ceph-mon@host1
+</code></pre>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">leveldb ceph</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ceph</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://idcat.cn/ceph-mon基础运维.html" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/ceph条带化介绍.html" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          ceph条带化介绍
+        
+      </div>
+    </a>
   
   
-    </div></section>
+    <a href="/centos7系统默认io-scheduler介绍.html" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">centos7系统下磁盘默认io scheduler介绍</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+  
+  
   
 
-    
+  
+  
+  
+	<script>
+	(function(){
+		var bp = document.createElement('script');
+		bp.src = '//push.zhanzhang.baidu.com/push.js';
+		var s = document.getElementsByTagName("script")[0];
+		s.parentNode.insertBefore(bp, s);
+	})();
+	</script>     
+   
+
+  
+
+  
+
+
 
 
           </div>
@@ -237,9 +440,9 @@ var _hmt = _hmt || [];
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,
