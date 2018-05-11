@@ -6,18 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives: 2018/2 | deelaaay learning</title>
+  <title>systemtap-centos7上安装调试 | deelaaay learning</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="自我定位">
-<meta property="og:type" content="website">
-<meta property="og:title" content="deelaaay learning">
-<meta property="og:url" content="http://yoursite.com/archives/2018/02/index.html">
+  <meta name="description" content="systemtap简介 SystemTap 是一款诊断Linux系统性能的工具，可以跟踪内核以及用户态程序中的任意函数、syscall、语句甚至指令，可以用来动态地收集调试和性能信息的工具，不需要我们重新编译、重启内核。 详细介绍查看官网地址。其官网地址 https://sourceware.org/systemtap/。">
+<meta name="keywords" content="systemtap">
+<meta property="og:type" content="article">
+<meta property="og:title" content="systemtap-centos7上安装调试">
+<meta property="og:url" content="http://yoursite.com/2018/05/11/systemtap-centos7上安装调试/index.html">
 <meta property="og:site_name" content="deelaaay learning">
-<meta property="og:description" content="自我定位">
+<meta property="og:description" content="systemtap简介 SystemTap 是一款诊断Linux系统性能的工具，可以跟踪内核以及用户态程序中的任意函数、syscall、语句甚至指令，可以用来动态地收集调试和性能信息的工具，不需要我们重新编译、重启内核。 详细介绍查看官网地址。其官网地址 https://sourceware.org/systemtap/。">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-05-11T02:07:10.100Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="deelaaay learning">
-<meta name="twitter:description" content="自我定位">
+<meta name="twitter:title" content="systemtap-centos7上安装调试">
+<meta name="twitter:description" content="systemtap简介 SystemTap 是一款诊断Linux系统性能的工具，可以跟踪内核以及用户态程序中的任意函数、syscall、语句甚至指令，可以用来动态地收集调试和性能信息的工具，不需要我们重新编译、重启内核。 详细介绍查看官网地址。其官网地址 https://sourceware.org/systemtap/。">
   
     <link rel="alternative" href="/atom.xml" title="deelaaay learning" type="application/atom+xml">
   
@@ -159,98 +161,242 @@ var _hmt = _hmt || [];
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-systemtap-centos7上安装调试" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/02/28/ceph-mon基础运维/" class="archive-article-date">
-  	<time datetime="2018-02-28T15:59:41.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-28</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/02/28/ceph-mon基础运维/">ceph-mon基础运维</a>
+    <h1 class="article-title" itemprop="name">
+      systemtap-centos7上安装调试
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2018/05/11/systemtap-centos7上安装调试/" class="archive-article-date">
+  	<time datetime="2018-05-11T02:04:36.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-11</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>systemtap简介</strong></p>
+<p>SystemTap 是一款诊断Linux系统性能的工具，可以跟踪内核以及用户态程序中的任意函数、syscall、语句甚至指令，可以用来动态地收集调试和性能信息的工具，不需要我们重新编译、重启内核。</p>
+<p>详细介绍查看官网地址。其官网地址 <a href="https://sourceware.org/systemtap/" title="https://sourceware.org/systemtap/" target="_blank" rel="noopener">https://sourceware.org/systemtap/</a>。<br><a id="more"></a><br><strong>systemtap安装</strong></p>
+<p>本例环境 centos7 7.2.1511 内核版本3.10.0-693.21.1.el7.x86_64</p>
+<p>systemtap包安装</p>
+<pre><code>yum install systemtap systemtap-runtime
+</code></pre><p>systemtap内核信息安装包安装</p>
+<p>• kernel-debuginfo</p>
+<p>• kernel-debuginfo-common</p>
+<p>• kernel-devel</p>
+<p>通过root用户执行如下命令进行以上3个包的自动安装</p>
+<pre><code>stap-prep
+</code></pre><p><strong>确认安装成功</strong></p>
+<p>执行如下脚本，返回complete即可</p>
+<pre><code>[root@node1 ~]# stap -v -e &apos;probe vfs.read {printf(&quot;read performed\n&quot;); exit()}&apos;
+Pass 1: parsed user script and 466 library scripts using 226636virt/39688res/3308shr/36524data kb, in 190usr/130sys/323real ms.
+Pass 2: analyzed script: 1 probe, 1 function, 7 embeds, 0 globals using 371188virt/179300res/4640shr/181076data kb, in 1270usr/690sys/1964real ms.
+Pass 3: using cached /root/.systemtap/cache/df/stap_df47b68c3f1c63f931107c651e9afa76_2692.c
+Pass 4: using cached /root/.systemtap/cache/df/stap_df47b68c3f1c63f931107c651e9afa76_2692.ko
+Pass 5: starting run.
+read performed
+Pass 5: run completed in 0usr/50sys/448real ms.
+[root@node1 ~]# 
+</code></pre><p><strong>其他机器上执行</strong></p>
+<p>当用户允许一个systemtap 脚本的时候，它会将脚本build为一个内核模块，然后加载该模块，当有事件触发该模块的时候，则执行模块。但是systemtap 脚本只能在部署了debuginfo等内核信息包的主机运行，那么在其他没有安装这些debuginfo的主机如何运行systemtap脚本呢？</p>
+<p>这里systemtap，命令stap支持指定参数-m 将脚本编译为一个内核模块，然后将该模块复制到其他没有安装debuginfo的节点。在其他节点上通过staprun module.ko执行脚本。</p>
+<p>举例：</p>
+<ul>
+<li><p>node1 作为host system是安装了systemtap systemtap-runtime kernel-debuginfo等所有包的节点。</p>
+</li>
+<li><p>node3 作为target system 仅仅安装了systemtap-runtime包。</p>
+</li>
+<li><p>node1 和node3 内核尽量保持一致。不一致也没有关系，通过-r参数指定target system内核版本即可,但是前提是node1即host system节点必须也安装了target system节点的内核版本。</p>
+</li>
+</ul>
+<p>查看内核信息以及将脚本编译输出到模块teststap</p>
+<pre><code>[root@node1 ~]# uname -r
+3.10.0-693.21.1.el7.x86_64
+
+[root@node3 ~]# uname -r
+3.10.0-693.21.1.el7.x86_64
+
+[root@node1 ~]# stap -v -r 3.10.0-693.21.1.el7.x86_64 -e &apos;probe vfs.read {printf(&quot;read performed\n&quot;); exit()}&apos; -m teststap
+ 1: parsed user script and 466 library scripts using 226648virt/39732res/3336shr/36536data kb, in 290usr/30sys/329real ms.
+Pass 2: analyzed script: 1 probe, 1 function, 7 embeds, 0 globals using 371200virt/179340res/4660shr/181088data kb, in 1160usr/650sys/1810real ms.
+Pass 3: translated to C into &quot;/tmp/stap2XZAPY/teststap_src.c&quot; using 371200virt/179588res/4908shr/181088data kb, in 20usr/70sys/81real ms.
+Pass 4: compiled C into &quot;teststap.ko&quot; in 790usr/1380sys/2079real ms.
+Pass 5: starting run.
+read performed
+Pass 5: run completed in 0usr/70sys/393real ms.
+
+[root@node1 ~]# ll teststap.ko
+  -rw-r--r-- 1 root root 96912 May 10 16:29 teststap.ko
+</code></pre><p>上面命令-r 指定内核版本，若是2者之间内核一致，则可以不需要-r参数。<br>将该模块文件复制到node3节点，然后执行如下确认：</p>
+<pre><code>[root@node1 ~]# scp teststap.ko root@node3:/root
+teststap.ko                                                                                  100%   95KB  33.9MB/s   00:00    
+[root@node1 ~]# ssh node3
+Last login: Thu May 10 14:36:32 2018 from 192.168.0.99             
+[root@node3 ~]# staprun teststap.ko 
+read performed
+[root@node3 ~]# 
+</code></pre><p>成功执行模块指令</p>
+<p><strong>运行systemtap 脚本</strong></p>
+<p>常用命令stap staprun 相关使用使用man查看</p>
+<p>运行stap命令用户最好拥有root权限，若是普通用户则需要将其加入到组stapdev 或者stapusr ，详情查看官网介绍。</p>
+<p>脚本运行方式：</p>
+<p>1、通过脚本文件</p>
+<p>stap script_file_name</p>
+<p>2、通过- 从标准输出中获取脚本信息</p>
+<p>echo “probe timer.s(1) {exit()}” | stap -v -</p>
+<p><strong>stap基本参数</strong></p>
+<p>-v 详细列出输出信息-vvv列出更多信息</p>
+<p>-o filename 将标准输出到指定文件名</p>
+<p>-S size,count 限制output文件的数量和单个文件大小。</p>
+<p>-x process_id 设置systemtap句柄函数target()获取指定进程ID的信息</p>
+<p>-c command  设置systemtap句柄函数target()通过指定的command来运行</p>
+<p>-e ‘scrip’ 使用脚本作为systemtap的输入</p>
+<p>-F 让systemtap在后台已进程方式运行，默认后台模式有2种，一种是in-memory ，一种是file 模式</p>
+<ul>
+<li>in-memory 模式</li>
+</ul>
+<p>执行</p>
+<pre><code>stap -F iotime.stp 
+</code></pre><p>执行改命令后，stap打印简单的改命令执行信息，方便你重新连接改脚本：</p>
+<pre><code>Disconnecting from systemtap module.
+To reconnect, type &quot;staprun -A stap_5dd0073edcb1f13f7565d8c343063e68_19556&quot;
+</code></pre><p>获取结果</p>
+<pre><code>staprun -A stap_5dd0073edcb1f13f7565d8c343063e68_19556
+</code></pre><ul>
+<li>file 模式</li>
+</ul>
+<p>执行</p>
+<pre><code>stap -F -o /tmp/pfaults.log -S 1,2 pfaults.stp
+</code></pre><p>生成2个文件，每个文件1M大小，文件格式如/tmp/iotime.log.[0-9]+<br>始终保持最新的数据到这2个文件中，旧数据会被remove。该命令执行后会输出进程id号，则通过kill 命令停止脚本运行，举例id号为7590</p>
+<pre><code>kill -s SIGTERM 7590
+</code></pre>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ceph</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">systemtap</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/05/11/systemtap-centos7上安装调试/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/02/27/centos7系统默认io-scheduler介绍/" class="archive-article-date">
-  	<time datetime="2018-02-27T03:12:28.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-27</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2018/05/11/记录一次因对象权限不对导致osd无法启动的排查过程/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">记录一次因对象权限不对导致osd无法启动的排查过程</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/02/27/centos7系统默认io-scheduler介绍/">centos7系统下磁盘默认io scheduler介绍</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">io</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
   
 
-    
+  
+
+  
+
+
 
 
           </div>
@@ -274,8 +420,8 @@ var _hmt = _hmt || [];
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,

@@ -161,6 +161,165 @@ var _hmt = _hmt || [];
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-ceph-dencoder基本使用" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/03/27/ceph-dencoder基本使用/">ceph-dencoder基本使用</a>
+    </h1>
+  
+
+        
+        <a href="/2018/03/27/ceph-dencoder基本使用/" class="archive-article-date">
+  	<time datetime="2018-03-27T14:06:41.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-27</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>本文摘自<a href="https://blog.csdn.net/scaleqiao/article/details/51987426" target="_blank" rel="noopener">https://blog.csdn.net/scaleqiao/article/details/51987426</a></p>
+<p>0 简介</p>
+<p>贯穿Ceph OSD端数据处理的一个核心结构就是ObjectStore::Transaction，OSD处理的所有操作以及其关联的数据都会封装进入Transaction中的bufferlist结构里，这里的封装也就是序列化(encode)，它将各种数据结构无论简单或者复杂都作为字节流，存入bufferlist中。最终Transaction会由具体的ObjectStore后端实现来处理，当然，处理时会对bufferlist中的数据进行反序列化（decode）。而本文介绍的ceph-dencoder工具就是Ceph提供的可以进行encode、decode以及dump ceph相关数据结构的工具，同时它也可以用来调试以及测试Ceph不同版本之间的兼容性。今天这里主要介绍它的decode功能，其他功能大家可以自行研究。<br>
+        
+          <a class="article-more-a" href="/2018/03/27/ceph-dencoder基本使用/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ceph</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/03/27/ceph-dencoder基本使用/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+  
+    <article id="post-ceph-kvstore-tool工具简单介绍" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/03/27/ceph-kvstore-tool工具简单介绍/">ceph-kvstore-tool工具简单介绍</a>
+    </h1>
+  
+
+        
+        <a href="/2018/03/27/ceph-kvstore-tool工具简单介绍/" class="archive-article-date">
+  	<time datetime="2018-03-27T12:07:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-27</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>参考<a href="https://blog.csdn.net/scaleqiao/article/details/51946042" target="_blank" rel="noopener">https://blog.csdn.net/scaleqiao/article/details/51946042</a></p>
+<p>大家都知道Ceph的很多数据比如PG log、Monitor的数据都存在kvstore里（leveldb或者RocksDB中），Ceph也提供了查看kvstore里数据的工具，它就是ceph-kvstore-tool。<br>
+        
+          <a class="article-more-a" href="/2018/03/27/ceph-kvstore-tool工具简单介绍/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ceph</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/03/27/ceph-kvstore-tool工具简单介绍/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+  
     <article id="post-ceph集群替换mon节点ip地址" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -805,166 +964,9 @@ rbd_header.3289416b8b4567
 
 
   
-    <article id="post-ceph-mon基础运维" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/02/28/ceph-mon基础运维/">ceph-mon基础运维</a>
-    </h1>
-  
-
-        
-        <a href="/2018/02/28/ceph-mon基础运维/" class="archive-article-date">
-  	<time datetime="2018-02-28T15:59:41.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-28</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>全文参考<a href="https://access.redhat.com/documentation/en-us/red_hat_ceph_storage/3/html/troubleshooting_guide/troubleshooting-monitors" target="_blank" rel="noopener">https://access.redhat.com/documentation/en-us/red_hat_ceph_storage/3/html/troubleshooting_guide/troubleshooting-monitors</a></p>
-<p>进行翻译，可以直接查看原文。<br>
-        
-          <a class="article-more-a" href="/2018/02/28/ceph-mon基础运维/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ceph</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/02/28/ceph-mon基础运维/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-
-
-  
-    <article id="post-centos7系统默认io-scheduler介绍" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/02/27/centos7系统默认io-scheduler介绍/">centos7系统下磁盘默认io scheduler介绍</a>
-    </h1>
-  
-
-        
-        <a href="/2018/02/27/centos7系统默认io-scheduler介绍/" class="archive-article-date">
-  	<time datetime="2018-02-27T03:12:28.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-27</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>在一次使用fio对磁盘进行iops的测试过程中，通过iostat监控磁盘信息。发现2者显示的iops不一样。根据这个做了以下测试，以及自己的一些推断，非专业，仅供参考。<br>
-        
-          <a class="article-more-a" href="/2018/02/27/centos7系统默认io-scheduler介绍/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">io</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/02/27/centos7系统默认io-scheduler介绍/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
     </nav>
   
 
@@ -1071,15 +1073,7 @@ var _hmt = _hmt || [];
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">blktrace btt blkparse</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">ceph</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">io</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1087,7 +1081,19 @@ var _hmt = _hmt || [];
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">blktrace btt blkparse</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">io</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">flashcache</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">ceph10.2 radosgw  hadoop</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1099,7 +1105,7 @@ var _hmt = _hmt || [];
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">tdbdump  tdbbakcup tdbtool</a>
+                <a href="javascript:void(0)" class="js-tag color5">systemtap</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1107,11 +1113,11 @@ var _hmt = _hmt || [];
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">flamegraph</a>
+                <a href="javascript:void(0)" class="js-tag color2">tdbdump  tdbbakcup tdbtool</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">ceph10.2 radosgw  hadoop</a>
+                <a href="javascript:void(0)" class="js-tag color1">flamegraph</a>
               </li>
             
             <div class="clearfix"></div>

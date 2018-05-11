@@ -6,18 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives: 2018/2 | deelaaay learning</title>
+  <title>记录一次因对象权限不对导致osd无法启动的排查过程 | deelaaay learning</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="自我定位">
-<meta property="og:type" content="website">
-<meta property="og:title" content="deelaaay learning">
-<meta property="og:url" content="http://yoursite.com/archives/2018/02/index.html">
+  <meta name="description" content="记录一次osd启动失败的例子，仅个人记录使用。">
+<meta name="keywords" content="ceph">
+<meta property="og:type" content="article">
+<meta property="og:title" content="记录一次因对象权限不对导致osd无法启动的排查过程">
+<meta property="og:url" content="http://yoursite.com/2018/05/11/记录一次因对象权限不对导致osd无法启动的排查过程/index.html">
 <meta property="og:site_name" content="deelaaay learning">
-<meta property="og:description" content="自我定位">
+<meta property="og:description" content="记录一次osd启动失败的例子，仅个人记录使用。">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-05-11T02:06:39.057Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="deelaaay learning">
-<meta name="twitter:description" content="自我定位">
+<meta name="twitter:title" content="记录一次因对象权限不对导致osd无法启动的排查过程">
+<meta name="twitter:description" content="记录一次osd启动失败的例子，仅个人记录使用。">
   
     <link rel="alternative" href="/atom.xml" title="deelaaay learning" type="application/atom+xml">
   
@@ -159,36 +161,106 @@ var _hmt = _hmt || [];
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-记录一次因对象权限不对导致osd无法启动的排查过程" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/02/28/ceph-mon基础运维/" class="archive-article-date">
-  	<time datetime="2018-02-28T15:59:41.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-28</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/02/28/ceph-mon基础运维/">ceph-mon基础运维</a>
+    <h1 class="article-title" itemprop="name">
+      记录一次因对象权限不对导致osd无法启动的排查过程
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2018/05/11/记录一次因对象权限不对导致osd无法启动的排查过程/" class="archive-article-date">
+  	<time datetime="2018-05-11T02:03:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-11</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>记录一次osd启动失败的例子，仅个人记录使用。<br><a id="more"></a><br>集群状态：</p>
+<pre><code>[root@node1 omap]# ceph -s
+cluster 911c57dc-a930-4da8-ab0e-69f6b6586e3d
+ health HEALTH_WARN
+        328 pgs degraded
+        328 pgs stuck degraded
+        328 pgs stuck unclean
+        328 pgs stuck undersized
+        328 pgs undersized
+        recovery 319/957 objects degraded (33.333%)
+        too many PGs per OSD (328 &gt; max 300)
+ monmap e1: 3 mons at {node1=192.168.1.141:6789/0,node2=192.168.1.142:6789/0,node3=192.168.1.143:6789/0}
+        election epoch 108, quorum 0,1,2 node1,node2,node3
+  fsmap e705662: 1/1/1 up {0=node1=up:active}, 2 up:standby
+ osdmap e705733: 3 osds: 2 up, 2 in; 328 remapped pgs
+        flags sortbitwise,require_jewel_osds
+  pgmap v1296660: 328 pgs, 12 pools, 457 MB data, 319 objects
+        1071 MB used, 29626 MB / 30697 MB avail
+        319/957 objects degraded (33.333%)
+             328 active+undersized+degraded
+</code></pre><p>查看是node1上的osd0 没有启动，于是启动osd0</p>
+<pre><code>2018-05-10 12:08:08.756988 7fa896131800  0 filestore(/var/lib/ceph/osd/ceph-0) mount: enabling WRITEAHEAD journal mode: checkpoint is not enabled
+2018-05-10 12:08:08.760327 7fa896131800  1 journal _open /var/lib/ceph/osd/ceph-0/journal fd 18: 5368709120 bytes, block size 4096 bytes, directio = 1, aio = 1
+2018-05-10 12:08:08.762157 7fa896131800  1 journal _open /var/lib/ceph/osd/ceph-0/journal fd 18: 5368709120 bytes, block size 4096 bytes, directio = 1, aio = 1
+2018-05-10 12:08:08.763165 7fa896131800  1 filestore(/var/lib/ceph/osd/ceph-0) upgrade
+2018-05-10 12:08:08.763591 7fa896131800  0 &lt;cls&gt; cls/cephfs/cls_cephfs.cc:202: loading cephfs_size_scan
+2018-05-10 12:08:08.763774 7fa896131800  0 &lt;cls&gt; cls/hello/cls_hello.cc:305: loading cls_hello
+
+
+2018-05-10 12:08:08.770974 7fa896131800 -1 osd/OSD.h: In function &apos;OSDMapRef OSDService::get_map(epoch_t)&apos; thread 7fa896131800 time 2018-05-10 12:08:08.769611
+osd/OSD.h: 894: FAILED assert(ret)
+
+ ceph version 10.2.10 (5dc1e4c05cb68dbf62ae6fce3f0700e4654fdbbe)
+ 1: (ceph::__ceph_assert_fail(char const*, char const*, int, char const*)+0x85) [0x560b85e5c9e5]
+ 2: (OSDService::get_map(unsigned int)+0x3d) [0x560b8582f14d]
+ 3: (OSD::init()+0x1fe2) [0x560b857e2b42]
+ 4: (main()+0x2c01) [0x560b85746461]
+ 5: (__libc_start_main()+0xf5) [0x7fa892e2fc05]
+ 6: (()+0x35d917) [0x560b85790917]
+ NOTE: a copy of the executable, or `objdump -rdS &lt;executable&gt;` is needed to interpret this.
+</code></pre><p>只能看到get_map(epoch_t) FAILED assert(ret)。不知道什么原因导致的。于是开启调试日志启动该osd查看更多详细信息。</p>
+<pre><code>[root@node1 ceph-0]# ceph-osd -f --cluster ceph -i 0 --setuser ceph --setgroup ceph --debug-osd=10 --debug-filestore=10 --log-to-stderr=1
+</code></pre><p>查看输出中显示如下：</p>
+<pre><code>-2&gt; 2018-05-10 12:57:33.725952 7f66199a7800 10 filestore(/var/lib/ceph/osd/ceph-0) error opening file /var/lib/ceph/osd/ceph-0/current/meta/DIR_4/DIR_A/DIR_0/osdmap.705730__0_C8EB90A4__none with flags=2: (13) Permission denied
+-1&gt; 2018-05-10 12:57:33.725960 7f66199a7800 10 filestore(/var/lib/ceph/osd/ceph-0) FileStore::read(meta/#-1:2509d713:::osdmap.705730:0#) open error: (13) Permission denied
+ 0&gt; 2018-05-10 12:57:33.727508 7f66199a7800 -1 osd/OSD.h: In function &apos;OSDMapRef OSDService::get_map(epoch_t)&apos; thread 7f66199a7800 time 2018-05-10 12:57:33.725969
+osd/OSD.h: 894: FAILED assert(ret)
+</code></pre><p>有对象文件权限拒绝。</p>
+<p>进入目录查看</p>
+<pre><code>[root@node1 DIR_0]# ll
+total 24
+-rw-r--r-- 1 ceph ceph 5171 Apr 25 09:32 osdmap.705305__0_C8F530A4__none
+-rw-r--r-- 1 ceph ceph 5171 Apr 25 09:39 osdmap.705518__0_C8F460A4__none
+-rw-r--r-- 1 root root 5659 May 10 11:48 osdmap.705730__0_C8EB90A4__none
+</code></pre><p>均是root用户。于是修改权限</p>
+<pre><code>[root@node1 DIR_0]# chown ceph:ceph osdmap.705730__0_C8EB90A4__none 
+</code></pre><p>启动该osd</p>
+<pre><code>[root@node1 DIR_0]# systemctl start ceph-osd@0
+</code></pre><p>查看集群状态</p>
+<pre><code>[root@node1 DIR_0]# ceph -s
+cluster 911c57dc-a930-4da8-ab0e-69f6b6586e3d
+ health HEALTH_WARN
+        too many PGs per OSD (328 &gt; max 300)
+ monmap e1: 3 mons at {node1=192.168.1.141:6789/0,node2=192.168.1.142:6789/0,node3=192.168.1.143:6789/0}
+        election epoch 108, quorum 0,1,2 node1,node2,node3
+  fsmap e705662: 1/1/1 up {0=node1=up:active}, 2 up:standby
+ osdmap e705736: 3 osds: 3 up, 3 in
+        flags sortbitwise,require_jewel_osds
+  pgmap v1296809: 328 pgs, 12 pools, 457 MB data, 319 objects
+        1593 MB used, 44453 MB / 46046 MB avail
+             328 active+clean
+</code></pre><p>至此，集群恢复OK。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -200,57 +272,117 @@ var _hmt = _hmt || [];
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/05/11/记录一次因对象权限不对导致osd无法启动的排查过程/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/02/27/centos7系统默认io-scheduler介绍/" class="archive-article-date">
-  	<time datetime="2018-02-27T03:12:28.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-27</time>
-</a>
+<nav id="article-nav">
+  
+    <a href="/2018/05/11/systemtap-centos7上安装调试/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          systemtap-centos7上安装调试
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/05/08/blktrace-fio对比测试分析/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">blktrace+fio对比测试分析</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/02/27/centos7系统默认io-scheduler介绍/">centos7系统下磁盘默认io scheduler介绍</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">io</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
   
 
-    
+  
+
+  
+
+
 
 
           </div>
@@ -274,8 +406,8 @@ var _hmt = _hmt || [];
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
