@@ -5,7 +5,7 @@
     
   <url>
     <loc>http://idcat.cn/saltstack%E4%B8%80%E9%94%AE%E9%83%A8%E7%BD%B2haproxy-keepalived-nginx%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E9%AB%98%E5%8F%AF%E7%94%A8%E7%8E%AF%E5%A2%83.html</loc>
-    <lastmod>2018-06-09T12:29:46.835Z</lastmod>
+    <lastmod>2018-06-09T12:32:40.421Z</lastmod>
     <data>
         <display>
         <title>saltstack一键部署haproxy+keepalived+nginx负载均衡高可用环境</title>
