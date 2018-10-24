@@ -7,20 +7,18 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://idcat.cn">
-  <title>ceph 多区域radosgw网关配置 | deelaaay learning</title>
+  <title>Tag: lio target | deelaaay learning</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="一、本文环境 2台虚拟机部署2套ceph集群。2个节点分别作为不同集群的radosgw网关。 Cluster1    节点名： ceph01   ip :  192.168.0.39 Cluster2    节点名： ceph02   ip :  192.168.1.169">
-<meta name="keywords" content="ceph">
-<meta property="og:type" content="article">
-<meta property="og:title" content="ceph 多区域radosgw网关配置">
-<meta property="og:url" content="http://idcat.cn/ceph-多区域radosgw网关配置.html">
+  <meta name="description" content="自我定位">
+<meta property="og:type" content="website">
+<meta property="og:title" content="deelaaay learning">
+<meta property="og:url" content="http://idcat.cn/tags/lio-target/index.html">
 <meta property="og:site_name" content="deelaaay learning">
-<meta property="og:description" content="一、本文环境 2台虚拟机部署2套ceph集群。2个节点分别作为不同集群的radosgw网关。 Cluster1    节点名： ceph01   ip :  192.168.0.39 Cluster2    节点名： ceph02   ip :  192.168.1.169">
+<meta property="og:description" content="自我定位">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-03-28T14:07:43.015Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ceph 多区域radosgw网关配置">
-<meta name="twitter:description" content="一、本文环境 2台虚拟机部署2套ceph集群。2个节点分别作为不同集群的radosgw网关。 Cluster1    节点名： ceph01   ip :  192.168.0.39 Cluster2    节点名： ceph02   ip :  192.168.1.169">
+<meta name="twitter:title" content="deelaaay learning">
+<meta name="twitter:description" content="自我定位">
   
     <link rel="alternative" href="/atom.xml" title="deelaaay learning" type="application/atom+xml">
   
@@ -162,274 +160,60 @@ var _hmt = _hmt || [];
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-ceph-多区域radosgw网关配置" class="article article-type-post " itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
+            
   
-    <h1 class="article-title" itemprop="name">
-      ceph 多区域radosgw网关配置
+  
+    
+    
+      
+      
+      <section class="archives-wrap">
+        <div class="archive-year-wrap">
+          <a href="/archives/2018" class="archive-year">2018</a>
+        </div>
+        <div class="archives">
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      	<div class="article-meta">
+	      	<a href="/centos7系统lio简单使用.html" class="archive-article-date">
+  	<time datetime="2018-10-24T12:06:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-10-24</time>
+</a>
+        </div>
+    	 
+  
+    <h1 itemprop="name">
+      <a class="archive-article-title" href="/centos7系统lio简单使用.html">centos7系统lio简单使用</a>
     </h1>
   
 
-        
-        <a href="/ceph-多区域radosgw网关配置.html" class="archive-article-date">
-  	<time datetime="2018-03-28T14:06:36.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-28</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>一、本文环境</p>
-<p>2台虚拟机部署2套ceph集群。2个节点分别作为不同集群的radosgw网关。</p>
-<p>Cluster1    节点名： ceph01   ip :  192.168.0.39</p>
-<p>Cluster2    节点名： ceph02   ip :  192.168.1.169<br><a id="more"></a><br>二，概念：        </p>
-<p>  zone：包含多个RGW实例的一个逻辑概念。zone不能跨集群。同一个zone的数据保存在同一组pool中。     本例中每个zone只有一个RGW实例。</p>
-<p>  zonegroup：一个zonegroup如果包含1个或多个zone。如果一个zonegroup包含多个zone，必须指定 一个zone作为master zone，用来处理bucket和用户的创建。一个集群可以创建多个zonegroup，一个zonegroup也可以跨多个集群。     本例中只有一个zonegroup,跨2个集群，每个集群只有一个zone,分别作为master和从zone.</p>
-<p>  realm：一个realm包含1个或多个zonegroup。如果realm包含多个zonegroup，必须指定一个zonegroup为master zonegroup， 用来处理系统操作。一个系统中可以包含多个realm，多个realm之间资源完全隔离。    本例 只有一个realm,包含一个zonegroup. </p>
-<p>  RGW多活方式是在同一zonegroup的多个zone之间进行，即同一zonegroup中多个zone之间的数据是完全一致的，用户可以通过任意zone读写同一份数据。 但是，对元数据的操作，比如创建桶、创建用户，仍然只能在master zone进行。对数据的操作，比如创建桶中的对象，访问对象等，可以在任意zone中 处理。</p>
-<p>三、在Cluster1集群上配置master zone</p>
-<p>创建realm</p>
-<pre><code>radosgw-admin realm create --rgw-realm=aaa --default
-[root@ceph01 ~]# radosgw-admin realm list
-{
-&quot;default_info&quot;: &quot;eff9b039-8c3c-4991-87f9-e9331b2c7824&quot;,
-&quot;realms&quot;: [
-    &quot;aaa&quot;
-    ]
-}
-</code></pre><p>创建master zonegroup,先删除默认的zonegroup</p>
-<pre><code>radosgw-admin zonegroup delete --rgw-zonegroup=default
-</code></pre><p>创建一个为azonggroup的zonegroup</p>
-<pre><code>radosgw-admin zonegroup create --rgw-zonegroup=azonegroup --endpoints=192.168.0.39:7480 --master --default
-</code></pre><p>创建master zone,先删除默认的zone</p>
-<pre><code>adosgw-admin zone delete --rgw-zone=default
-</code></pre><p>创建一个为azone的zone</p>
-<pre><code>radosgw-admin zone create --rgw-zonegroup=azonegroup --rgw-zone=azone --endpoints=192.168.0.39:7480 --default --master
-</code></pre><p>创建一个auser账户用于和bzone zone同步</p>
-<pre><code>radosgw-admin user create --uid=&quot;auser&quot; --display-name=&quot;auser&quot; --system
-</code></pre><p>用创建auser账户产生的access 和secret更新zone配置</p>
-<pre><code>radosgw-admin zone modify --rgw-zone=azone --access-key=BKG10IM15N8EB0I7ZE7U --secret=Cvh60vBX5ciujqRaLw3bm6wMIGmLdlJ9FB4ukOG
-</code></pre><p>更新period</p>
-<pre><code>radosgw-admin period update --commit
-</code></pre><p>修改配置ceph.conf</p>
-<pre><code>[client.rgw.ceph-1]
-
-host = ceph-1
-
-rgw frontends = &quot;civetweb port=7480&quot;
-
-rgw_zone=azone
-</code></pre><p>重启radosgw服务</p>
-<pre><code>systemctl restart ceph-radosgw@rgw.ceph01
-</code></pre><p>四、在Cluster2集群上配置slave zone</p>
-<p>从master zone拉取realm</p>
-<pre><code>[root@ceph02 ceph]#radosgw-admin realm pull --url=192.168.0.39:7480 --access-key=BKG10IM15N8EB0I7ZE7U --secret=Cvh60vBX5ciujqRaLw3bm6wMIGmLdlJ9FB4ukOGC
-</code></pre><p>注意：这里的access key 和secret是master zone上auser 账户的access key和secret</p>
-<p>拉取period</p>
-<pre><code>[root@ceph02 ceph]# radosgw-admin period pull --url=192.168.0.39:7480 --access-key=BKG10IM15N8EB0I7ZE7U --secret=Cvh60vBX5ciujqRaLw3bm6wMIGmLdlJ9FB4ukOGC
-</code></pre><p>注意：这里的access key 和secret是master zone上auser 账户的access key和secret</p>
-<p>创建slave zone，名称为bzone</p>
-<pre><code>[root@ceph02 ceph]# radosgw-admin zone create --rgw-zonegroup=azonegroup --rgw-zone=bzone --access-key=BKG10IM15N8EB0I7ZE7U --secret=Cvh60vBX5ciujqRaLw3bm6wMIGmLdlJ9FB4ukOGC --endpoints=192.168.1.169:7480
-[root@ceph02 ceph]# radosgw-admin zone list
-{
-&quot;default_info&quot;: &quot;118aa9b6-458f-4b4e-9aa8-1c3577bf8dd6&quot;,
-&quot;zones&quot;: [
-    &quot;bzone&quot;,
-    &quot;default&quot;
-]
-}
-</code></pre><p> 注意：这里的access key 和secret是master zone上auser 账户的access key和secret</p>
-<p>更新period</p>
-<pre><code>[root@ceph02 ceph]#radosgw-admin period update --commit
-</code></pre><p>有如下警告，只需要更新libcurl既可</p>
-<pre><code>2018-03-28 18:07:46.941333 7f27d9f499c0  0 WARNING: detected a version of libcurl which contains a bug in curl_multi_wait(). enabling a workaround that may degrade performance slightly.
-
-[root@ceph02 ceph]# yum update libcurl -y
-</code></pre><p>修改配置ceph.conf</p>
-<pre><code>[client.rgw.ceph-2]
-
- host = ceph-2
-
- rgw frontends = &quot;civetweb port=7480&quot;
-
- rgw_zone=bzone
-</code></pre><p>重启radosgw服务</p>
-<pre><code>systemctl restart ceph-radosgw@rgw.ceph02
-</code></pre><p>五、验证zone之间数据同步</p>
-<p>在ceph02  从节点执行</p>
-<pre><code>[root@ceph02 ~]# radosgw-admin sync status
-      realm eff9b039-8c3c-4991-87f9-e9331b2c7824 (aaa)
-  zonegroup 7e6ff2ed-f8aa-44fc-b2f3-5ca81464dd9b (azonegroup)
-       zone 118aa9b6-458f-4b4e-9aa8-1c3577bf8dd6 (bzone)
-metadata sync syncing
-            full sync: 0/64 shards
-            incremental sync: 64/64 shards
-            metadata is caught up with master
-  data sync source: 08fcacca-5e53-4499-9413-5212d2477576 (azone)
-                    syncing
-                    full sync: 0/128 shards
-                    incremental sync: 128/128 shards
-                    data is caught up with source
-</code></pre><p>在master zone  节点ceph01上创建用户</p>
-<pre><code>[root@ceph01 ~]# radosgw-admin user create --uid=&quot;zhang&quot; --display-name=&quot;zhang&quot;
-</code></pre><p>安装s3客户端 创建桶tong1，并put 对象</p>
-<pre><code>[root@ceph01 ~]# s3cmd mb s3://tong1
-[root@ceph01 ~]# s3cmd put release.asc s3://tong1
-upload: &apos;release.asc&apos; -&gt; &apos;s3://tong1/release.asc&apos;  [1 of 1]
-1645 of 1645   100% in    0s    33.23 kB/s  done
-
-[root@ceph01 ~]# s3cmd ls s3://tong1
-2018-03-28 12:26      1082   s3://tong1/anaconda-ks.cfg
-2018-03-28 13:05      1645   s3://tong1/release.asc
-</code></pre><p>在slave zone 节点ceph02 查看（将ceph01 /root/.s3cfg 拷贝到ceph02节点同样的目录）</p>
-<pre><code>[root@ceph02 ~]# s3cmd  ls s3://tong1
-2018-03-28 12:26      1082   s3://tong1/anaconda-ks.cfg
-2018-03-28 13:05      1645   s3://tong1/release.asc
-</code></pre><p>至此，2个zone之间可做到高可用，保证一定的数据安全。详细测试以后进行。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
+        <div class="article-info info-on-right">
+          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ceph</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">lio target</a>
         		</li>
       		
 		</ul>
 	</div>
 
-      
+          
 
-      
-
-      
-        
-<div class="share-btn share-icons tooltip-left">
-  <div class="tooltip tooltip-east">
-    <span class="tooltip-item">
-      <a href="javascript:;" class="share-sns share-outer">
-        <i class="icon icon-share"></i>
-      </a>
-    </span>
-    <span class="tooltip-content">
-      <div class="share-wrap">
-        <div class="share-icons">
-          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
-            <i class="icon icon-weibo"></i>
-          </a>
-          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
-            <i class="icon icon-weixin"></i>
-          </a>
-          <a class="qq share-sns" href="javascript:;" data-type="qq">
-            <i class="icon icon-qq"></i>
-          </a>
-          <a class="douban share-sns" href="javascript:;" data-type="douban">
-            <i class="icon icon-douban"></i>
-          </a>
-          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
-            <i class="icon icon-qzone"></i>
-          </a>
-          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
-            <i class="icon icon-facebook"></i>
-          </a>
-          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
-            <i class="icon icon-twitter"></i>
-          </a>
-          <a class="google share-sns" href="javascript:;" data-type="google">
-            <i class="icon icon-google"></i>
-          </a>
         </div>
-      </div>
-    </span>
-  </div>
-</div>
-
-<div class="page-modal wx-share js-wx-box">
-    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
-    <p>扫一扫，分享到微信</p>
-    <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://idcat.cn/ceph-多区域radosgw网关配置.html" alt="微信分享二维码">
-    </div>
-</div>
-
-<div class="mask js-mask"></div>
-      
-      <div class="clearfix"></div>
-    </div>
+        <div class="clearfix"></div>
+    </header>
   </div>
 </article>
-
-  
-<nav id="article-nav">
-  
-    <a href="/集群所有mon-store-db丢失恢复.html" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          集群所有mon store.db丢失恢复
-        
-      </div>
-    </a>
   
   
-    <a href="/ceph-dencoder基本使用.html" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">ceph-dencoder基本使用</div>
-      <i class="icon-circle-right"></i>
-    </a>
-  
-</nav>
-
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-  
-  
+    </div></section>
   
 
-  
-  
-  
-	<script>
-	(function(){
-		var bp = document.createElement('script');
-		bp.src = '//push.zhanzhang.baidu.com/push.js';
-		var s = document.getElementsByTagName("script")[0];
-		s.parentNode.insertBefore(bp, s);
-	})();
-	</script>     
-   
-
-  
-
-  
-
-
+    
 
 
           </div>
@@ -453,9 +237,9 @@ upload: &apos;release.asc&apos; -&gt; &apos;s3://tong1/release.asc&apos;  [1 of 
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: true,
+		isPost: false,
 		isArchive: false,
-		isTag: false,
+		isTag: true,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,

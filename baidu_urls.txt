@@ -1,3 +1,4 @@
+http://idcat.cn/centos7系统lio简单使用.html
 http://idcat.cn/saltstack一键部署haproxy-keepalived-nginx负载均衡高可用环境.html
 http://idcat.cn/systemtap-centos7上安装调试.html
 http://idcat.cn/记录一次因对象权限不对导致osd无法启动的排查过程.html
@@ -7,4 +8,3 @@ http://idcat.cn/nginx反向代理和负载均衡最基础配置实现.html
 http://idcat.cn/tdb文件简介.html
 http://idcat.cn/blktrace-工具简介.html
 http://idcat.cn/cosbench例子-参考.html
-http://idcat.cn/集群所有mon-store-db丢失恢复.html

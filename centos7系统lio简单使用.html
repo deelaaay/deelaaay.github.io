@@ -7,20 +7,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://idcat.cn">
-  <title>ceph 多区域radosgw网关配置 | deelaaay learning</title>
+  <title>centos7系统lio简单使用 | deelaaay learning</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="一、本文环境 2台虚拟机部署2套ceph集群。2个节点分别作为不同集群的radosgw网关。 Cluster1    节点名： ceph01   ip :  192.168.0.39 Cluster2    节点名： ceph02   ip :  192.168.1.169">
-<meta name="keywords" content="ceph">
+  <meta name="description" content="centos7安装targettargetcli是一个iSCSI配置管理工具,该工具简单易用,可以直接替换scsi-target-utils,Linux-IO target 在linux内核2.6.38以后，用软件实现的scsi target,支持的SAN技术中所有流行的存储协议包括Fibre Channel、FCoe\iSCSI、iser等，同时还能为本机生成模拟的scsi设备，以及为虚拟机提供">
+<meta name="keywords" content="lio target">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ceph 多区域radosgw网关配置">
-<meta property="og:url" content="http://idcat.cn/ceph-多区域radosgw网关配置.html">
+<meta property="og:title" content="centos7系统lio简单使用">
+<meta property="og:url" content="http://idcat.cn/centos7系统lio简单使用.html">
 <meta property="og:site_name" content="deelaaay learning">
-<meta property="og:description" content="一、本文环境 2台虚拟机部署2套ceph集群。2个节点分别作为不同集群的radosgw网关。 Cluster1    节点名： ceph01   ip :  192.168.0.39 Cluster2    节点名： ceph02   ip :  192.168.1.169">
+<meta property="og:description" content="centos7安装targettargetcli是一个iSCSI配置管理工具,该工具简单易用,可以直接替换scsi-target-utils,Linux-IO target 在linux内核2.6.38以后，用软件实现的scsi target,支持的SAN技术中所有流行的存储协议包括Fibre Channel、FCoe\iSCSI、iser等，同时还能为本机生成模拟的scsi设备，以及为虚拟机提供">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-03-28T14:07:43.015Z">
+<meta property="og:updated_time" content="2018-10-24T12:16:18.650Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ceph 多区域radosgw网关配置">
-<meta name="twitter:description" content="一、本文环境 2台虚拟机部署2套ceph集群。2个节点分别作为不同集群的radosgw网关。 Cluster1    节点名： ceph01   ip :  192.168.0.39 Cluster2    节点名： ceph02   ip :  192.168.1.169">
+<meta name="twitter:title" content="centos7系统lio简单使用">
+<meta name="twitter:description" content="centos7安装targettargetcli是一个iSCSI配置管理工具,该工具简单易用,可以直接替换scsi-target-utils,Linux-IO target 在linux内核2.6.38以后，用软件实现的scsi target,支持的SAN技术中所有流行的存储协议包括Fibre Channel、FCoe\iSCSI、iser等，同时还能为本机生成模拟的scsi设备，以及为虚拟机提供">
   
     <link rel="alternative" href="/atom.xml" title="deelaaay learning" type="application/atom+xml">
   
@@ -162,133 +162,46 @@ var _hmt = _hmt || [];
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-ceph-多区域radosgw网关配置" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-centos7系统lio简单使用" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      ceph 多区域radosgw网关配置
+      centos7系统lio简单使用
     </h1>
   
 
         
-        <a href="/ceph-多区域radosgw网关配置.html" class="archive-article-date">
-  	<time datetime="2018-03-28T14:06:36.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-28</time>
+        <a href="/centos7系统lio简单使用.html" class="archive-article-date">
+  	<time datetime="2018-10-24T12:06:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-10-24</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>一、本文环境</p>
-<p>2台虚拟机部署2套ceph集群。2个节点分别作为不同集群的radosgw网关。</p>
-<p>Cluster1    节点名： ceph01   ip :  192.168.0.39</p>
-<p>Cluster2    节点名： ceph02   ip :  192.168.1.169<br><a id="more"></a><br>二，概念：        </p>
-<p>  zone：包含多个RGW实例的一个逻辑概念。zone不能跨集群。同一个zone的数据保存在同一组pool中。     本例中每个zone只有一个RGW实例。</p>
-<p>  zonegroup：一个zonegroup如果包含1个或多个zone。如果一个zonegroup包含多个zone，必须指定 一个zone作为master zone，用来处理bucket和用户的创建。一个集群可以创建多个zonegroup，一个zonegroup也可以跨多个集群。     本例中只有一个zonegroup,跨2个集群，每个集群只有一个zone,分别作为master和从zone.</p>
-<p>  realm：一个realm包含1个或多个zonegroup。如果realm包含多个zonegroup，必须指定一个zonegroup为master zonegroup， 用来处理系统操作。一个系统中可以包含多个realm，多个realm之间资源完全隔离。    本例 只有一个realm,包含一个zonegroup. </p>
-<p>  RGW多活方式是在同一zonegroup的多个zone之间进行，即同一zonegroup中多个zone之间的数据是完全一致的，用户可以通过任意zone读写同一份数据。 但是，对元数据的操作，比如创建桶、创建用户，仍然只能在master zone进行。对数据的操作，比如创建桶中的对象，访问对象等，可以在任意zone中 处理。</p>
-<p>三、在Cluster1集群上配置master zone</p>
-<p>创建realm</p>
-<pre><code>radosgw-admin realm create --rgw-realm=aaa --default
-[root@ceph01 ~]# radosgw-admin realm list
-{
-&quot;default_info&quot;: &quot;eff9b039-8c3c-4991-87f9-e9331b2c7824&quot;,
-&quot;realms&quot;: [
-    &quot;aaa&quot;
-    ]
-}
-</code></pre><p>创建master zonegroup,先删除默认的zonegroup</p>
-<pre><code>radosgw-admin zonegroup delete --rgw-zonegroup=default
-</code></pre><p>创建一个为azonggroup的zonegroup</p>
-<pre><code>radosgw-admin zonegroup create --rgw-zonegroup=azonegroup --endpoints=192.168.0.39:7480 --master --default
-</code></pre><p>创建master zone,先删除默认的zone</p>
-<pre><code>adosgw-admin zone delete --rgw-zone=default
-</code></pre><p>创建一个为azone的zone</p>
-<pre><code>radosgw-admin zone create --rgw-zonegroup=azonegroup --rgw-zone=azone --endpoints=192.168.0.39:7480 --default --master
-</code></pre><p>创建一个auser账户用于和bzone zone同步</p>
-<pre><code>radosgw-admin user create --uid=&quot;auser&quot; --display-name=&quot;auser&quot; --system
-</code></pre><p>用创建auser账户产生的access 和secret更新zone配置</p>
-<pre><code>radosgw-admin zone modify --rgw-zone=azone --access-key=BKG10IM15N8EB0I7ZE7U --secret=Cvh60vBX5ciujqRaLw3bm6wMIGmLdlJ9FB4ukOG
-</code></pre><p>更新period</p>
-<pre><code>radosgw-admin period update --commit
-</code></pre><p>修改配置ceph.conf</p>
-<pre><code>[client.rgw.ceph-1]
-
-host = ceph-1
-
-rgw frontends = &quot;civetweb port=7480&quot;
-
-rgw_zone=azone
-</code></pre><p>重启radosgw服务</p>
-<pre><code>systemctl restart ceph-radosgw@rgw.ceph01
-</code></pre><p>四、在Cluster2集群上配置slave zone</p>
-<p>从master zone拉取realm</p>
-<pre><code>[root@ceph02 ceph]#radosgw-admin realm pull --url=192.168.0.39:7480 --access-key=BKG10IM15N8EB0I7ZE7U --secret=Cvh60vBX5ciujqRaLw3bm6wMIGmLdlJ9FB4ukOGC
-</code></pre><p>注意：这里的access key 和secret是master zone上auser 账户的access key和secret</p>
-<p>拉取period</p>
-<pre><code>[root@ceph02 ceph]# radosgw-admin period pull --url=192.168.0.39:7480 --access-key=BKG10IM15N8EB0I7ZE7U --secret=Cvh60vBX5ciujqRaLw3bm6wMIGmLdlJ9FB4ukOGC
-</code></pre><p>注意：这里的access key 和secret是master zone上auser 账户的access key和secret</p>
-<p>创建slave zone，名称为bzone</p>
-<pre><code>[root@ceph02 ceph]# radosgw-admin zone create --rgw-zonegroup=azonegroup --rgw-zone=bzone --access-key=BKG10IM15N8EB0I7ZE7U --secret=Cvh60vBX5ciujqRaLw3bm6wMIGmLdlJ9FB4ukOGC --endpoints=192.168.1.169:7480
-[root@ceph02 ceph]# radosgw-admin zone list
-{
-&quot;default_info&quot;: &quot;118aa9b6-458f-4b4e-9aa8-1c3577bf8dd6&quot;,
-&quot;zones&quot;: [
-    &quot;bzone&quot;,
-    &quot;default&quot;
-]
-}
-</code></pre><p> 注意：这里的access key 和secret是master zone上auser 账户的access key和secret</p>
-<p>更新period</p>
-<pre><code>[root@ceph02 ceph]#radosgw-admin period update --commit
-</code></pre><p>有如下警告，只需要更新libcurl既可</p>
-<pre><code>2018-03-28 18:07:46.941333 7f27d9f499c0  0 WARNING: detected a version of libcurl which contains a bug in curl_multi_wait(). enabling a workaround that may degrade performance slightly.
-
-[root@ceph02 ceph]# yum update libcurl -y
-</code></pre><p>修改配置ceph.conf</p>
-<pre><code>[client.rgw.ceph-2]
-
- host = ceph-2
-
- rgw frontends = &quot;civetweb port=7480&quot;
-
- rgw_zone=bzone
-</code></pre><p>重启radosgw服务</p>
-<pre><code>systemctl restart ceph-radosgw@rgw.ceph02
-</code></pre><p>五、验证zone之间数据同步</p>
-<p>在ceph02  从节点执行</p>
-<pre><code>[root@ceph02 ~]# radosgw-admin sync status
-      realm eff9b039-8c3c-4991-87f9-e9331b2c7824 (aaa)
-  zonegroup 7e6ff2ed-f8aa-44fc-b2f3-5ca81464dd9b (azonegroup)
-       zone 118aa9b6-458f-4b4e-9aa8-1c3577bf8dd6 (bzone)
-metadata sync syncing
-            full sync: 0/64 shards
-            incremental sync: 64/64 shards
-            metadata is caught up with master
-  data sync source: 08fcacca-5e53-4499-9413-5212d2477576 (azone)
-                    syncing
-                    full sync: 0/128 shards
-                    incremental sync: 128/128 shards
-                    data is caught up with source
-</code></pre><p>在master zone  节点ceph01上创建用户</p>
-<pre><code>[root@ceph01 ~]# radosgw-admin user create --uid=&quot;zhang&quot; --display-name=&quot;zhang&quot;
-</code></pre><p>安装s3客户端 创建桶tong1，并put 对象</p>
-<pre><code>[root@ceph01 ~]# s3cmd mb s3://tong1
-[root@ceph01 ~]# s3cmd put release.asc s3://tong1
-upload: &apos;release.asc&apos; -&gt; &apos;s3://tong1/release.asc&apos;  [1 of 1]
-1645 of 1645   100% in    0s    33.23 kB/s  done
-
-[root@ceph01 ~]# s3cmd ls s3://tong1
-2018-03-28 12:26      1082   s3://tong1/anaconda-ks.cfg
-2018-03-28 13:05      1645   s3://tong1/release.asc
-</code></pre><p>在slave zone 节点ceph02 查看（将ceph01 /root/.s3cfg 拷贝到ceph02节点同样的目录）</p>
-<pre><code>[root@ceph02 ~]# s3cmd  ls s3://tong1
-2018-03-28 12:26      1082   s3://tong1/anaconda-ks.cfg
-2018-03-28 13:05      1645   s3://tong1/release.asc
-</code></pre><p>至此，2个zone之间可做到高可用，保证一定的数据安全。详细测试以后进行。</p>
+        <h1 id="centos7安装target"><a href="#centos7安装target" class="headerlink" title="centos7安装target"></a>centos7安装target</h1><p>targetcli是一个iSCSI配置管理工具,该工具简单易用,可以直接替换scsi-target-utils,Linux-IO target 在linux内核2.6.38以后，用软件实现的scsi target,支持的SAN技术中所有流行的存储协议包括Fibre Channel、FCoe\iSCSI、iser等，同时还能为本机生成模拟的scsi设备，以及为虚拟机提供基于virtio的scsi设备</p>
+<a id="more"></a>
+<p>[root@node1 ~]# yum install target</p>
+<p>启动服务</p>
+<p>[root@node1 ~]# systemctl status target<br>● target.service - Restore LIO kernel target configuration<br>   Loaded: loaded (/usr/lib/systemd/system/target.service; disabled; vendor preset: disabled)<br>   Active: inactive (dead)<br>[root@node1 ~]# systemctl start target<br>[root@node1 ~]# systemctl status target<br>● target.service - Restore LIO kernel target configuration<br>   Loaded: loaded (/usr/lib/systemd/system/target.service; disabled; vendor preset: disabled)<br>   Active: active (exited) since Wed 2018-10-24 10:55:09 CST; 1s ago<br>  Process: 4752 ExecStart=/usr/bin/targetctl restore (code=exited, status=0/SUCCESS)<br> Main PID: 4752 (code=exited, status=0/SUCCESS)</p>
+<p>Oct 24 10:55:09 node1 systemd[1]: Starting Restore LIO kernel target configuration…<br>Oct 24 10:55:09 node1 target[4752]: No saved config file at /etc/target/saveconfig.json, ok, exiting<br>Oct 24 10:55:09 node1 systemd[1]: Started Restore LIO kernel target configuration.</p>
+<h1 id="简单挂载测试"><a href="#简单挂载测试" class="headerlink" title="简单挂载测试"></a>简单挂载测试</h1><p>下面进行最简单的rbd块设备挂载测试。事先准备了rbd块设备挂载到/dev/rbd0</p>
+<p>[root@node1 ~]# targetcli<br>targetcli shell version 2.1.fb46<br>Copyright 2011-2013 by Datera, Inc and others.<br>For help on commands, type ‘help’.</p>
+<p>/&gt; ls<br>o- / …………………………………………………………………………………… […]<br>  o- backstores …………………………………………………………………………. […]<br>  | o- block ………………………………………………………………. [Storage Objects: 0]<br>  | o- fileio ……………………………………………………………… [Storage Objects: 0]<br>  | o- pscsi ………………………………………………………………. [Storage Objects: 0]<br>  | o- ramdisk …………………………………………………………….. [Storage Objects: 0]<br>  o- iscsi ……………………………………………………………………….. [Targets: 0]<br>  o- loopback …………………………………………………………………….. [Targets: 0]</p>
+<h2 id="创建iscsi块设备"><a href="#创建iscsi块设备" class="headerlink" title="创建iscsi块设备"></a>创建iscsi块设备</h2><p>/&gt; /backstores/block create rbd-lun /dev/rbd0<br>Created block storage object rbd-lun using /dev/rbd0.<br>/&gt; ls<br>o- / …………………………………………………………………………………… […]<br>  o- backstores …………………………………………………………………………. […]<br>  | o- block ………………………………………………………………. [Storage Objects: 1]<br>  | | o- rbd-lun ………………………………………. [/dev/rbd0 (1.0GiB) write-thru deactivated]<br>  | |   o- alua ……………………………………………………………….. [ALUA Groups: 1]<br>  | |     o- default_tg_pt_gp ………………………………………. [ALUA state: Active/optimized]<br>  | o- fileio ……………………………………………………………… [Storage Objects: 0]<br>  | o- pscsi ………………………………………………………………. [Storage Objects: 0]<br>  | o- ramdisk …………………………………………………………….. [Storage Objects: 0]<br>  o- iscsi ……………………………………………………………………….. [Targets: 0]<br>  o- loopback …………………………………………………………………….. [Targets: 0]</p>
+<h2 id="创建LIO-iscsi目标"><a href="#创建LIO-iscsi目标" class="headerlink" title="创建LIO iscsi目标"></a>创建LIO iscsi目标</h2><p>/&gt; /iscsi create<br>Created target iqn.2003-01.org.linux-iscsi.node1.x8664:sn.9c6086f5562d.<br>Created TPG 1.<br>Global pref auto_add_default_portal=true<br>Created default portal listening on all IPs (0.0.0.0), port 3260.<br>/&gt; ls<br>o- / …………………………………………………………………………………… […]<br>  o- backstores …………………………………………………………………………. […]<br>  | o- block ………………………………………………………………. [Storage Objects: 1]<br>  | | o- rbd-lun ………………………………………. [/dev/rbd0 (1.0GiB) write-thru deactivated]<br>  | |   o- alua ……………………………………………………………….. [ALUA Groups: 1]<br>  | |     o- default_tg_pt_gp ………………………………………. [ALUA state: Active/optimized]<br>  | o- fileio ……………………………………………………………… [Storage Objects: 0]<br>  | o- pscsi ………………………………………………………………. [Storage Objects: 0]<br>  | o- ramdisk …………………………………………………………….. [Storage Objects: 0]<br>  o- iscsi ……………………………………………………………………….. [Targets: 1]<br>  | o- iqn.2003-01.org.linux-iscsi.node1.x8664:sn.9c6086f5562d ……………………………. [TPGs: 1]<br>  |   o- tpg1 ……………………………………………………………. [no-gen-acls, no-auth]<br>  |     o- acls ……………………………………………………………………… [ACLs: 0]<br>  |     o- luns ……………………………………………………………………… [LUNs: 0]<br>  |     o- portals ………………………………………………………………… [Portals: 1]<br>  |       o- 0.0.0.0:3260 …………………………………………………………………. [OK]<br>  o- loopback …………………………………………………………………….. [Targets: 0]</p>
+<h2 id="使用默认配置创建portal"><a href="#使用默认配置创建portal" class="headerlink" title="使用默认配置创建portal"></a>使用默认配置创建portal</h2><p>/&gt; cd /iscsi/iqn.2003-01.org.linux-iscsi.node1.x8664:sn.9c6086f5562d/tpg1/<br>/iscsi/iqn.2003-01.org.linux-iscsi.node1.x8664:sn.9c6086f5562d/tpg1/acls/<br>/iscsi/iqn.2003-01.org.linux-iscsi.node1.x8664:sn.9c6086f5562d/tpg1/luns/<br>/iscsi/iqn.2003-01.org.linux-iscsi.node1.x8664:sn.9c6086f5562d/tpg1/portals/  /iscsi/iqn.20…86f5562d/tpg1&gt; portals/ create</p>
+<p>Using default IP port 3260<br>Binding to INADDR_ANY (0.0.0.0)<br>This NetworkPortal already exists in configFS</p>
+<h2 id="创建逻辑单元-LUN"><a href="#创建逻辑单元-LUN" class="headerlink" title="创建逻辑单元(LUN)"></a>创建逻辑单元(LUN)</h2><p>/&gt; cd /iscsi/iqn.2003-01.org.linux-iscsi.node1.x8664:sn.9c6086f5562d/tpg1/<br>/iscsi/iqn.20…86f5562d/tpg1&gt; luns/ create /backstores/block/rbd-lun<br>Created LUN 0.</p>
+<h2 id="定义客户端访问控制权限（无限制）"><a href="#定义客户端访问控制权限（无限制）" class="headerlink" title="定义客户端访问控制权限（无限制）"></a>定义客户端访问控制权限（无限制）</h2><p>/&gt; cd /iscsi/iqn.2003-01.org.linux-iscsi.node1.x8664:sn.9c6086f5562d/tpg1/</p>
+<p>/iscsi/iqn.20…86f5562d/tpg1&gt; ls<br>o- tpg1 …………………………………………………………………. [no-gen-acls, no-auth]<br>  o- acls …………………………………………………………………………… [ACLs: 0]<br>  o- luns …………………………………………………………………………… [LUNs: 1]<br>  | o- lun0 ………………………………………… [block/rbd-lun (/dev/rbd0) (default_tg_pt_gp)]<br>  o- portals ……………………………………………………………………… [Portals: 1]<br>o- 0.0.0.0:3260 ………………………………………………………………………. [OK]<br>/iscsi/iqn.20…86f5562d/tpg1&gt; set attribute authentication=0 demo_mode_write_protect=0 generate_node_acls=1 cache_dynamic_acls=1<br>Parameter demo_mode_write_protect is now ‘0’.<br>Parameter authentication is now ‘0’.<br>Parameter generate_node_acls is now ‘1’.<br>Parameter cache_dynamic_acls is now ‘1’.<br>/iscsi/iqn.20…86f5562d/tpg1&gt; ls<br>o- tpg1 ……………………………………………………………………. [gen-acls, no-auth]<br>  o- acls …………………………………………………………………………… [ACLs: 0]<br>  o- luns …………………………………………………………………………… [LUNs: 1]<br>  | o- lun0 ………………………………………… [block/rbd-lun (/dev/rbd0) (default_tg_pt_gp)]<br>  o- portals ……………………………………………………………………… [Portals: 1]<br>o- 0.0.0.0:3260 ………………………………………………………………………. [OK]</p>
+<h2 id="保存配置"><a href="#保存配置" class="headerlink" title="保存配置"></a>保存配置</h2><p>/&gt; saveconfig<br>Configuration saved to /etc/target/saveconfig.json<br>/&gt; exit<br>Global pref auto_save_on_exit=true<br>Last 10 configs saved in /etc/target/backup/.<br>Configuration saved to /etc/target/saveconfig.json</p>
+<h1 id="客户端访问"><a href="#客户端访问" class="headerlink" title="客户端访问"></a>客户端访问</h1><p>[root@node2 ~]# iscsiadm -m discovery -t st -p 192.168.3.250<br>192.168.3.250:3260,1 iqn.2003-01.org.linux-iscsi.node1.x8664:sn.9c6086f5562d<br>[root@node2 ~]# iscsiadm -m node -T iqn.2003-01.org.linux-iscsi.node1.x8664:sn.9c6086f5562d  -p 192.168.3.250 -l<br>Logging in to [iface: default, target: iqn.2003-01.org.linux-iscsi.node1.x8664:sn.9c6086f5562d, portal: 192.168.3.250,3260] (multiple)<br>Login to [iface: default, target: iqn.2003-01.org.linux-iscsi.node1.x8664:sn.9c6086f5562d, portal: 192.168.3.250,3260] successful.</p>
+<p>[root@node2 ~]# lsblk<br>NAME                                                                                                  MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT<br>sda                                                                                                     8:0    0   30G  0 disk<br>├─sda1                                                                                                  8:1    0    1G  0 part /boot<br>└─sda2                                                                                                  8:2    0   29G  0 part<br>  ├─centos-root                                                                                       253:0    0   27G  0 lvm  /<br>  └─centos-swap                                                                                       253:1    0    2G  0 lvm  [SWAP]<br>sdd                                                                                                     8:48   0    1G  0 disk<br>sr0                                                                                                    11:0    1  4.2G  0 rom  </p>
+<p>sdd磁盘即是挂载的磁盘。</p>
 
       
 
@@ -302,7 +215,7 @@ upload: &apos;release.asc&apos; -&gt; &apos;s3://tong1/release.asc&apos;  [1 of 
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ceph</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">lio target</a>
         		</li>
       		
 		</ul>
@@ -358,7 +271,7 @@ upload: &apos;release.asc&apos; -&gt; &apos;s3://tong1/release.asc&apos;  [1 of 
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://idcat.cn/ceph-多区域radosgw网关配置.html" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://idcat.cn/centos7系统lio简单使用.html" alt="微信分享二维码">
     </div>
 </div>
 
@@ -372,18 +285,9 @@ upload: &apos;release.asc&apos; -&gt; &apos;s3://tong1/release.asc&apos;  [1 of 
   
 <nav id="article-nav">
   
-    <a href="/集群所有mon-store-db丢失恢复.html" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          集群所有mon store.db丢失恢复
-        
-      </div>
-    </a>
   
-  
-    <a href="/ceph-dencoder基本使用.html" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">ceph-dencoder基本使用</div>
+    <a href="/saltstack一键部署haproxy-keepalived-nginx负载均衡高可用环境.html" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">saltstack一键部署haproxy+keepalived+nginx负载均衡高可用环境</div>
       <i class="icon-circle-right"></i>
     </a>
   
