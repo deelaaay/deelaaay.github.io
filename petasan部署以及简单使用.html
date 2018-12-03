@@ -7,18 +7,35 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://idcat.cn">
-  <title>Tag: ceph | deelaaay learning</title>
+  <title>petasan部署以及简单使用 | deelaaay learning</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="自我定位">
-<meta property="og:type" content="website">
-<meta property="og:title" content="deelaaay learning">
-<meta property="og:url" content="http://idcat.cn/tags/ceph/page/2/index.html">
+  <meta name="description" content="无意间发现有个开源的san产品（petasan）,底层基于ceph做的，当前最新版本2.1.0，底层ceph已经支持到12.2.7了。支持VMware vshere,hyper_v等虚拟化以及database。其san访问控制是基于LIO做的，上层提供完整的wen界面进行ceph集群监控等支持手动配置crush等，支持在线配置iscsi lun等。提供主机节点的各个硬件的监控以及ceph集群状态监">
+<meta name="keywords" content="petasan targetcli ceph">
+<meta property="og:type" content="article">
+<meta property="og:title" content="petasan部署以及简单使用">
+<meta property="og:url" content="http://idcat.cn/petasan部署以及简单使用.html">
 <meta property="og:site_name" content="deelaaay learning">
-<meta property="og:description" content="自我定位">
+<meta property="og:description" content="无意间发现有个开源的san产品（petasan）,底层基于ceph做的，当前最新版本2.1.0，底层ceph已经支持到12.2.7了。支持VMware vshere,hyper_v等虚拟化以及database。其san访问控制是基于LIO做的，上层提供完整的wen界面进行ceph集群监控等支持手动配置crush等，支持在线配置iscsi lun等。提供主机节点的各个硬件的监控以及ceph集群状态监">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="file:///C:/Users/zhang/AppData/Local/Temp/ksohtml/wps90E9.tmp.jpg">
+<meta property="og:image" content="file:///C:/Users/zhang/AppData/Local/Temp/ksohtml/wps90F9.tmp.jpg">
+<meta property="og:image" content="file:///C:/Users/zhang/AppData/Local/Temp/ksohtml/wps910A.tmp.jpg">
+<meta property="og:image" content="file:///C:/Users/zhang/AppData/Local/Temp/ksohtml/wps910B.tmp.jpg">
+<meta property="og:image" content="file:///C:/Users/zhang/AppData/Local/Temp/ksohtml/wps911C.tmp.jpg">
+<meta property="og:image" content="file:///C:/Users/zhang/AppData/Local/Temp/ksohtml/wps912C.tmp.jpg">
+<meta property="og:image" content="file:///C:/Users/zhang/AppData/Local/Temp/ksohtml/wps913D.tmp.jpg">
+<meta property="og:image" content="file:///C:/Users/zhang/AppData/Local/Temp/ksohtml/wps913E.tmp.jpg">
+<meta property="og:image" content="file:///C:/Users/zhang/AppData/Local/Temp/ksohtml/wps914E.tmp.jpg">
+<meta property="og:image" content="file:///C:/Users/zhang/AppData/Local/Temp/ksohtml/wps915F.tmp.jpg">
+<meta property="og:image" content="file:///C:/Users/zhang/AppData/Local/Temp/ksohtml/wps9160.tmp.jpg">
+<meta property="og:image" content="file:///C:/Users/zhang/AppData/Local/Temp/ksohtml/wps9171.tmp.jpg">
+<meta property="og:image" content="file:///C:/Users/zhang/AppData/Local/Temp/ksohtml/wps9181.tmp.jpg">
+<meta property="og:image" content="file:///C:/Users/zhang/AppData/Local/Temp/ksohtml/wps9182.tmp.jpg">
+<meta property="og:updated_time" content="2018-12-03T12:56:18.188Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="deelaaay learning">
-<meta name="twitter:description" content="自我定位">
+<meta name="twitter:title" content="petasan部署以及简单使用">
+<meta name="twitter:description" content="无意间发现有个开源的san产品（petasan）,底层基于ceph做的，当前最新版本2.1.0，底层ceph已经支持到12.2.7了。支持VMware vshere,hyper_v等虚拟化以及database。其san访问控制是基于LIO做的，上层提供完整的wen界面进行ceph集群监控等支持手动配置crush等，支持在线配置iscsi lun等。提供主机节点的各个硬件的监控以及ceph集群状态监">
+<meta name="twitter:image" content="file:///C:/Users/zhang/AppData/Local/Temp/ksohtml/wps90E9.tmp.jpg">
   
     <link rel="alternative" href="/atom.xml" title="deelaaay learning" type="application/atom+xml">
   
@@ -160,64 +177,190 @@ var _hmt = _hmt || [];
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-petasan部署以及简单使用" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/ceph-mon基础运维.html" class="archive-article-date">
-  	<time datetime="2018-02-28T15:59:41.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-28</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/ceph-mon基础运维.html">ceph-mon基础运维</a>
+    <h1 class="article-title" itemprop="name">
+      petasan部署以及简单使用
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/petasan部署以及简单使用.html" class="archive-article-date">
+  	<time datetime="2018-10-25T10:53:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-10-25</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>无意间发现有个开源的san产品（petasan）,底层基于ceph做的，当前最新版本2.1.0，底层ceph已经支持到12.2.7了。支持VMware vshere,hyper_v等虚拟化以及database。其san访问控制是基于LIO做的，上层提供完整的wen界面进行ceph集群监控等支持手动配置crush等，支持在线配置iscsi lun等。提供主机节点的各个硬件的监控以及ceph集群状态监控，邮件告警，多路iscsi访问。</p>
+<p>详情自己查看官网介绍<a href="http://www.petasan.org/" target="_blank" rel="noopener">http://www.petasan.org/</a></p>
+<p>自己在虚拟机下做了下简单部署测试，挺简单的，下面记录下配置部署过程。</p>
+<a id="more"></a>
+<h3 id="环境介绍"><a href="#环境介绍" class="headerlink" title="环境介绍"></a><strong>环境介绍</strong></h3><p><img src="file:///C:\Users\zhang\AppData\Local\Temp\ksohtml\wps90E9.tmp.jpg" alt="img"> </p>
+<p>3台虚拟机，共2块网卡，分别为eth0 eth1。其中managerment iscsi1 backend1共用eth0网卡，iscsi2，backend2共用网卡eth1.</p>
+<h3 id="安装系统"><a href="#安装系统" class="headerlink" title="安装系统"></a><strong>安装系统</strong></h3><p><img src="file:///C:\Users\zhang\AppData\Local\Temp\ksohtml\wps90F9.tmp.jpg" alt="img"> </p>
+<p><img src="file:///C:\Users\zhang\AppData\Local\Temp\ksohtml\wps910A.tmp.jpg" alt="img"> </p>
+<p><img src="file:///C:\Users\zhang\AppData\Local\Temp\ksohtml\wps910B.tmp.jpg" alt="img"> </p>
+<p>最终完成系统安装后，点击reboot。</p>
+<h3 id="配置petasan"><a href="#配置petasan" class="headerlink" title="配置petasan"></a><strong>配置petasan</strong></h3><p>登入第一台虚拟机ip:5001,这里为192.168.0.181:5001</p>
+<p>创建集群</p>
+<p><img src="file:///C:\Users\zhang\AppData\Local\Temp\ksohtml\wps911C.tmp.jpg" alt="img"> </p>
+<p><img src="file:///C:\Users\zhang\AppData\Local\Temp\ksohtml\wps912C.tmp.jpg" alt="img"> </p>
+<p><img src="file:///C:\Users\zhang\AppData\Local\Temp\ksohtml\wps913D.tmp.jpg" alt="img"> </p>
+<p>按照设定完成第一台部署。</p>
+<p>然后剩余2台主机，同样登入ip:5001 选择加入集群 按照提示一步步部署即可,部署成功后，主机显示如下</p>
+<p><img src="file:///C:\Users\zhang\AppData\Local\Temp\ksohtml\wps913E.tmp.jpg" alt="img"> </p>
+<p>最后一台主机部署的时候，需要一段时间，因为后台在部署ceph。最终成功后，可以查看集群状态。</p>
+<p><img src="file:///C:\Users\zhang\AppData\Local\Temp\ksohtml\wps914E.tmp.jpg" alt="img"> </p>
+<h3 id="使用petasan"><a href="#使用petasan" class="headerlink" title="使用petasan"></a><strong>使用petasan</strong></h3><p>通过ip:5000 登入，初始用户名密码为admin/password 可自行修改密码。</p>
+<p><img src="file:///C:\Users\zhang\AppData\Local\Temp\ksohtml\wps915F.tmp.jpg" alt="img"> </p>
+<p>下图显示详细的各个功能，包括集群监控等等，创建iscsi 等。</p>
+<p><img src="file:///C:\Users\zhang\AppData\Local\Temp\ksohtml\wps9160.tmp.jpg" alt="img"> </p>
+<p>在配置界面设置iscsi详细信息，包括虚拟ip段，根据之前规划的进行相关填写即可。</p>
+<p><img src="file:///C:\Users\zhang\AppData\Local\Temp\ksohtml\wps9171.tmp.jpg" alt="img"> </p>
+<p>创建共享使用的disk,选择多个活动的path，防止单点故障。</p>
+<p><img src="file:///C:\Users\zhang\AppData\Local\Temp\ksohtml\wps9181.tmp.jpg" alt="img"> </p>
+<p>查看active path为6的信息，该disk共享提供6个path分别2个分布在不同节点的不同网卡上。</p>
+<p><img src="file:///C:\Users\zhang\AppData\Local\Temp\ksohtml\wps9182.tmp.jpg" alt="img"> </p>
+<p>其他就不做介绍了，web端提供的很详细的step介绍。</p>
+<p>详情查看官网资料。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ceph</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">petasan targetcli ceph</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://idcat.cn/petasan部署以及简单使用.html" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
   
   
-    </div></section>
+    <a href="/centos7系统lio简单使用.html" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">centos7系统lio简单使用</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+  
+  
   
 
-    
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/tags/ceph/">&laquo; Prev</a><a class="page-number" href="/tags/ceph/">1</a><span class="page-number current">2</span>
-    </nav>
   
+  
+  
+	<script>
+	(function(){
+		var bp = document.createElement('script');
+		bp.src = '//push.zhanzhang.baidu.com/push.js';
+		var s = document.getElementsByTagName("script")[0];
+		s.parentNode.insertBefore(bp, s);
+	})();
+	</script>     
+   
+
+  
+
+  
+
+
 
 
           </div>
@@ -241,9 +384,9 @@ var _hmt = _hmt || [];
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,
