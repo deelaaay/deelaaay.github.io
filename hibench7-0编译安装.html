@@ -7,19 +7,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://idcat.cn">
-  <title>tags | deelaaay learning</title>
+  <title>hibench7.0编译安装 | deelaaay learning</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="自我定位">
-<meta property="og:type" content="website">
-<meta property="og:title" content="tags">
-<meta property="og:url" content="http://idcat.cn/tags/index.html">
+  <meta name="description" content="hibench7.0编译安装 引言 HiBench是一个大数据基准套件，可以帮助您评测不同大数据平台的性能、吞吐量和系统资源利用率。本文仅介绍如何对hadoop进行测试，其他大数据平台使用请参考官网https://github.com/intel-hadoop/HiBench 软件依赖 HiBench需要java环境，以及Maven管理。">
+<meta name="keywords" content="hibench7.0">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hibench7.0编译安装">
+<meta property="og:url" content="http://idcat.cn/hibench7-0编译安装.html">
 <meta property="og:site_name" content="deelaaay learning">
-<meta property="og:description" content="自我定位">
+<meta property="og:description" content="hibench7.0编译安装 引言 HiBench是一个大数据基准套件，可以帮助您评测不同大数据平台的性能、吞吐量和系统资源利用率。本文仅介绍如何对hadoop进行测试，其他大数据平台使用请参考官网https://github.com/intel-hadoop/HiBench 软件依赖 HiBench需要java环境，以及Maven管理。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-03-01T06:05:39.000Z">
+<meta property="og:updated_time" content="2019-11-20T12:40:50.822Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="tags">
-<meta name="twitter:description" content="自我定位">
+<meta name="twitter:title" content="hibench7.0编译安装">
+<meta name="twitter:description" content="hibench7.0编译安装 引言 HiBench是一个大数据基准套件，可以帮助您评测不同大数据平台的性能、吞吐量和系统资源利用率。本文仅介绍如何对hadoop进行测试，其他大数据平台使用请参考官网https://github.com/intel-hadoop/HiBench 软件依赖 HiBench需要java环境，以及Maven管理。">
   
     <link rel="alternative" href="/atom.xml" title="deelaaay learning" type="application/atom+xml">
   
@@ -161,27 +162,119 @@ var _hmt = _hmt || [];
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="page-undefined" class="article article-type-page " itemscope itemprop="blogPost">
+            <article id="post-hibench7-0编译安装" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      tags
+      hibench7.0编译安装
     </h1>
   
 
         
-        <a href="/tags/index.html" class="archive-article-date">
-  	<time datetime="2018-03-01T06:05:39.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-01</time>
+        <a href="/hibench7-0编译安装.html" class="archive-article-date">
+  	<time datetime="2019-11-20T12:38:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-20</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <p>hibench7.0编译安装</p>
+<p><strong>引言</strong></p>
+<p>HiBench是一个大数据基准套件，可以帮助您评测不同大数据平台的性能、吞吐量和系统资源利用率。本文仅介绍如何对hadoop进行测试，其他大数据平台使用请参考官网<a href="https://github.com/intel-hadoop/HiBench" target="_blank" rel="noopener">https://github.com/intel-hadoop/HiBench</a></p>
+<p><strong>软件依赖</strong></p>
+<p>HiBench需要java环境，以及Maven管理。</p>
+<a id="more"></a>
+<p><strong>安装java运行环境</strong></p>
+<p>新建目录/home/java 然后上传相应的jdk二进制文件到此目录并解压。（本例为aarch64为平台，x86平台一样的操作步骤，亲试）</p>
+<p>root@kylin1:/home/java# ll</p>
+<p>总用量 71608</p>
+<p>drwxr-xr-x 3 root root     4096 4月   8 11:59 ./</p>
+<p>drwxr-xr-x 4 root root     4096 4月   8 11:28 ../</p>
+<p>drwxr-xr-x 7 root root     4096 4月   8 11:44 jdk1.8.0_201/</p>
+<p>-rw-r–r– 1 root root 73312819 4月   8 11:43 jdk-8u201-linux-arm64-vfp-hflt.tar.gz</p>
+<p>添加环境变量：/etc/profile 文件末尾增加如下行</p>
+<p>export JAVA_HOME=/home/java/jdk1.8.0_201</p>
+<p>export CLASSPATH=.:$JAVA_HOME/jre/lib/rt.jar:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar</p>
+<p>export PATH=$PATH:$JAVA_HOME/bin</p>
+<p>使其生效</p>
+<p>source /etc/profile</p>
+<p>查看</p>
+<p>root@kylin1:/home/java# java -version</p>
+<p>java version “1.8.0_201”</p>
+<p>Java(TM) SE Runtime Environment (build 1.8.0_201-b09)</p>
+<p>Java HotSpot(TM) 64-Bit Server VM (build 25.201-b09, mixed mode)</p>
+<p><strong>安装Maven</strong></p>
+<p>下载Maven包</p>
+<p>wget <a href="http://apache.fayea.com/maven/maven-3/3.6.0/binaries/apache-maven-3.6.0-bin.zip" target="_blank" rel="noopener">http://apache.fayea.com/maven/maven-3/3.6.0/binaries/apache-maven-3.6.0-bin.zip</a></p>
+<p>解压缩</p>
+<p>unzip apache-maven-3.6.0-bin.zip -d /usr/local/</p>
+<p>添加环境变量</p>
+<p>cat /etc/profile,在文件末尾增加如下</p>
+<p>export M3_HOME=/usr/local/apache-maven-3.6.0</p>
+<p>export PATH=$M3_HOME/bin:$PATH</p>
+<p>source /etc/profile</p>
+<p><strong>测试Maven环境</strong></p>
+<p>mvn -v</p>
+<p>看到相应版本信息输出即表明配置正确：</p>
+<p>root@kylin3:/usr/local/HiBench-HiBench-7.0# mvn -v</p>
+<p>Apache Maven 3.6.0 (97c98ec64a1fdfee7767ce5ffb20918da4f719f3; 2018-10-25T02:41:47+08:00)</p>
+<p>Maven home: /usr/local/apache-maven-3.6.0</p>
+<p>Java version: 1.8.0_201, vendor: Oracle Corporation, runtime: /home/java/jdk1.8.0_201/jre</p>
+<p>Default locale: zh_CN, platform encoding: UTF-8</p>
+<p>OS name: “linux”, version: “4.4.58-20180615.kylin.server.yun+-generic”, arch: “aarch64”, family: “unix”</p>
+<p><strong>下载HiBench</strong></p>
+<p>git clone <a href="https://github.com/intel-hadoop/HiBench.git比较慢，建议直接网页下载zip包，然后解压到/usr/local目录下。" target="_blank" rel="noopener">https://github.com/intel-hadoop/HiBench.git比较慢，建议直接网页下载zip包，然后解压到/usr/local目录下。</a></p>
+<p>root@kylin3:/usr/local/HiBench-HiBench-7.0# pwd</p>
+<p>/usr/local/HiBench-HiBench-7.0</p>
+<p><strong>安装Hibench</strong></p>
+<p>切到HiBench下，执行对应的安装操作，可以选择自己想要安装的模块。以安装hadoop框架为例：</p>
+<p>root@kylin3:/usr/local/HiBench-HiBench-7.0# mvn -Phadoopbench -Dspark=2.1 -Dscala=2.11 clean package</p>
+<p>更多安装方法参考<a href="https://github.com/Intel-bigdata/HiBench/blob/master/docs/build-hibench.md" target="_blank" rel="noopener">https://github.com/Intel-bigdata/HiBench/blob/master/docs/build-hibench.md</a></p>
+<p>因为网络原因，下次模块过程中经常出现暂停现象。当前解决办法暂停下载，ctrl+c 然后继续执行上面的命令。</p>
+<p><strong>遇到的问题：</strong></p>
+<p><strong>[WARNING] Could not get content</strong></p>
+<p><strong>org.apache.maven.wagon.TransferFailedException: Failed to transfer file <a href="http://archive.apache.org/dist/hive/hive-0.14.0/apache-hive-0.14.0-bin.tar.gz" target="_blank" rel="noopener">http://archive.apache.org/dist/hive/hive-0.14.0/apache-hive-0.14.0-bin.tar.gz</a> with status code 503</strong></p>
+<p>下载hive出错，解决：</p>
+<p>root@kylin3:/usr/local/HiBench-HiBench-7.0# pwd</p>
+<p>/usr/local/HiBench-HiBench-7.0</p>
+<p>root@kylin3:/usr/local/HiBench-HiBench-7.0# vim hadoopbench/sql/pom.xml</p>
+<p>修改该文件中，将http改为https即可</p>
+  <properties><br><br>​    <strong><repo><a href="https://archive.apache.org" target="_blank" rel="noopener">https://archive.apache.org</a></repo></strong><br><br>​    <file>dist/hive/hive-0.14.0/apache-hive-0.14.0-bin.tar.gz</file><br><br>  </properties>
+
+
+
+
+
+<p><strong>org.apache.maven.wagon.TransferFailedException: Failed to transfer file <a href="http://archive.apache.org/dist/nutch/apache-nutch-1.2-bin.tar.gz" target="_blank" rel="noopener">http://archive.apache.org/dist/nutch/apache-nutch-1.2-bin.tar.gz</a> with status code 503</strong></p>
+<p>root@kylin3:/usr/local/HiBench-HiBench-7.0/hadoopbench/nutchindexing# pwd</p>
+<p>/usr/local/HiBench-HiBench-7.0/hadoopbench/nutchindexing</p>
+<p>vim pod.xml</p>
+<p>修改如下文件由http改成https</p>
+<p>​                        <configuration></configuration></p>
+<p>​                            <url><a href="https://archive.apache.org/dist/nutch/apache-nutch-1.2-bin.tar.gz" target="_blank" rel="noopener">https://archive.apache.org/dist/nutch/apache-nutch-1.2-bin.tar.gz</a></url></p>
+<p>​                        </p>
+<p>最终结果</p>
+<p>[INFO] Reactor Summary:</p>
+<p>[INFO] </p>
+<p>[INFO] hibench 7.0 …………………………………. SUCCESS [  0.173 s]</p>
+<p>[INFO] hibench-common 7.0 …………………………… SUCCESS [ 10.755 s]</p>
+<p>[INFO] HiBench data generation tools 7.0 ……………… SUCCESS [ 12.696 s]</p>
+<p>[INFO] hadoopbench 7.0 ……………………………… SUCCESS [  0.004 s]</p>
+<p>[INFO] hadoopbench-sql 7.0 ………………………….. SUCCESS [  2.355 s]</p>
+<p>[INFO] mahout 7.0 ………………………………….. SUCCESS [  6.676 s]</p>
+<p>[INFO] PEGASUS: A Peta-Scale Graph Mining System 2.0-SNAPSHOT SUCCESS [  0.978 s]</p>
+<p>[INFO] nutchindexing 7.0 ……………………………. SUCCESS [ 41.968 s]</p>
+<p>[INFO] ————————————————————————</p>
+<p>[INFO] BUILD SUCCESS</p>
+<p>[INFO] ————————————————————————</p>
+<p>[INFO] Total time:  01:15 min</p>
+<p>[INFO] Finished at: 2019-04-09T11:58:27+08:00</p>
+<p>[INFO] ————————————————————————</p>
+
       
 
       
@@ -189,6 +282,17 @@ var _hmt = _hmt || [];
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">hibench7.0</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
 
       
@@ -239,7 +343,7 @@ var _hmt = _hmt || [];
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://idcat.cn/tags/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://idcat.cn/hibench7-0编译安装.html" alt="微信分享二维码">
     </div>
 </div>
 
@@ -251,6 +355,16 @@ var _hmt = _hmt || [];
 </article>
 
   
+<nav id="article-nav">
+  
+  
+    <a href="/docker实战.html" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">docker实战</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
 
 <aside class="wrap-side-operation">
     <div class="mod-side-operation">
@@ -315,7 +429,7 @@ var _hmt = _hmt || [];
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,

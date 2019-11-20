@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://idcat.cn/"/>
-  <updated>2018-12-03T12:56:18.188Z</updated>
+  <updated>2019-11-20T12:40:50.822Z</updated>
   <id>http://idcat.cn/</id>
   
   <author>
@@ -15,6 +15,44 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>hibench7.0编译安装</title>
+    <link href="http://idcat.cn/hibench7-0%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85.html"/>
+    <id>http://idcat.cn/hibench7-0编译安装.html</id>
+    <published>2019-11-20T12:38:25.000Z</published>
+    <updated>2019-11-20T12:40:50.822Z</updated>
+    
+    <content type="html"><![CDATA[<p>hibench7.0编译安装</p><p><strong>引言</strong></p><p>HiBench是一个大数据基准套件，可以帮助您评测不同大数据平台的性能、吞吐量和系统资源利用率。本文仅介绍如何对hadoop进行测试，其他大数据平台使用请参考官网<a href="https://github.com/intel-hadoop/HiBench" target="_blank" rel="noopener">https://github.com/intel-hadoop/HiBench</a></p><p><strong>软件依赖</strong></p><p>HiBench需要java环境，以及Maven管理。</p><a id="more"></a><p><strong>安装java运行环境</strong></p><p>新建目录/home/java 然后上传相应的jdk二进制文件到此目录并解压。（本例为aarch64为平台，x86平台一样的操作步骤，亲试）</p><p>root@kylin1:/home/java# ll</p><p>总用量 71608</p><p>drwxr-xr-x 3 root root     4096 4月   8 11:59 ./</p><p>drwxr-xr-x 4 root root     4096 4月   8 11:28 ../</p><p>drwxr-xr-x 7 root root     4096 4月   8 11:44 jdk1.8.0_201/</p><p>-rw-r–r– 1 root root 73312819 4月   8 11:43 jdk-8u201-linux-arm64-vfp-hflt.tar.gz</p><p>添加环境变量：/etc/profile 文件末尾增加如下行</p><p>export JAVA_HOME=/home/java/jdk1.8.0_201</p><p>export CLASSPATH=.:$JAVA_HOME/jre/lib/rt.jar:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar</p><p>export PATH=$PATH:$JAVA_HOME/bin</p><p>使其生效</p><p>source /etc/profile</p><p>查看</p><p>root@kylin1:/home/java# java -version</p><p>java version “1.8.0_201”</p><p>Java(TM) SE Runtime Environment (build 1.8.0_201-b09)</p><p>Java HotSpot(TM) 64-Bit Server VM (build 25.201-b09, mixed mode)</p><p><strong>安装Maven</strong></p><p>下载Maven包</p><p>wget <a href="http://apache.fayea.com/maven/maven-3/3.6.0/binaries/apache-maven-3.6.0-bin.zip" target="_blank" rel="noopener">http://apache.fayea.com/maven/maven-3/3.6.0/binaries/apache-maven-3.6.0-bin.zip</a></p><p>解压缩</p><p>unzip apache-maven-3.6.0-bin.zip -d /usr/local/</p><p>添加环境变量</p><p>cat /etc/profile,在文件末尾增加如下</p><p>export M3_HOME=/usr/local/apache-maven-3.6.0</p><p>export PATH=$M3_HOME/bin:$PATH</p><p>source /etc/profile</p><p><strong>测试Maven环境</strong></p><p>mvn -v</p><p>看到相应版本信息输出即表明配置正确：</p><p>root@kylin3:/usr/local/HiBench-HiBench-7.0# mvn -v</p><p>Apache Maven 3.6.0 (97c98ec64a1fdfee7767ce5ffb20918da4f719f3; 2018-10-25T02:41:47+08:00)</p><p>Maven home: /usr/local/apache-maven-3.6.0</p><p>Java version: 1.8.0_201, vendor: Oracle Corporation, runtime: /home/java/jdk1.8.0_201/jre</p><p>Default locale: zh_CN, platform encoding: UTF-8</p><p>OS name: “linux”, version: “4.4.58-20180615.kylin.server.yun+-generic”, arch: “aarch64”, family: “unix”</p><p><strong>下载HiBench</strong></p><p>git clone <a href="https://github.com/intel-hadoop/HiBench.git比较慢，建议直接网页下载zip包，然后解压到/usr/local目录下。" target="_blank" rel="noopener">https://github.com/intel-hadoop/HiBench.git比较慢，建议直接网页下载zip包，然后解压到/usr/local目录下。</a></p><p>root@kylin3:/usr/local/HiBench-HiBench-7.0# pwd</p><p>/usr/local/HiBench-HiBench-7.0</p><p><strong>安装Hibench</strong></p><p>切到HiBench下，执行对应的安装操作，可以选择自己想要安装的模块。以安装hadoop框架为例：</p><p>root@kylin3:/usr/local/HiBench-HiBench-7.0# mvn -Phadoopbench -Dspark=2.1 -Dscala=2.11 clean package</p><p>更多安装方法参考<a href="https://github.com/Intel-bigdata/HiBench/blob/master/docs/build-hibench.md" target="_blank" rel="noopener">https://github.com/Intel-bigdata/HiBench/blob/master/docs/build-hibench.md</a></p><p>因为网络原因，下次模块过程中经常出现暂停现象。当前解决办法暂停下载，ctrl+c 然后继续执行上面的命令。</p><p><strong>遇到的问题：</strong></p><p><strong>[WARNING] Could not get content</strong></p><p><strong>org.apache.maven.wagon.TransferFailedException: Failed to transfer file <a href="http://archive.apache.org/dist/hive/hive-0.14.0/apache-hive-0.14.0-bin.tar.gz" target="_blank" rel="noopener">http://archive.apache.org/dist/hive/hive-0.14.0/apache-hive-0.14.0-bin.tar.gz</a> with status code 503</strong></p><p>下载hive出错，解决：</p><p>root@kylin3:/usr/local/HiBench-HiBench-7.0# pwd</p><p>/usr/local/HiBench-HiBench-7.0</p><p>root@kylin3:/usr/local/HiBench-HiBench-7.0# vim hadoopbench/sql/pom.xml</p><p>修改该文件中，将http改为https即可</p>  <properties><br><br>​    <strong><repo><a href="https://archive.apache.org" target="_blank" rel="noopener">https://archive.apache.org</a></repo></strong><br><br>​    <file>dist/hive/hive-0.14.0/apache-hive-0.14.0-bin.tar.gz</file><br><br>  </properties><p><strong>org.apache.maven.wagon.TransferFailedException: Failed to transfer file <a href="http://archive.apache.org/dist/nutch/apache-nutch-1.2-bin.tar.gz" target="_blank" rel="noopener">http://archive.apache.org/dist/nutch/apache-nutch-1.2-bin.tar.gz</a> with status code 503</strong></p><p>root@kylin3:/usr/local/HiBench-HiBench-7.0/hadoopbench/nutchindexing# pwd</p><p>/usr/local/HiBench-HiBench-7.0/hadoopbench/nutchindexing</p><p>vim pod.xml</p><p>修改如下文件由http改成https</p><p>​                        <configuration></configuration></p><p>​                            <url><a href="https://archive.apache.org/dist/nutch/apache-nutch-1.2-bin.tar.gz" target="_blank" rel="noopener">https://archive.apache.org/dist/nutch/apache-nutch-1.2-bin.tar.gz</a></url></p><p>​                        </p><p>最终结果</p><p>[INFO] Reactor Summary:</p><p>[INFO] </p><p>[INFO] hibench 7.0 …………………………………. SUCCESS [  0.173 s]</p><p>[INFO] hibench-common 7.0 …………………………… SUCCESS [ 10.755 s]</p><p>[INFO] HiBench data generation tools 7.0 ……………… SUCCESS [ 12.696 s]</p><p>[INFO] hadoopbench 7.0 ……………………………… SUCCESS [  0.004 s]</p><p>[INFO] hadoopbench-sql 7.0 ………………………….. SUCCESS [  2.355 s]</p><p>[INFO] mahout 7.0 ………………………………….. SUCCESS [  6.676 s]</p><p>[INFO] PEGASUS: A Peta-Scale Graph Mining System 2.0-SNAPSHOT SUCCESS [  0.978 s]</p><p>[INFO] nutchindexing 7.0 ……………………………. SUCCESS [ 41.968 s]</p><p>[INFO] ————————————————————————</p><p>[INFO] BUILD SUCCESS</p><p>[INFO] ————————————————————————</p><p>[INFO] Total time:  01:15 min</p><p>[INFO] Finished at: 2019-04-09T11:58:27+08:00</p><p>[INFO] ————————————————————————</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;hibench7.0编译安装&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;引言&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;HiBench是一个大数据基准套件，可以帮助您评测不同大数据平台的性能、吞吐量和系统资源利用率。本文仅介绍如何对hadoop进行测试，其他大数据平台使用请参考官网&lt;a href=&quot;https://github.com/intel-hadoop/HiBench&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;https://github.com/intel-hadoop/HiBench&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;软件依赖&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;HiBench需要java环境，以及Maven管理。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="hibench7.0" scheme="http://idcat.cn/tags/hibench7-0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>docker实战</title>
+    <link href="http://idcat.cn/docker%E5%AE%9E%E6%88%98.html"/>
+    <id>http://idcat.cn/docker实战.html</id>
+    <published>2018-12-05T00:06:21.000Z</published>
+    <updated>2018-12-05T00:07:47.310Z</updated>
+    
+    <summary type="html">
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>petasan部署以及简单使用</title>
@@ -442,52 +480,6 @@ rbd_directory
 rbd_id.image
 rbd_header.3289416b8b4567
 &lt;/code&gt;&lt;/pre&gt;
-    
-    </summary>
-    
-    
-      <category term="ceph" scheme="http://idcat.cn/tags/ceph/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>利用火焰图分析ceph-mds进程的cpu占用-简单介绍</title>
-    <link href="http://idcat.cn/%E5%88%A9%E7%94%A8%E7%81%AB%E7%84%B0%E5%9B%BE%E5%88%86%E6%9E%90ceph-mds%E8%BF%9B%E7%A8%8B%E7%9A%84cpu%E5%8D%A0%E7%94%A8-%E7%AE%80%E5%8D%95%E4%BB%8B%E7%BB%8D.html"/>
-    <id>http://idcat.cn/利用火焰图分析ceph-mds进程的cpu占用-简单介绍.html</id>
-    <published>2018-03-14T12:53:48.000Z</published>
-    <updated>2018-03-14T12:59:08.579Z</updated>
-    
-    <content type="html"><![CDATA[<p>利用火焰图分析ceph-mds进程的cpu占用-简单介绍</p><p><strong>Perf工具简介</strong></p><p>它是 Linux 系统原生提供的性能分析工具，用来进行软件性能分析的工具。是linux中用于分析性能问题的一大利器，可以针对一个运行着的程序，对系统进行采样，会返回 CPU 正在执行的函数名以及调用栈（stack）。<br>通常，它的执行频率是 99Hz（每秒99次），如果99次都返回同一个函数名，那就说明 CPU 这一秒钟都在执行同一个函数，可能存在性能问题。<br><a id="more"></a><br>安装</p><pre><code>yum install perf</code></pre><p><strong>火焰图（Flame Graphs）简介：</strong></p><p><a href="http://www.brendangregg.com/flamegraphs.html" target="_blank" rel="noopener">http://www.brendangregg.com/flamegraphs.html</a></p><p>火焰图是基于 perf 结果产生的 svg图片，用来展示 CPU 的调用栈。<br><img src="https://i.imgur.com/rniB5kO.jpg" alt=""></p><p>y 轴表示调用栈，每一层都是一个函数。调用栈越深，火焰就越高，顶部就是正在执行的函数，下方都是它的父函数。<br>x 轴表示抽样数，如果一个函数在 x 轴占据的宽度越宽，就表示它被抽到的次数多，即执行的时间长。注意，x 轴不代表时间，而是所有的调用栈合并后，按字母顺序排列的。<br>火焰图就是看顶层的哪个函数占据的宽度最大。只要有”平顶”（plateaus），就表示该函数可能存在性能问题</p><p><strong>下载</strong></p><p>Git  brendangregg大神的火焰图生成程序</p><pre><code>git clone https://github.com/brendangress/FlameGraph</code></pre><p><strong>使用</strong></p><p>进入到下载目录，另外窗口客户端对集群进行写操作，期间通过perf对mds进程进行采样收集。</p><p>客户端写入：</p><pre><code>time  dd if=/dev/zero of=a bs=1M count=1024 oflag=direct</code></pre><p>对mds进程进行perf测试并采样30s</p><pre><code>[root@ceph01 FlameGraph]# perf record -e cpu-clock --call-graph dwarf  -p 17484 -- sleep 30 [ perf record: Woken up 1 times to write data ][ perf record: Captured and wrote 0.327 MB perf.data (1 samples) ][root@ceph01 FlameGraph]#</code></pre><p><strong>分析</strong></p><p>首先对之前的采样结果进行整理</p><pre><code>[root@ceph01 FlameGraph]# perf script | ./stackcollapse-perf.pl &gt; ceph-mds.out</code></pre><p>生成火焰图</p><pre><code>[root@ceph01 FlameGraph]# ./flamegraph.pl ceph-mds.out &gt; ceph-mds.svg</code></pre><p>下载该svg文件并通过chrome浏览器打开<br><img src="https://i.imgur.com/ZcFZ2OM.jpg" alt=""><br>总结</p><p>火焰图的功能不止这一点，当然perf作为linux下的性能测试的一大神器，其功能也不仅仅这一点。该PPT的内容仅作为抛砖引玉之用。</p><p>参考网站 <a href="http://www.brendangregg.com/flamegraphs.html" target="_blank" rel="noopener">http://www.brendangregg.com/flamegraphs.html</a></p><p>后期关于一些测试方面的经验再做分享。</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;利用火焰图分析ceph-mds进程的cpu占用-简单介绍&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Perf工具简介&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;它是 Linux 系统原生提供的性能分析工具，用来进行软件性能分析的工具。是linux中用于分析性能问题的一大利器，可以针对一个运行着的程序，对系统进行采样，会返回 CPU 正在执行的函数名以及调用栈（stack）。&lt;br&gt;通常，它的执行频率是 99Hz（每秒99次），如果99次都返回同一个函数名，那就说明 CPU 这一秒钟都在执行同一个函数，可能存在性能问题。&lt;br&gt;
-    
-    </summary>
-    
-    
-      <category term="flamegraph" scheme="http://idcat.cn/tags/flamegraph/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>ceph获取crushmap-查看对象分布-目录绑定-查看条带</title>
-    <link href="http://idcat.cn/ceph%E8%8E%B7%E5%8F%96crushmap-%E6%9F%A5%E7%9C%8B%E5%AF%B9%E8%B1%A1%E5%88%86%E5%B8%83-%E7%9B%AE%E5%BD%95%E7%BB%91%E5%AE%9A-%E6%9F%A5%E7%9C%8B%E6%9D%A1%E5%B8%A6.html"/>
-    <id>http://idcat.cn/ceph获取crushmap-查看对象分布-目录绑定-查看条带.html</id>
-    <published>2018-03-12T12:54:07.000Z</published>
-    <updated>2018-03-12T13:17:21.346Z</updated>
-    
-    <content type="html"><![CDATA[<p>本文仅仅记录下常用命令，以备自己查询使用。</p><h1 id="crushmap"><a href="#crushmap" class="headerlink" title="crushmap"></a>crushmap</h1><p><strong>获取crush  map</strong></p><p>要获取集群的crush map，执行命令：</p><pre><code>ceph osd  getcrushmap -o {compiled-crushmap-filename}</code></pre><p>ceph将crush输出（-o）到你指定的文件，由于crush map是已编译的，所以需要反编译；</p><a id="more"></a><p><strong>反编译crush map</strong></p><p>要反编译crush map， 执行命令：</p><pre><code>crushtool -d {compiled-crushmap-filename}  -o {decompiled-crushmap-filename}</code></pre><p>ceph将反编译（-d）二进制crush图，且输出（-o）到你指定的文件；</p><p><strong>编译crush map</strong></p><p>要编译crush map，执行命令：</p><pre><code>crushtool -c  {decompiled-crushmap-filename}  -o {compiled-crushmap-filename}</code></pre><p>　　ceph将已编译的crush map保存到你指定的文件；</p><p><strong>注入crush map</strong></p><p>要把crush map应用到集群，执行命令：</p><pre><code>ceph osd  setcrushmap -i {compiled-crushmap-filename}</code></pre><p>ceph 将把你指定的已编译的crush  map输入到集群；</p><h1 id="查看对象分布"><a href="#查看对象分布" class="headerlink" title="查看对象分布"></a>查看对象分布</h1><p>查看文件系统下某个文件的对象集合</p><pre><code>[root@node192 jiushan-dir1]# cephfs ./10M show_layoutWARNING: This tool is deprecated.  Use the layout.* xattrs to query and modify layouts.layout.data_pool:     3layout.object_size:   4194304layout.stripe_unit:   4194304layout.stripe_count:  1[root@node192 jiushan-dir1]# cephfs ./10M show_location WARNING: This tool is deprecated.  Use the layout.* xattrs to query and modify layouts.location.file_offset:  0location.object_offset:0location.object_no:    0location.object_size:  4194304location.object_name:  10000001458.00000000location.block_offset: 0location.block_size:   4194304location.osd:          0[root@node192 jiushan-dir1]# cephfs ./10M mapWARNING: This tool is deprecated.  Use the layout.* xattrs to query and modify layouts.FILE OFFSET                    OBJECT        OFFSET        LENGTH  OSD          0      10000001458.00000000             0       4194304  0    4194304      10000001458.00000001             0       4194304  5    8388608      10000001458.00000002             0       4194304  2[root@node248 ~]# rados -p data ls100000003e9.00000000100000003e9.00000006100000003e9.00000002100000003e9.00000008100000003e9.00000001100000003e9.00000005100000003e9.00000004100000003e9.00000009100000003e9.00000003100000003e9.00000007[root@node248 ~]# ceph osd map data   100000003e9.00000007osdmap e39 pool &apos;data&apos; (1) object &apos;100000003e9.00000007&apos; -&gt; pg 1.e5b260d4 (1.d4) -&gt; up ([0,4], p0) acting ([0,4], p0)[root@node ~]# ceph osd treeID WEIGHT   TYPE NAME          UP/DOWN REWEIGHT PRIMARY-AFFINITY  -1 18.13797 root default                                          -2  7.25519     host node253                                    0  3.62759         osd.0           up  1.00000          1.00000  2  3.62759         osd.2           up  1.00000          1.00000  -3  7.25519     host node250                                    1  3.62759         osd.1           up  1.00000          1.00000  3  3.62759         osd.3           up  1.00000          1.00000  -4  3.62759     host node248                                    4  3.62759         osd.4           up  1.00000          1.00000 [root@node248 ~]# cd /var/lib/ceph/osd/ceph-4/current/[root@node248 current]# ls 1.d4_head/100000003e9.00000007__head_E5B260D4__1  __head_000000D4__1</code></pre><h1 id="目录绑定，查看条带"><a href="#目录绑定，查看条带" class="headerlink" title="目录绑定，查看条带"></a>目录绑定，查看条带</h1><p><strong>目录绑定到哪个存储池</strong></p><pre><code>getfattr -n ceph.dir.layout.pool /ceph</code></pre><p><strong>查看文件条带</strong></p><pre><code>getfattr -n ceph.file.layout file1 # file: file1ceph.file.layout=&quot;stripe_unit=4194304 stripe_count=1 object_size=4194304 pool=pool-rule-c2&quot;</code></pre><p>pool=存储池 </p><p><strong>查看目录所有信息</strong></p><pre><code>getfattr -n ceph.dir.layout nfs-1#file: nfs-1ceph.dir.layout=&quot;stripe_unit=4194304 stripe_count=1 object_size=4194304 pool=pool-rule-c2&quot;</code></pre><p><strong>设置 setfattr</strong></p><pre><code>[root@ceph226 ceph]# getfattr -n ceph.dir.layout nfs-2nfs-2: ceph.dir.layout: No such attribute[root@ceph226 ceph]# setfattr -n ceph.dir.layout.pool -v pool-rule-c2 nfs-2[root@ceph226 ceph]# getfattr -n ceph.dir.layout.pool  nfs-2#file: nfs-2ceph.dir.layout.pool=&quot;pool-rule-c2&quot;[root@ceph226 ceph]# getfattr -n ceph.dir.layout  nfs-2# file: nfs-2ceph.dir.layout=&quot;stripe_unit=4194304 stripe_count=1 object_size=4194304 pool=pool-rule-c2&quot;</code></pre>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;本文仅仅记录下常用命令，以备自己查询使用。&lt;/p&gt;
-&lt;h1 id=&quot;crushmap&quot;&gt;&lt;a href=&quot;#crushmap&quot; class=&quot;headerlink&quot; title=&quot;crushmap&quot;&gt;&lt;/a&gt;crushmap&lt;/h1&gt;&lt;p&gt;&lt;strong&gt;获取crush  map&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;要获取集群的crush map，执行命令：&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;ceph osd  getcrushmap -o {compiled-crushmap-filename}
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;ceph将crush输出（-o）到你指定的文件，由于crush map是已编译的，所以需要反编译；&lt;/p&gt;
     
     </summary>
     

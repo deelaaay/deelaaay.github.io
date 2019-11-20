@@ -1,3 +1,5 @@
+http://idcat.cn/hibench7-0编译安装.html
+http://idcat.cn/docker实战.html
 http://idcat.cn/petasan部署以及简单使用.html
 http://idcat.cn/centos7系统lio简单使用.html
 http://idcat.cn/saltstack一键部署haproxy-keepalived-nginx负载均衡高可用环境.html
@@ -6,5 +8,3 @@ http://idcat.cn/记录一次因对象权限不对导致osd无法启动的排查�
 http://idcat.cn/blktrace-fio对比测试分析.html
 http://idcat.cn/hadoop2-7-3通过s3对接ceph10-2-radosgw测试.html
 http://idcat.cn/nginx反向代理和负载均衡最基础配置实现.html
-http://idcat.cn/tdb文件简介.html
-http://idcat.cn/blktrace-工具简介.html
